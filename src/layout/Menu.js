@@ -130,30 +130,12 @@ class Menu extends Component {
           render={({ permissions }) => {
             if (hasAccess(permissions, "users.enabled")) {
               return (
-                <SubMenu
-                  handleToggle={() => this.handleToggle("resourcesCatalog")}
-                  isOpen={this.state.resourcesCatalog}
-                  sidebarIsOpen={open}
-                  name="Resources"
-                  icon={<measurements.icon />}
-                >
-                  {hasAccess(permissions, "users.enabled") && (
-                    <MenuItemLink
-                      to={`/curriculums`}
-                      primaryText={"Curriculums"}
-                      leftIcon={<admins.icon />}
-                      onClick={onMenuClick}
-                    />
-                  )}
-                  {hasAccess(permissions, "users.enabled") && (
-                    <MenuItemLink
-                      to={`/files`}
-                      primaryText={"Files"}
-                      leftIcon={<admins.icon />}
-                      onClick={onMenuClick}
-                    />
-                  )}
-                </SubMenu>
+                <MenuItemLink
+                  to={`/resources`}
+                  primaryText={"Resources"}
+                  leftIcon={<measurements.icon />}
+                  onClick={onMenuClick}
+                />
               );
             } else {
               return <div></div>;

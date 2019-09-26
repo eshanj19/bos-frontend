@@ -16,6 +16,14 @@
  */
 
 import axios from "./axios";
+import { useSnackbar } from "notistack";
+import {
+  SNACKBAR_ERROR,
+  SNACKBAR_SUCCESS,
+  API_ERROR_UNKNOWN,
+  API_SUCCESS
+} from "./constants";
+import { enqueueSnackbar } from "notistack";
 
 const toFormData = data => {
   const fd = new FormData();
@@ -31,6 +39,10 @@ const login = data => {
 
 const get = url => {
   return axios.get(`${url}`);
+};
+
+const post = url => {
+  return axios.post(`${url}`);
 };
 
 const getAthleteBaseline = (basePath, id) => {
@@ -69,6 +81,10 @@ const getAllPermissions = () => {
   return axios.get(`/permission_groups/all_permissions/`);
 };
 
+const getNGOPermissionGroups = key => {
+  return axios.get(`/ngos/${key}/permission_groups/`);
+};
+
 const getForgotPasswordToken = body => {
   return axios.post("/get_forgot_password_token/", toFormData(body));
 };
@@ -89,18 +105,60 @@ const createCoach = body => {
   return axios.post("/coaches/", body);
 };
 
+const createNGO = body => {
+  return axios.post("/ngos/", body);
+};
+
+const createPermissionGroup = body => {
+  return axios.post("/permission_groups/", body);
+};
+
 const logout = () => {
   return axios.post("/logout_view/");
 };
 
+const handleError = (error, enqueueSnackbar) => {
+  const { data } = error;
+  if (data && data.message) {
+    showSnackbar(enqueueSnackbar, data.message, SNACKBAR_ERROR);
+  } else {
+    showSnackbar(enqueueSnackbar, API_ERROR_UNKNOWN, SNACKBAR_ERROR);
+  }
+};
+
+const handleSuccess = (success, enqueueSnackbar) => {
+  const { data } = success;
+  if (data && data.message) {
+    showSnackbar(enqueueSnackbar, data.message, SNACKBAR_SUCCESS);
+  } else {
+    showSnackbar(enqueueSnackbar, API_SUCCESS, SNACKBAR_SUCCESS);
+  }
+};
+
+const showSnackbar = (enqueueSnackbar, message, variant) => {
+  if (enqueueSnackbar) {
+    enqueueSnackbar(message, {
+      variant: variant,
+      anchorOrigin: {
+        vertical: "bottom",
+        horizontal: "center"
+      }
+    });
+  }
+};
+
 const api = {
+  handleSuccess,
+  handleError,
   login,
   get,
   put,
+  post,
   getAthleteBaseline,
   getCoachBaseline,
   getAthleteBaselineMeasurements,
   getCoachBaselineMeasurements,
+  getNGOPermissionGroups,
   getAllPermissions,
   isAuthenticated,
   resetPassword,
@@ -109,7 +167,9 @@ const api = {
   forgotPassword,
   logout,
   createAthlete,
-  createCoach
+  createCoach,
+  createNGO,
+  createPermissionGroup
 };
 
 export default api;

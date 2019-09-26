@@ -25,7 +25,7 @@ import {
 } from "react-admin";
 import withStyles from "@material-ui/core/styles/withStyles";
 
-import { styles } from "./CoachCreate";
+import { styles } from "../common/UserCreate";
 import api from "../api";
 import BaselineList from "../common/BaselineList";
 

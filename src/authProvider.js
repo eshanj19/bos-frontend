@@ -196,20 +196,20 @@ export default async (type, params) => {
     }
     authPermissions["measurement_types"] = measurementTypes;
 
-    if (checkPermission(permissions, "ngos.view_ngo")) {
+    if (checkPermission(permissions, "users.bos_admin")) {
       ngos["show"] = true;
       ngos["list"] = true;
       ngos["enabled"] = true;
     }
-    if (checkPermission(permissions, "ngos.add_ngo")) {
+    if (checkPermission(permissions, "users.bos_admin")) {
       ngos["create"] = true;
       ngos["enabled"] = true;
     }
-    if (checkPermission(permissions, "ngos.change_ngo")) {
+    if (checkPermission(permissions, "users.bos_admin")) {
       ngos["edit"] = true;
       ngos["enabled"] = true;
     }
-    if (checkPermission(permissions, "ngos.delete_ngo")) {
+    if (checkPermission(permissions, "users.bos_admin")) {
       ngos["delete"] = true;
       ngos["enabled"] = true;
     }

@@ -25,8 +25,6 @@ import {
 } from "react-admin";
 import withStyles from "@material-ui/core/styles/withStyles";
 
-import { styles } from "./CoachCreate";
-
 const CoachEdit = ({ classes, ...props }) => (
   <Edit title="Coach Edit" {...props}>
     <TabbedForm>
@@ -60,4 +58,5 @@ const CoachEdit = ({ classes, ...props }) => (
   </Edit>
 );
 
-export default withStyles(styles)(CoachEdit);
+// export default withStyles(styles)(CoachEdit);
+export default CoachEdit;

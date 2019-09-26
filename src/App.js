@@ -106,16 +106,6 @@ class App extends Component {
             {...measurementTypes}
           />,
           <ResourceWithPermissions
-            name="curriculums"
-            permissions={permissions}
-            {...curriculums}
-          />,
-          <ResourceWithPermissions
-            name="files"
-            permissions={permissions}
-            {...files}
-          />,
-          <ResourceWithPermissions
             name="coaches"
             permissions={permissions}
             {...coaches}

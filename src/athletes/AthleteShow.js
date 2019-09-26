@@ -18,7 +18,7 @@
 import React, { Component } from "react";
 import {
   Show,
-  TabbedShowLayout,
+  SimpleShowLayout,
   BooleanField,
   Tab,
   TextField
@@ -28,6 +28,7 @@ import withStyles from "@material-ui/core/styles/withStyles";
 import { styles } from "./AthleteCreate";
 import api from "../api";
 import BaselineList from "./BaselineList";
+import { Divider, Typography } from "@material-ui/core";
 
 class AthleteShow extends Component {
   state = { athleteBaselineMeasurements: [] };
@@ -62,42 +63,30 @@ class AthleteShow extends Component {
     const { athleteBaselineMeasurements } = this.state;
     return (
       <Show title="Athlete Show" {...props}>
-        <TabbedShowLayout>
-          <Tab label="Identity">
-            <TextField source="username" formClassName={classes.first_name} />
-            <TextField source="first_name" formClassName={classes.first_name} />
-            <TextField source="last_name" formClassName={classes.last_name} />
-            <BooleanField
-              source="is_active"
-              formClassName={classes.is_active}
-            />
-          </Tab>
-          <Tab label="Baseline" path="baseline">
-            <BaselineList
-              athleteBaselineMeasurements={athleteBaselineMeasurements}
-              handleCheckbox={null}
-              readOnly={true}
-            />
-          </Tab>
-        </TabbedShowLayout>
+        <SimpleShowLayout>
+          <Typography gutterBottom variant="headline">
+            Identity
+          </Typography>
+          <Divider variant="middle" />
+
+          <TextField source="username" formClassName={classes.first_name} />
+          <TextField source="first_name" formClassName={classes.first_name} />
+          <TextField source="last_name" formClassName={classes.last_name} />
+          <BooleanField source="is_active" formClassName={classes.is_active} />
+          <Divider variant="middle" />
+          <Typography gutterBottom variant="headline">
+            Baseline
+          </Typography>
+          <Divider variant="middle" />
+          <BaselineList
+            athleteBaselineMeasurements={athleteBaselineMeasurements}
+            handleCheckbox={null}
+            readOnly={true}
+          />
+        </SimpleShowLayout>
       </Show>
     );
   }
 }
-// const AthleteShow = ({ classes, ...props }) => (
-//   <Show title="Athlete Show" {...props}>
-//     <TabbedShowLayout>
-//       <Tab label="Identity">
-//         <TextField source="username" formClassName={classes.first_name} />
-//         <TextField source="first_name" formClassName={classes.first_name} />
-//         <TextField source="last_name" formClassName={classes.last_name} />
-//         <BooleanField source="is_active" formClassName={classes.is_active} />
-//       </Tab>
-//       <Tab label="Baseline" path="baseline">
-//         <BooleanField source="is_active" formClassName={classes.is_active} />
-//       </Tab>
-//     </TabbedShowLayout>
-//   </Show>
-// );
 
 export default withStyles(styles)(AthleteShow);

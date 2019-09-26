@@ -15,52 +15,91 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import React from "react";
+import React, { Component } from "react";
 import {
   BooleanField,
   Datagrid,
   DateField,
   EditButton,
+  ShowButton,
   Filter,
   List,
   TextField,
-  NullableBooleanInput,
+  BooleanInput,
   Responsive,
-  SearchInput
+  SearchInput,
+  BulkActions,
+  BulkDeleteAction
 } from "react-admin";
 import withStyles from "@material-ui/core/styles/withStyles";
-
-const NgoFilter = props => (
-  <Filter {...props}>
-    <SearchInput source="q" alwaysOn />
-    <NullableBooleanInput source="is_active" />
-  </Filter>
-);
+import { hasAccess } from "ra-auth-acl";
+import DeactivateAction from "../common/DeactivateAction";
 
 const styles = {
   nb_commands: { color: "purple" }
 };
 
-const NgoList = ({ classes, ...props }) => (
-  <List
-    {...props}
-    filters={<NgoFilter />}
-    sort={{ field: "label", order: "ASC" }}
-    perPage={25}
-  >
-    <Responsive
-      medium={
-        <Datagrid>
-          <TextField source="label" type="text" />
-          <TextField source="uom" type="text" />
-          <BooleanField source="is_active" type="text" />
-          <DateField source="creation_time" showTime />
-          <DateField source="last_modification_time" showTime />
-          <EditButton />
-        </Datagrid>
-      }
-    />
-  </List>
-);
+class NgoList extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      athleteBaselineMeasurements: []
+    };
+    console.log(this.props);
+    this.NgoFilter = this.NgoFilter.bind(this);
+    this.PostBulkActions = this.PostBulkActions.bind(this);
+    this.onSuccess = this.onSuccess.bind(this);
+  }
 
+  NgoFilter = props => (
+    <Filter {...props}>
+      <SearchInput label="Name" source="name" alwaysOn />
+      <BooleanInput source="is_active" alwaysOn />
+    </Filter>
+  );
+
+  PostBulkActions = props => (
+    <BulkActions {...props}>
+      <DeactivateAction
+        {...props}
+        label="Deactivate"
+        customPath="deactivate"
+        onSuccess={this.onSuccess}
+      />
+      <BulkDeleteAction />
+    </BulkActions>
+  );
+
+  onSuccess = () => {
+    this.props.history.goBack();
+  };
+
+  render() {
+    const { classes, permissions, ...props } = this.props;
+
+    return (
+      <List
+        {...props}
+        filters={<this.NgoFilter />}
+        sort={{ field: "name", order: "ASC" }}
+        perPage={25}
+        filterDefaultValues={{ is_active: true }}
+        bulkActions={<this.PostBulkActions />}
+      >
+        <Responsive
+          medium={
+            <Datagrid>
+              <TextField source="name" type="text" />
+              <BooleanField source="is_active" type="text" />
+              <DateField source="creation_time" showTime />
+              <DateField source="last_modification_time" showTime />
+              {hasAccess(permissions, "ngos.show") && <ShowButton />}
+              {hasAccess(permissions, "ngos.edit") && <EditButton />}
+            </Datagrid>
+          }
+        />
+      </List>
+    );
+  }
+}
 export default withStyles(styles)(NgoList);

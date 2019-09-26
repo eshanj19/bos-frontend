@@ -30,6 +30,8 @@ import {
 } from "@material-ui/core";
 import BaselineList from "./BaselineList";
 import { ATHLETE, COACH, ADMIN } from "../constants";
+import PermissionGroupList from "./PermissionGroupList";
+import instance from "../axios";
 export const styles = {
   first_name: { marginLeft: 32, marginTop: 20 },
   last_name: { marginLeft: 32, marginTop: 20 },
@@ -76,17 +78,18 @@ class UserCreate extends Component {
     super(props);
     const { basePath } = this.props;
     var role = null;
-    if (basePath == "/athletes") {
+    if (basePath === "/athletes") {
       role = ATHLETE;
     }
-    if (basePath == "/coaches") {
+    if (basePath === "/coaches") {
       role = COACH;
     }
-    if (basePath == "/users") {
+    if (basePath === "/users") {
       role = ADMIN;
     }
     this.state = {
       baselineMeasurements: [],
+      permissionGroups: [],
       role: role
     };
     this.handleIdentityChange = this.handleIdentityChange.bind(this);
@@ -95,19 +98,36 @@ class UserCreate extends Component {
 
   componentDidMount() {
     const { role } = this.state;
-    if (role == ATHLETE) {
-      api.getAthleteBaselineMeasurements().then(result => {
-        this.setState({
-          baselineMeasurements: result.data
-        });
-      });
+    var apiCalls = [];
+    const ngoKey = localStorage.getItem("ngo_key");
+
+    if (role === ATHLETE) {
+      apiCalls.push(api.getAthleteBaselineMeasurements());
+      apiCalls.push(api.getNGOPermissionGroups(ngoKey));
     }
-    if (role == COACH) {
-      api.getCoachBaselineMeasurements().then(result => {
-        this.setState({
-          baselineMeasurements: result.data
+    if (role === COACH) {
+      apiCalls.push(api.getCoachBaselineMeasurements());
+      apiCalls.push(api.getNGOPermissionGroups(ngoKey));
+    }
+
+    if (apiCalls.length) {
+      instance
+        .all(apiCalls)
+        .then(
+          instance.spread((baselineResponse, ngoPermissionGroups) => {
+            // TODO Error handling
+            var baselineMeasurements = baselineResponse.data;
+            var permissionGroups = ngoPermissionGroups.data;
+            this.setState({
+              baselineMeasurements: baselineMeasurements,
+              permissionGroups: permissionGroups
+            });
+          })
+        )
+        .catch(response => {
+          console.log(response);
+          api.handleError(response);
         });
-      });
     }
   }
 
@@ -121,8 +141,8 @@ class UserCreate extends Component {
     var { baselineMeasurements: baselineMeasurements } = this.state;
     for (let index = 0; index < baselineMeasurements.length; index++) {
       const element = baselineMeasurements[index];
-      if (element.key == key) {
-        if (element.input_type == "boolean") {
+      if (element.key === key) {
+        if (element.input_type === "boolean") {
           console.log("Value of ", event.target);
           element["value"] = event.target.value;
         } else {
@@ -136,13 +156,19 @@ class UserCreate extends Component {
   };
 
   customAction() {
-    var { baselineMeasurements, first_name, last_name, role } = this.state;
+    var {
+      baselineMeasurements,
+      permissionGroups,
+      first_name,
+      last_name,
+      role
+    } = this.state;
     var createData = {};
     var baselines = [];
     for (let index = 0; index < baselineMeasurements.length; index++) {
       const element = baselineMeasurements[index];
-      if (element.input_type == "boolean") {
-        if (element.value == true || element.value == false) {
+      if (element.input_type === "boolean") {
+        if (element.value === true || element.value == false) {
           baselines.push(element);
         }
       } else if (element.value) {
@@ -152,11 +178,11 @@ class UserCreate extends Component {
     createData["baselines"] = baselines;
     createData["first_name"] = first_name;
     createData["last_name"] = last_name;
-    if (role == ATHLETE) {
+    if (role === ATHLETE) {
       api.createAthlete(createData).then(result => {
         this.props.history.push(this.props.basePath);
       });
-    } else if (role == COACH) {
+    } else if (role === COACH) {
       api.createCoach(createData).then(result => {
         this.props.history.push(this.props.basePath);
       });
@@ -165,16 +191,16 @@ class UserCreate extends Component {
 
   render() {
     const { classes, ...props } = this.props;
-    const { baselineMeasurements, role } = this.state;
+    const { baselineMeasurements, permissionGroups, role } = this.state;
     console.log(role);
     var userTitle = null;
-    if (role == ATHLETE) {
+    if (role === ATHLETE) {
       userTitle = "Athlete";
     }
-    if (role == ADMIN) {
+    if (role === ADMIN) {
       userTitle = "Admin";
     }
-    if (role == COACH) {
+    if (role === COACH) {
       userTitle = "Coach";
     }
     return (
@@ -220,6 +246,19 @@ class UserCreate extends Component {
               readOnly={false}
             />
 
+            <Divider variant="middle" />
+
+            <div className={classes.sectionHeader}>
+              <Typography gutterBottom variant="headline">
+                Permission Group
+              </Typography>
+            </div>
+
+            <PermissionGroupList
+              permissionGroups={permissionGroups}
+              handleCheckbox={this.handleChange}
+              readOnly={false}
+            />
             <Button
               variant="contained"
               size="small"
