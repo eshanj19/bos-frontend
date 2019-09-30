@@ -15,15 +15,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import FileIcon from "@material-ui/icons/People";
+import ResourceIcon from "@material-ui/icons/People";
 
-import FileList from "./FileList";
-import FileCreate from "./FileCreate";
-import FileEdit from "./FileEdit";
+import ResourceList from "./ResourceList";
+import ResourceCreate from "./ResourceCreate";
+import ResourceEdit from "./ResourceEdit";
 
 export default {
-  list: FileList,
-  create: FileCreate,
-  edit: FileEdit,
-  icon: FileIcon
+  list: ResourceList,
+  create: ResourceCreate,
+  edit: ResourceEdit,
+  icon: ResourceIcon
 };

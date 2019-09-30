@@ -28,8 +28,7 @@ import customRoutes from "./routes";
 import englishMessages from "./i18n/en";
 import drfProvider from "./dataProvider";
 
-import files from "./files";
-import curriculums from "./curriculums";
+import resources from "./resources";
 import coaches from "./coaches";
 import admins from "./admins";
 import permissionGroups from "./permissionGroups";
@@ -89,6 +88,11 @@ class App extends Component {
             name="measurements"
             permissions={permissions}
             {...measurements}
+          />,
+          <ResourceWithPermissions
+            name="resources"
+            permissions={permissions}
+            {...resources}
           />,
           <ResourceWithPermissions
             name="ngos"

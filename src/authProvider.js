@@ -158,6 +158,15 @@ export default async (type, params) => {
       delete: false
     };
 
+    var resources = {
+      enabled: false,
+      show: false,
+      list: false,
+      create: false,
+      edit: false,
+      delete: false
+    };
+
     if (checkPermission(permissions, "measurements.view_measurement")) {
       measurements["show"] = true;
       measurements["list"] = true;
@@ -221,8 +230,14 @@ export default async (type, params) => {
       permission_groups["create"] = true;
       permission_groups["edit"] = true;
       permission_groups["enabled"] = true;
+      resources["show"] = true;
+      resources["list"] = true;
+      resources["create"] = true;
+      resources["edit"] = true;
+      resources["enabled"] = true;
     }
     authPermissions["permission_groups"] = permission_groups;
+    authPermissions["resources"] = resources;
 
     if (checkPermission(permissions, "users.view_user")) {
       users["show"] = true;

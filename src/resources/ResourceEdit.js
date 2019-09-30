@@ -19,9 +19,9 @@ import React from "react";
 import { Edit, BooleanInput, SimpleForm, TextInput } from "react-admin";
 import withStyles from "@material-ui/core/styles/withStyles";
 
-import { styles } from "./FileCreate";
+import { styles } from "./ResourceCreate";
 
-const FileEdit = ({ classes, ...props }) => (
+const ResourceEdit = ({ classes, ...props }) => (
   <Edit {...props}>
     <SimpleForm>
       <TextInput source="first_name" formClassName={classes.first_name} />
@@ -38,4 +38,4 @@ const FileEdit = ({ classes, ...props }) => (
   </Edit>
 );
 
-export default withStyles(styles)(FileEdit);
+export default withStyles(styles)(ResourceEdit);

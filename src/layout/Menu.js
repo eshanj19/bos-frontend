@@ -32,6 +32,7 @@ import {
 import SubMenu from "./SubMenu";
 import admins from "../admins";
 import measurements from "../measurements";
+import resources from "../resources";
 import measurementTypes from "../measurementTypes";
 import ngos from "../ngos";
 import permissionGroups from "../permissionGroups";

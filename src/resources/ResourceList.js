@@ -23,7 +23,10 @@ import {
   EditButton,
   List,
   TextField,
-  Responsive
+  Responsive,
+  BooleanInput,
+  SearchInput,
+  Filter
 } from "react-admin";
 import withStyles from "@material-ui/core/styles/withStyles";
 
@@ -31,15 +34,31 @@ const styles = {
   nb_commands: { color: "purple" }
 };
 
-const CurriculumList = ({ classes, ...props }) => (
-  <List {...props} sort={{ field: "last_seen", order: "DESC" }} perPage={25}>
+const ResourceFilter = props => (
+  <Filter {...props}>
+    <SearchInput label="Name" source="name" alwaysOn />
+    <BooleanInput source="is_active" alwaysOn />
+  </Filter>
+);
+
+const ResourcesList = ({ classes, ...props }) => (
+  <List
+    {...props}
+    sort={{ field: "label", order: "ASC" }}
+    perPage={25}
+    filters={<ResourceFilter />}
+    filterDefaultValues={{ is_active: true }}
+  >
     <Responsive
       medium={
         <Datagrid>
-          <TextField source="first_name" type="text" />
-          <TextField source="last_name" type="text" />
-          <TextField source="email" type="text" />
+          <TextField source="label" type="text" />
           <DateField label="Created on" source="creation_time" showTime />
+          <DateField
+            label="Modified on"
+            source="last_modification_time"
+            showTime
+          />
           <BooleanField source="is_active" label="Active?" />
           <EditButton />
         </Datagrid>
@@ -48,4 +67,4 @@ const CurriculumList = ({ classes, ...props }) => (
   </List>
 );
 
-export default withStyles(styles)(CurriculumList);
+export default withStyles(styles)(ResourcesList);
