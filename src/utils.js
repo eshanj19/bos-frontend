@@ -29,3 +29,13 @@ export const checkPermission = (permissions, permission) => {
   }
   return false;
 };
+
+export const RESOURCE_TYPES = {
+  CIRRICULUM : 4
+}
+
+export const RESOURCE_ITEMS = {
+  MEASUREMENT : 3,
+  SESSION : 2,
+  DAY : 1
+}

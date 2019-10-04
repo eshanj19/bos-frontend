@@ -28,7 +28,9 @@ import {
   SearchInput,
   Filter
 } from "react-admin";
+import {Menu,MenuItem,Fade,Button} from '@material-ui/core';
 import withStyles from "@material-ui/core/styles/withStyles";
+import { RESOURCE_TYPES } from "../utils";
 
 const styles = {
   nb_commands: { color: "purple" }
@@ -41,6 +43,41 @@ const ResourceFilter = props => (
   </Filter>
 );
 
+const CreateActions = props => {
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const open = Boolean(anchorEl);
+  const handleClick = event => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+  const handleMenuSelect = (item) => {
+    console.log(props);
+    props.history.push({pathname:`/resources/create/${item}`,
+      state:{type : RESOURCE_TYPES.CIRRICULUM}});
+  }
+  return(
+    <>
+      <Button color="primary" aria-controls="fade-menu" aria-haspopup="true" onClick={handleClick}>
+        Create
+      </Button>
+      <Menu
+        id="fade-menu"
+        anchorEl={anchorEl}
+        keepMounted
+        open={open}
+        onClose={handleClose}
+        TransitionComponent={Fade}
+      >
+        <MenuItem onClick={() => handleMenuSelect('curriculum')}>Curriculum</MenuItem>
+        <MenuItem onClick={() => handleMenuSelect('session')}>Session</MenuItem>
+        <MenuItem onClick={() => handleMenuSelect('curriculum')}>Video</MenuItem>
+      </Menu>
+    </>
+  )
+}
+
 const ResourcesList = ({ classes, ...props }) => (
   <List
     {...props}
@@ -48,6 +85,7 @@ const ResourcesList = ({ classes, ...props }) => (
     perPage={25}
     filters={<ResourceFilter />}
     filterDefaultValues={{ is_active: true }}
+    actions={<CreateActions {...props}/>}
   >
     <Responsive
       medium={

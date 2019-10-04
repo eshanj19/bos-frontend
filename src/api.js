@@ -147,6 +147,10 @@ const showSnackbar = (enqueueSnackbar, message, variant) => {
   }
 };
 
+const getMeasurementDropdownOptionsForNgo = (ngo_key) => {
+  return axios.get(`ngos/${ngo_key}/measurements/`);
+}
+
 const api = {
   handleSuccess,
   handleError,
@@ -169,7 +173,8 @@ const api = {
   createAthlete,
   createCoach,
   createNGO,
-  createPermissionGroup
+  createPermissionGroup,
+  getMeasurementDropdownOptionsForNgo
 };
 
 export default api;

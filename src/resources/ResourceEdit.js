@@ -19,7 +19,7 @@ import React from "react";
 import { Edit, BooleanInput, SimpleForm, TextInput } from "react-admin";
 import withStyles from "@material-ui/core/styles/withStyles";
 
-import { styles } from "./ResourceCreate";
+import { styles } from "./create/Curriculum";
 
 const ResourceEdit = ({ classes, ...props }) => (
   <Edit {...props}>

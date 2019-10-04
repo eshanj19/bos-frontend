@@ -21,7 +21,7 @@ import { hasAccess } from "ra-auth-acl";
 const MeasurementFilter = props => (
   <Filter {...props}>
     <SearchInput label="Label" source="label" alwaysOn />
-    <BooleanInput source="is_active" />
+    <BooleanInput alwaysOn source="is_active" />
     <ReferenceInput label="Type" source="type" reference="measurement_types">
       <SelectInput optionText="label" />
     </ReferenceInput>

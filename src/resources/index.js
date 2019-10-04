@@ -18,12 +18,12 @@
 import ResourceIcon from "@material-ui/icons/People";
 
 import ResourceList from "./ResourceList";
-import ResourceCreate from "./ResourceCreate";
+// import ResourceCreate from "./ResourceCreate";
 import ResourceEdit from "./ResourceEdit";
 
 export default {
   list: ResourceList,
-  create: ResourceCreate,
+  // create: ResourceCreate,
   edit: ResourceEdit,
   icon: ResourceIcon
 };
