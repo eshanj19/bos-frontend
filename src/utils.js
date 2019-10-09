@@ -31,11 +31,17 @@ export const checkPermission = (permissions, permission) => {
 };
 
 export const RESOURCE_TYPES = {
-  CIRRICULUM : 4
-}
+  CIRRICULUM: 4
+};
 
 export const RESOURCE_ITEMS = {
-  MEASUREMENT : 3,
-  SESSION : 2,
-  DAY : 1
-}
+  FILE: 4,
+  MEASUREMENT: 3,
+  SESSION: 2,
+  DAY: 1
+};
+
+export const INPUT_TYPE = {
+  TEXT: 1,
+  DROPDOWN: 2
+};

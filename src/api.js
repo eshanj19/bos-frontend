@@ -151,6 +151,10 @@ const getMeasurementDropdownOptionsForNgo = (ngo_key) => {
   return axios.get(`ngos/${ngo_key}/measurements/`);
 }
 
+const getFileDropdownOptionsForNgo = (ngo_key) => {
+  return axios.get(`ngos/${ngo_key}/files/`);
+}
+
 const api = {
   handleSuccess,
   handleError,
@@ -174,7 +178,8 @@ const api = {
   createCoach,
   createNGO,
   createPermissionGroup,
-  getMeasurementDropdownOptionsForNgo
+  getMeasurementDropdownOptionsForNgo,
+  getFileDropdownOptionsForNgo
 };
 
 export default api;
