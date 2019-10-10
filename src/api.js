@@ -147,13 +147,17 @@ const showSnackbar = (enqueueSnackbar, message, variant) => {
   }
 };
 
-const getMeasurementDropdownOptionsForNgo = (ngo_key) => {
+const getMeasurementDropdownOptionsForNgo = ngo_key => {
   return axios.get(`ngos/${ngo_key}/measurements/`);
-}
+};
 
-const getFileDropdownOptionsForNgo = (ngo_key) => {
+const getFileDropdownOptionsForNgo = ngo_key => {
   return axios.get(`ngos/${ngo_key}/files/`);
-}
+};
+
+const saveSession = data => {
+  return axios.post("resources/", data);
+};
 
 const api = {
   handleSuccess,
@@ -179,7 +183,8 @@ const api = {
   createNGO,
   createPermissionGroup,
   getMeasurementDropdownOptionsForNgo,
-  getFileDropdownOptionsForNgo
+  getFileDropdownOptionsForNgo,
+  saveSession
 };
 
 export default api;

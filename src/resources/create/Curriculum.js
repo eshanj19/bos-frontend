@@ -9,7 +9,7 @@ import filterDeep from "deepdash/filterDeep";
 import PlaceholderItem from "./PlaceholderItem";
 import { RESOURCE_ITEMS, INPUT_TYPE } from "../../utils";
 import api from "../../api";
-import DeleteIcon from "@material-ui/icons/Delete";
+import DeleteIcon from "@material-ui/icons/Clear";
 
 export const styles = {
   first_name: { display: "inline-block" },
@@ -168,7 +168,7 @@ class Cirriculum extends Component {
     // console.log(value);
     // const {name,value} = target;
     this.setState(
-      () => ({ measurementLabel: label }),
+      () => ({ measurementLabel: value }),
       () => {
         this.handleAddMeasurementClick(sessionId, dayId);
       }
@@ -177,7 +177,7 @@ class Cirriculum extends Component {
 
   handleAddFileInputChange = (sessionId, dayId, { label, value }) => {
     this.setState(
-      () => ({ fileLabel: label }),
+      () => ({ fileLabel: value }),
       () => {
         this.handleAddFileClick(sessionId, dayId);
       }
@@ -283,7 +283,7 @@ class Cirriculum extends Component {
       return session.id === PLACEHOLDER_ID ? (
         <PlaceholderItem
           key={index}
-          type={RESOURCE_ITEMS.SESSION}
+          inputType={INPUT_TYPE.DROPDOWN}
           onAddClick={() => {
             this.handleAddSessionClick(dayId);
           }}

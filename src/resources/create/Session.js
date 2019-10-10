@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { withRouter } from "react-router-dom";
 import withStyles from "@material-ui/core/styles/withStyles";
 import { Card, CardContent, Button, Input } from "@material-ui/core";
-import findIndex from "lodash/findIndex";
+import find from "lodash/find";
 import uniqueId from "lodash/uniqueId";
 import filterDeep from "deepdash/filterDeep";
 import PlaceholderItem from "./PlaceholderItem";
@@ -76,7 +76,7 @@ class Session extends Component {
     const updatedSessionItems = session.items;
     const index = updatedSessionItems.length;
     updatedSessionItems.splice(index - 1, 1, {
-      label: sessionItem.label,
+      label: sessionItem.value,
       id: randomId(),
       type: itemType
     });
@@ -113,6 +113,7 @@ class Session extends Component {
   };
 
   renderSessionItems = (items, sessionId) => {
+    const { measurementOptions, fileOptions } = this.state;
     return items.map((item, index) => {
       return item.id === PLACEHOLDER_ID ? (
         <div key={uniqueId()}>
@@ -145,7 +146,13 @@ class Session extends Component {
         </div>
       ) : (
         <div key={uniqueId()} className={this.props.classes.item_margin}>
-          <span className={this.props.classes.label_title}>{item.label}</span>
+          <span className={this.props.classes.label_title}>
+            {
+              find(measurementOptions.concat(fileOptions), {
+                value: item.label
+              }).label
+            }
+          </span>
         </div>
       );
     });
@@ -161,14 +168,44 @@ class Session extends Component {
   };
 
   handleSubmit = () => {
-    const { session } = this.state;
+    const {
+      session: { items }
+    } = this.state;
     /**
      * filter the placeholders
      * don't need to have the placeholders to be
      * sent to the server
      */
-    // filteredSessions.map((items) => )
+    const files = items
+      .filter(item => {
+        return item.type === RESOURCE_ITEMS.FILE && item.id !== PLACEHOLDER_ID;
+      })
+      .map(item => {
+        delete item.type;
+        delete item.id;
+        return item;
+      });
 
+    const measurements = items
+      .filter(item => {
+        return (
+          item.type === RESOURCE_ITEMS.MEASUREMENT && item.id !== PLACEHOLDER_ID
+        );
+      })
+      .map(item => {
+        delete item.type;
+        delete item.id;
+        return item;
+      });
+    console.log({ files, measurements });
+    const payload = {
+      data: { files, measurements },
+      label: "session_one",
+      type: "session"
+    };
+    api.saveSession(payload).then(response => {
+      console.log("session saved");
+    });
     // console.log(filtered);
   };
   render() {
