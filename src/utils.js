@@ -43,5 +43,6 @@ export const RESOURCE_ITEMS = {
 
 export const INPUT_TYPE = {
   TEXT: 1,
-  DROPDOWN: 2
+  DROPDOWN: 2,
+  CREATABLE_DROPDOWN: 3
 };

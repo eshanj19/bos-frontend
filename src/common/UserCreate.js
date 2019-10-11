@@ -138,7 +138,7 @@ class UserCreate extends Component {
   };
 
   handleChange = (key, event) => {
-    var { baselineMeasurements: baselineMeasurements } = this.state;
+    var { baselineMeasurements } = this.state;
     for (let index = 0; index < baselineMeasurements.length; index++) {
       const element = baselineMeasurements[index];
       if (element.key === key) {

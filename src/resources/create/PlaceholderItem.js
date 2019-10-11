@@ -10,6 +10,7 @@ import {
   Input
 } from "@material-ui/core";
 import withStyles from "@material-ui/core/styles/withStyles";
+import CreatableSelect from "react-select/creatable";
 import { RESOURCE_ITEMS, INPUT_TYPE } from "../../utils";
 import Select from "react-select";
 
@@ -39,6 +40,13 @@ function PlaceholderItem({ onInputChange, onAddClick, title, ...props }) {
     <div className={props.classes.item_input} style={{ ...props.style }}>
       {props.inputType === INPUT_TYPE.DROPDOWN ? (
         <Select isSearchable options={props.options} onChange={onInputChange} />
+      ) : props.inputType === INPUT_TYPE.CREATABLE_DROPDOWN ? (
+        <CreatableSelect
+          isClearable
+          onChange={onInputChange}
+          options={props.options}
+          onCreateOption={props.onCreateOption}
+        />
       ) : (
         <>
           <Input

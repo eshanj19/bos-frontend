@@ -159,6 +159,14 @@ const saveSession = data => {
   return axios.post("resources/", data);
 };
 
+const getSessionsForNgo = (ngo_key) => {
+  return axios.get(`ngos/${ngo_key}/training_sessions/`);
+}
+
+const saveCurriculum = data => {
+  return axios.post("resources/", data);
+}
+
 const api = {
   handleSuccess,
   handleError,
@@ -184,7 +192,9 @@ const api = {
   createPermissionGroup,
   getMeasurementDropdownOptionsForNgo,
   getFileDropdownOptionsForNgo,
-  saveSession
+  saveSession,
+  getSessionsForNgo,
+  saveCurriculum
 };
 
 export default api;

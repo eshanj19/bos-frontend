@@ -10,6 +10,7 @@ import PlaceholderItem from "./PlaceholderItem";
 import { RESOURCE_ITEMS, INPUT_TYPE } from "../../utils";
 import api from "../../api";
 import DeleteIcon from "@material-ui/icons/Clear";
+import FlareIcon from '@material-ui/icons/Flare';
 
 export const styles = {
   first_name: { display: "inline-block" },
@@ -27,10 +28,18 @@ export const styles = {
   delete_icon: {
     fontSize: "14px",
     position: "absolute",
-    marginLeft: "8px",
-    marginTop: "4px"
+    left : '8px',
+    top: "4px",
+    cursor: "pointer"
   },
-  delete_wrapper: { position: "relative", cursor: "pointer" }
+  compulsory_icon : {
+    fontSize: "14px",
+    position: "absolute",
+    left : '24px',
+    top : '4px',
+    cursor:'pointer'
+  },
+  delete_wrapper: { position: "relative" }
 };
 
 const randomId = type => {
@@ -88,44 +97,22 @@ class Cirriculum extends Component {
       });
       this.setState({ measurementOptions: sanitizedOptions });
     });
+    api.getSessionsForNgo(ngoKey).then(({data}) => {
+      const sanitizedOptions = data.map((option) => {
+        return {
+          label : option.label,
+          value : option.data
+        }
+      })
+      this.setState({sessionOptions : sanitizedOptions});
+    })
   }
 
-  findAndDeleteNode = id => {
-    const updatedDays = Array.from(this.state.days);
-    console.log([...updatedDays]);
-    if (findIndex(updatedDays, { id: id }) > -1) {
-      const dIndex = findIndex(updatedDays, { id: id });
-      updatedDays.splice(dIndex, 1);
-      return updatedDays;
-    } else {
-      for (let i = 0; i < updatedDays.length; i++) {
-        const { sessions } = updatedDays[i];
-        if (findIndex(sessions, { id: id }) > -1) {
-          const sIndex = findIndex(sessions, { id: id });
-          sessions.splice(sIndex, 1);
-          return updatedDays;
-        } else {
-          for (let j = 0; j < sessions.length; j++) {
-            const { measurements } = sessions[j];
-            if (findIndex(measurements, { id: id }) > -1) {
-              const mIndex = findIndex(measurements, { id: id });
-              measurements.splice(mIndex, 1);
-              return updatedDays;
-            }
-          }
-        }
-      }
-    }
-    return updatedDays;
-  };
-
-  handleDelete = id => {
-    console.log(id);
-    const updatedDays = this.findAndDeleteNode(id);
-    console.log(updatedDays);
-    this.setState({ days: updatedDays });
-  };
-
+  /**
+   * all DAY related callbacks
+   * watch inputfield change value and create add callbacks
+   * START
+   */
   handleAddDayClick = () => {
     const { days, dayLabel } = this.state;
     const updatedDays = Array.from(days);
@@ -146,15 +133,41 @@ class Cirriculum extends Component {
     this.setState({ dayLabel: value });
   };
 
-  handleAddSessionClick = dayId => {
-    const { days, sessionLabel } = this.state;
+  /**
+   * DAY callbacks END
+   */
+
+  /**
+   * all SESSION related callbacks
+   * watch session createable select dropdowns
+   * and add session callbacks START
+   */
+
+  handleSessionCreateOption = (value,dayId) => {
+    this.handleAddSessionClick(dayId,value);
+  };
+  handleAddSessionOptionSelected = (dayId,{label,value}) => {
+    const sessionId = this.handleAddSessionClick(dayId,label);
+    const {measurements,files} = value;
+    for(let i = 0 ; i < measurements.length ; i++) {
+      const measurement = measurements[i];
+      this.handleAddMeasurementClick(sessionId,dayId,measurement.key);
+    }
+    for(let i = 0 ; i < files.length ;i++) {
+      const file = files[i];
+      this.handleAddFileClick(sessionId,dayId,file.key);
+    }
+  }
+  handleAddSessionClick = (dayId,label) => {
+    const { days } = this.state;
     const updatedDays = Array.from(days);
     const dayIndex = findIndex(days, { id: dayId });
     const updatedSessions = days[dayIndex].sessions;
     const index = updatedSessions.length;
+    const id = randomId("session");
     updatedSessions.splice(index - 1, 1, {
-      label: sessionLabel,
-      id: randomId("session"),
+      label,
+      id,
       measurements: [PLACEHOLDER_MEASUREMENT],
       files: [PLACEHOLDER_FILE]
     });
@@ -162,8 +175,17 @@ class Cirriculum extends Component {
     const updatedDay = { ...days[dayIndex], sessions: updatedSessions };
     updatedDays.splice(dayIndex, 1, updatedDay);
     this.setState({ days: updatedDays });
+    return id;
   };
+  /**
+   * SESSION callbacks END
+   */
 
+  /**
+   * add MEASUREMENT related callbacks
+   * input change and creation of measurement node
+   * START
+   */
   handleAddMeasurementInputChange = (sessionId, dayId, { label, value }) => {
     // console.log(value);
     // const {name,value} = target;
@@ -174,47 +196,9 @@ class Cirriculum extends Component {
       }
     );
   };
-
-  handleAddFileInputChange = (sessionId, dayId, { label, value }) => {
-    this.setState(
-      () => ({ fileLabel: value }),
-      () => {
-        this.handleAddFileClick(sessionId, dayId);
-      }
-    );
-  };
-
-  handleAddFileClick = (sessionId, dayId) => {
-    const { days, fileLabel } = this.state;
-    const updatedDays = Array.from(days);
-    const dayIndex = findIndex(days, { id: dayId });
-    const sessionIndex = findIndex(days[dayIndex].sessions, { id: sessionId });
-    const updatedSessions = days[dayIndex].sessions;
-    const updatedFiles = days[dayIndex].sessions[sessionIndex].files;
-    const index = updatedFiles.length;
-    updatedFiles.splice(index - 1, 1, {
-      label: fileLabel,
-      id: randomId("file")
-    });
-    updatedFiles.push(PLACEHOLDER_FILE);
-    //find index of day to be updated.
-    const updatedSession = {
-      ...days[dayIndex].sessions[sessionIndex],
-      files: updatedFiles
-    };
-    updatedSessions.splice(sessionIndex, 1, updatedSession);
-    const updatedDay = { ...days[dayIndex], sessions: updatedSessions };
-    updatedDays.splice(dayIndex, 1, updatedDay);
-    this.setState({ days: updatedDays });
-  };
-
-  handleAddSessionInputChange = ({ target }) => {
-    const { name, value } = target;
-    this.setState({ sessionLabel: value });
-  };
-
-  handleAddMeasurementClick = (sessionId, dayId) => {
+  handleAddMeasurementClick = (sessionId, dayId, label) => {
     const { days, measurementLabel } = this.state;
+    if(measurementLabel) label = measurementLabel;
     const updatedDays = Array.from(days);
     const dayIndex = findIndex(days, { id: dayId });
     const sessionIndex = findIndex(days[dayIndex].sessions, { id: sessionId });
@@ -223,7 +207,7 @@ class Cirriculum extends Component {
       days[dayIndex].sessions[sessionIndex].measurements;
     const index = updatedMeasurements.length;
     updatedMeasurements.splice(index - 1, 1, {
-      label: measurementLabel,
+      label: label,
       id: randomId("measurement")
     });
     updatedMeasurements.push(PLACEHOLDER_MEASUREMENT);
@@ -237,115 +221,163 @@ class Cirriculum extends Component {
     updatedDays.splice(dayIndex, 1, updatedDay);
     this.setState({ days: updatedDays });
   };
+  handleSetCompulsory = (id) => {
+    const updatedDays = Array.from(this.state.days);
+    updatedDays.forEach((day) => {
+      if(day.id === PLACEHOLDER_ID) return;
+      const {sessions} = day;
+      sessions.forEach((session) => {
+        const {measurements} = session;
+        const index = findIndex(measurements,{id:id});
+        if(index > -1) {
+          measurements[index].is_required = true;
+        }
+      })
+    })
+    this.setState({days:updatedDays});
+  }
+  /**
+   * MEASUREMENT callbacks END
+   */
 
-  renderMeasurementAndFiles = (measurements, files, sessionId, dayId) => {
-    return measurements.concat(files).map((item, index) => {
-      return item.id === PLACEHOLDER_ID_MEASUREMENT ? (
-        <PlaceholderItem
-          key={index}
-          inputType={INPUT_TYPE.DROPDOWN}
-          onInputChange={selected =>
-            this.handleAddMeasurementInputChange(sessionId, dayId, selected)
-          }
-          title="+ Add Measurement"
-          style={{ marginLeft: "20px" }}
-          options={this.state.measurementOptions}
-        />
-      ) : item.id === PLACEHOLDER_ID_FILE ? (
-        <PlaceholderItem
-          key={index}
-          inputType={INPUT_TYPE.DROPDOWN}
-          onInputChange={selected =>
-            this.handleAddFileInputChange(sessionId, dayId, selected)
-          }
-          title="+ Add File"
-          style={{ marginLeft: "20px" }}
-          options={this.state.fileOptions}
-        />
-      ) : (
-        <div key={index} className={this.props.classes.item_margin}>
-          <span className={this.props.classes.label_title}>
-            {item.label}
-            <a
-              className={this.props.classes.delete_wrapper}
-              onClick={() => this.handleDelete(item.id)}
-            >
-              <DeleteIcon className={this.props.classes.delete_icon} />
-            </a>
-          </span>
-        </div>
-      );
-    });
-  };
-
-  renderSessions = (sessions, dayId) => {
-    return sessions.map((session, index) => {
-      return session.id === PLACEHOLDER_ID ? (
-        <PlaceholderItem
-          key={index}
-          inputType={INPUT_TYPE.DROPDOWN}
-          onAddClick={() => {
-            this.handleAddSessionClick(dayId);
-          }}
-          onInputChange={this.handleAddSessionInputChange}
-          title="+ Add Session"
-          style={{ marginLeft: "10px" }}
-          inputPlaceholderText="Enter Session Title"
-        />
-      ) : (
-        <div key={index} className={this.props.classes.item_margin}>
-          <span className={this.props.classes.label_title}>
-            {session.label}
-            <a
-              className={this.props.classes.delete_wrapper}
-              onClick={() => this.handleDelete(session.id)}
-            >
-              <DeleteIcon className={this.props.classes.delete_icon} />
-            </a>
-          </span>
-          {this.renderMeasurementAndFiles(
-            session.measurements,
-            session.files,
-            session.id,
-            dayId
-          )}
-        </div>
-      );
-    });
-  };
-
-  renderDays = (day, index) => {
-    return (
-      <div key={index} style={{ marginBottom: "8px" }}>
-        {/* <CardContent> */}
-        <span className={this.props.classes.label_title}>
-          {day.label}
-          <a
-            className={this.props.classes.delete_wrapper}
-            onClick={() => this.handleDelete(day.id)}
-          >
-            <DeleteIcon className={this.props.classes.delete_icon} />
-          </a>
-        </span>
-        {this.renderSessions(day.sessions, day.id)}
-        {/* </CardContent> */}
-      </div>
+  /**
+   * add FILE related callbacks
+   * input change and creation of file node
+   * START
+   */
+  handleAddFileInputChange = (sessionId, dayId, { label, value }) => {
+    this.setState(
+      () => ({ fileLabel: value }),
+      () => {
+        this.handleAddFileClick(sessionId, dayId);
+      }
     );
   };
+  handleAddFileClick = (sessionId, dayId,label) => {
+    const { days, fileLabel } = this.state;
+    if(fileLabel) label = fileLabel;
+    const updatedDays = Array.from(days);
+    const dayIndex = findIndex(days, { id: dayId });
+    const sessionIndex = findIndex(days[dayIndex].sessions, { id: sessionId });
+    const updatedSessions = days[dayIndex].sessions;
+    const updatedFiles = days[dayIndex].sessions[sessionIndex].files;
+    const index = updatedFiles.length;
+    const id = randomId("file");
+    updatedFiles.splice(index - 1, 1, {
+      label,
+      id
+    });
+    updatedFiles.push(PLACEHOLDER_FILE);
+    //find index of day to be updated.
+    const updatedSession = {
+      ...days[dayIndex].sessions[sessionIndex],
+      files: updatedFiles
+    };
+    updatedSessions.splice(sessionIndex, 1, updatedSession);
+    const updatedDay = { ...days[dayIndex], sessions: updatedSessions };
+    updatedDays.splice(dayIndex, 1, updatedDay);
+    this.setState({ days: updatedDays });
+  };
+  /**
+   * FILE callbacks END
+   */
 
+   /**
+    * DELETE any node
+    */
+  handleDelete = id => {
+    console.log(id);
+    const updatedDays = this.findAndDeleteNode(id);
+    console.log(updatedDays);
+    this.setState({ days: updatedDays });
+  };
+  findAndDeleteNode = id => {
+    const updatedDays = Array.from(this.state.days);
+    console.log([...updatedDays]);
+    if (findIndex(updatedDays, { id: id }) > -1) {
+      const dIndex = findIndex(updatedDays, { id: id });
+      updatedDays.splice(dIndex, 1);
+      return updatedDays;
+    } else {
+      for (let i = 0; i < updatedDays.length; i++) {
+        const { sessions } = updatedDays[i];
+        if (findIndex(sessions, { id: id }) > -1) {
+          const sIndex = findIndex(sessions, { id: id });
+          sessions.splice(sIndex, 1);
+          return updatedDays;
+        } else {
+          for (let j = 0; j < sessions.length; j++) {
+            const { measurements,files } = sessions[j];
+            if (findIndex(measurements, { id: id }) > -1) {
+              const mIndex = findIndex(measurements, { id: id });
+              measurements.splice(mIndex, 1);
+              return updatedDays;
+            }
+            if (findIndex(files, { id: id }) > -1) {
+              const fIndex = findIndex(files, { id: id });
+              files.splice(fIndex, 1);
+              return updatedDays;
+            }
+          }
+        }
+      }
+    }
+    return updatedDays;
+  };
+
+   /**
+    * submit data to server.
+    */
   handleSubmit = () => {
     const { days } = this.state;
-    const filtered = filterDeep(days, (value, key, parent) => {
-      console.log(key);
-      console.log(value);
-      if (key == "id" && value === PLACEHOLDER_ID) {
-        return false;
-      } else {
-        return true;
-      }
-    });
-    console.log(filtered);
+    const filteredDays = days.filter((day) => {
+      return day.id !== PLACEHOLDER_ID;
+    })
+    filteredDays.forEach(day => {
+      const {sessions} = day;
+      const filteredSessions = sessions.filter(session => {
+        return session.id !== PLACEHOLDER_ID
+      })
+      filteredSessions.forEach(session => {
+        const {measurements,files} = session;
+        const filteredMeasurements = measurements.filter((item) => {
+          if(item.id !== PLACEHOLDER_ID_MEASUREMENT) {
+            item.key = item.label;
+            delete item.id;
+            delete item.label;
+            item.is_required = !!item.is_required;
+            return true;
+          }
+          return false;
+        })
+        const filteredFiles = files.filter((item) => {
+          if(item.id !== PLACEHOLDER_ID_FILE) {
+            item.key = item.label;
+            delete item.id;
+            delete item.label;
+            return true;
+          }
+          return false;
+        })
+        delete session.id
+        session.type = "session";
+        session.measurements = filteredMeasurements;
+        session.files = filteredFiles;
+      })
+      delete day.id
+      day.type = "day";
+      day.sessions = filteredSessions;
+    })
+    const payload = {
+      data: filteredDays,
+      label: "curriculum_one",
+      type: "curriculum"
+    };
+    api.saveCurriculum(payload).then((response) => {
+
+    })
   };
+
   render() {
     const { classes, ...props } = this.props;
     const { days } = this.state;
@@ -390,6 +422,120 @@ class Cirriculum extends Component {
       </div>
     );
   }
+
+  renderMeasurements = (measurements, sessionId, dayId) => {
+    const {measurementOptions} = this.state;
+    return measurements.map((item, index) => {
+      return item.id === PLACEHOLDER_ID_MEASUREMENT ? (
+        <PlaceholderItem
+          key={index}
+          inputType={INPUT_TYPE.DROPDOWN}
+          onInputChange={selected =>
+            this.handleAddMeasurementInputChange(sessionId, dayId, selected)
+          }
+          title="+ Add Measurement"
+          style={{ marginLeft: "20px" }}
+          options={this.state.measurementOptions}
+        />
+      ) : (
+        <div key={index} className={this.props.classes.item_margin}>
+          <span>{`${index + 1}. `}</span>
+          <span className={this.props.classes.label_title}>
+            {find(measurementOptions,{value : item.label}).label}
+            <a
+              className={this.props.classes.delete_wrapper}
+            >
+              <DeleteIcon onClick={() => this.handleDelete(item.id)} className={this.props.classes.delete_icon} />
+              <FlareIcon onClick={() => this.handleSetCompulsory(item.id)}  className={this.props.classes.compulsory_icon}/>
+            </a>
+          </span>
+        </div>
+      );
+    });
+  };
+
+  renderFiles = (files,sessionId, dayId) => {
+    const {fileOptions} = this.state;
+    return files.map((item,index) => {
+      return item.id === PLACEHOLDER_ID_FILE ? (
+        <PlaceholderItem
+          key={index}
+          inputType={INPUT_TYPE.DROPDOWN}
+          onInputChange={selected =>
+            this.handleAddFileInputChange(sessionId, dayId, selected)
+          }
+          title="+ Add File"
+          style={{ marginLeft: "20px" }}
+          options={this.state.fileOptions}
+        />
+      ) :
+      (
+        <div key={index} className={this.props.classes.item_margin}>
+          <span>{`${index + 1}. `}</span>
+          <span className={this.props.classes.label_title}>
+            {find((fileOptions),{value : item.label}).label}
+            <a
+              className={this.props.classes.delete_wrapper}
+              onClick={() => this.handleDelete(item.id)}
+            >
+              <DeleteIcon className={this.props.classes.delete_icon} />
+              <DeleteIcon className={this.props.classes.delete_icon} />
+            </a>
+          </span>
+        </div>
+      );
+    })
+  }
+
+  renderSessions = (sessions, dayId) => {
+    return sessions.map((session, index) => {
+      return session.id === PLACEHOLDER_ID ? (
+        <PlaceholderItem
+          key={index}
+          inputType={INPUT_TYPE.CREATABLE_DROPDOWN}
+          onInputChange={selected => this.handleAddSessionOptionSelected(dayId,selected)}
+          onCreateOption={(value) => {this.handleSessionCreateOption(value,dayId)}}
+          title="+ Add Session"
+          style={{ marginLeft: "10px" }}
+          inputPlaceholderText="Enter Session Title"
+          options={this.state.sessionOptions}
+        />
+      ) : (
+        <div key={index} className={this.props.classes.item_margin}>
+          <span className={this.props.classes.label_title}>
+            {session.label}
+            <a
+              className={this.props.classes.delete_wrapper}
+              onClick={() => this.handleDelete(session.id)}
+            >
+              <DeleteIcon className={this.props.classes.delete_icon} />
+            </a>
+          </span>
+          {this.renderMeasurements(session.measurements,session.id,dayId)}
+          {this.renderFiles(session.files,session.id,dayId)}
+        </div>
+      );
+    });
+  };
+
+  renderDays = (day, index) => {
+    return (
+      <div key={index} style={{ marginBottom: "8px" }}>
+        {/* <CardContent> */}
+        <span className={this.props.classes.label_title}>
+          {day.label}
+          <a
+            className={this.props.classes.delete_wrapper}
+            onClick={() => this.handleDelete(day.id)}
+          >
+            <DeleteIcon className={this.props.classes.delete_icon} />
+          </a>
+        </span>
+        {this.renderSessions(day.sessions, day.id)}
+        {/* </CardContent> */}
+      </div>
+    );
+  };
 }
 
 export default withStyles(styles)(Cirriculum);

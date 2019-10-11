@@ -53,7 +53,7 @@ class Session extends Component {
           value: option.key
         };
       });
-      this.setState({ fileOptions: sanitizedOptions });
+      this.setState({ fileOptions: sanitizedOptions, filesData : data });
     });
     api.getMeasurementDropdownOptionsForNgo(ngoKey).then(({ data }) => {
       const sanitizedOptions = data.map(option => {
@@ -76,7 +76,7 @@ class Session extends Component {
     const updatedSessionItems = session.items;
     const index = updatedSessionItems.length;
     updatedSessionItems.splice(index - 1, 1, {
-      label: sessionItem.value,
+      key: sessionItem.value,
       id: randomId(),
       type: itemType
     });
@@ -149,7 +149,7 @@ class Session extends Component {
           <span className={this.props.classes.label_title}>
             {
               find(measurementOptions.concat(fileOptions), {
-                value: item.label
+                value: item.key
               }).label
             }
           </span>
@@ -169,7 +169,9 @@ class Session extends Component {
 
   handleSubmit = () => {
     const {
-      session: { items }
+      session: { items },
+      filesData,
+      sessionName
     } = this.state;
     /**
      * filter the placeholders
@@ -183,7 +185,11 @@ class Session extends Component {
       .map(item => {
         delete item.type;
         delete item.id;
-        return item;
+        const selectedFile = find(filesData,{key:item.key});
+        const {data,label,key} = selectedFile;
+        return {
+          data,label,key
+        }
       });
 
     const measurements = items
@@ -200,7 +206,7 @@ class Session extends Component {
     console.log({ files, measurements });
     const payload = {
       data: { files, measurements },
-      label: "session_one",
+      label: sessionName,
       type: "session"
     };
     api.saveSession(payload).then(response => {
@@ -238,6 +244,7 @@ class Session extends Component {
             <Input
               style={{ width: "200px", marginBottom: "24px" }}
               placeholder="Session Name"
+              onChange={({target : {value}}) => {this.setState({sessionName:value})}}
             />
             {this.renderSessionItems(session.items, session.id)}
           </CardContent>
