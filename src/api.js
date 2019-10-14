@@ -167,6 +167,10 @@ const saveCurriculum = data => {
   return axios.post("resources/", data);
 }
 
+const getResource = key => {
+  return axios.get(`/resources/${key}`);
+}
+
 const api = {
   handleSuccess,
   handleError,
@@ -194,7 +198,8 @@ const api = {
   getFileDropdownOptionsForNgo,
   saveSession,
   getSessionsForNgo,
-  saveCurriculum
+  saveCurriculum,
+  getResource
 };
 
 export default api;

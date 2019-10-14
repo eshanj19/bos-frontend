@@ -20,21 +20,51 @@ import {
   BooleanField,
   Datagrid,
   DateField,
-  EditButton,
+  ShowButton,
   List,
   TextField,
   Responsive,
   BooleanInput,
   SearchInput,
-  Filter
+  Filter,
+  DatagridBody,
+  
+  
 } from "react-admin";
-import {Menu,MenuItem,Fade,Button} from '@material-ui/core';
+import { Menu, MenuItem, Fade, Button,TableCell,TableRow,Checkbox } from "@material-ui/core";
 import withStyles from "@material-ui/core/styles/withStyles";
 import { RESOURCE_TYPES } from "../utils";
 
 const styles = {
   nb_commands: { color: "purple" }
 };
+
+const DatagridRow = ({ record, resource, id, onToggleItem, children, selected, basePath, ...props }) => (
+  <TableRow key={id}>
+    <TableCell padding="none">
+            {record.status !== 'pending' && <Checkbox
+                checked={selected}
+                onClick={() => onToggleItem(id)}
+            />}
+        </TableCell>
+      {/* data columns based on children */}
+      {React.Children.map(children, field => (
+          <TableCell key={`${id}-${field.props.source}`}>
+              {React.cloneElement(field, {
+                  record,
+                  basePath,
+                  resource,
+              })}
+          </TableCell>
+      ))}
+      <TableCell>
+        <Button onClick={() => 
+          {props.history.push({ pathname: `/resources/edit/${record.type}/${record.key}` })}}>
+        Edit
+        </Button>
+      </TableCell>
+  </TableRow>
+)
 
 const ResourceFilter = props => (
   <Filter {...props}>
@@ -52,14 +82,17 @@ const CreateActions = props => {
   const handleClose = () => {
     setAnchorEl(null);
   };
-  const handleMenuSelect = (item) => {
-    console.log(props);
-    props.history.push({pathname:`/resources/create/${item}`,
-      state:{type : RESOURCE_TYPES.CIRRICULUM}});
-  }
-  return(
+  const handleMenuSelect = item => {
+    props.history.push({ pathname: `/resources/create/${item}` });
+  };
+  return (
     <>
-      <Button color="primary" aria-controls="fade-menu" aria-haspopup="true" onClick={handleClick}>
+      <Button
+        color="primary"
+        aria-controls="fade-menu"
+        aria-haspopup="true"
+        onClick={handleClick}
+      >
         Create
       </Button>
       <Menu
@@ -70,13 +103,20 @@ const CreateActions = props => {
         onClose={handleClose}
         TransitionComponent={Fade}
       >
-        <MenuItem onClick={() => handleMenuSelect('curriculum')}>Curriculum</MenuItem>
-        <MenuItem onClick={() => handleMenuSelect('session')}>Session</MenuItem>
-        <MenuItem onClick={() => handleMenuSelect('curriculum')}>Video</MenuItem>
+        <MenuItem onClick={() => handleMenuSelect("curriculum")}>
+          Curriculum
+        </MenuItem>
+        <MenuItem onClick={() => handleMenuSelect("session")}>Session</MenuItem>
+        <MenuItem onClick={() => handleMenuSelect("curriculum")}>
+          Video
+        </MenuItem>
       </Menu>
     </>
-  )
-}
+  );
+};
+
+const BosDatagridBody = (props) => <DatagridBody {...props} row={<DatagridRow {...props}/>}/>
+const BosDatagrid = (props) => <Datagrid {...props} body={<BosDatagridBody {...props}/>}/>
 
 const ResourcesList = ({ classes, ...props }) => (
   <List
@@ -85,23 +125,32 @@ const ResourcesList = ({ classes, ...props }) => (
     perPage={25}
     filters={<ResourceFilter />}
     filterDefaultValues={{ is_active: true }}
-    actions={<CreateActions {...props}/>}
+    actions={<CreateActions {...props} />}
   >
-    <Responsive
+    {/* <Responsive
       medium={
-        <Datagrid>
-          <TextField source="label" type="text" />
-          <DateField label="Created on" source="creation_time" showTime />
-          <DateField
-            label="Modified on"
-            source="last_modification_time"
-            showTime
-          />
-          <BooleanField source="is_active" label="Active?" />
-          <EditButton />
-        </Datagrid>
+        <Datagrid
+          {...props}
+          body={
+            <DatagridBody
+              {...props}
+              row={<DatagridRow {...props}/>}
+            />
+          }
+        ></Datagrid>
       }
-    />
+    /> */}
+    <BosDatagrid {...props}>
+      <TextField source="label" type="text" />
+        <DateField label="Created on" source="creation_time" showTime />
+        <DateField
+          label="Modified on"
+          source="last_modification_time"
+          showTime
+        />
+        <BooleanField source="is_active" label="Active?" />
+        <ShowButton />
+    </BosDatagrid>
   </List>
 );
 

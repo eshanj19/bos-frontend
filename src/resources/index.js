@@ -20,9 +20,11 @@ import ResourceIcon from "@material-ui/icons/People";
 import ResourceList from "./ResourceList";
 // import ResourceCreate from "./ResourceCreate";
 import ResourceEdit from "./ResourceEdit";
+import ResourceShow from "./ResourceShow";
 
 export default {
   list: ResourceList,
+  show : ResourceShow,
   // create: ResourceCreate,
   edit: ResourceEdit,
   icon: ResourceIcon

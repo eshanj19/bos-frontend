@@ -19,23 +19,25 @@ import React from "react";
 import { Edit, BooleanInput, SimpleForm, TextInput } from "react-admin";
 import withStyles from "@material-ui/core/styles/withStyles";
 
-import { styles } from "./create/Curriculum";
+import { styles } from "./common/Curriculum";
 
-const ResourceEdit = ({ classes, ...props }) => (
-  <Edit {...props}>
-    <SimpleForm>
-      <TextInput source="first_name" formClassName={classes.first_name} />
-      <TextInput source="last_name" formClassName={classes.last_name} />
-      <BooleanInput source="is_active" formClassName={classes.is_active} />
-      <TextInput
-        type="email"
-        source="email"
-        validation={{ email: true }}
-        fullWidth={true}
-        formClassName={classes.email}
-      />
-    </SimpleForm>
-  </Edit>
-);
+const ResourceEdit = ({ classes, ...props }) => {
+  return (
+    <Edit {...props}>
+      <SimpleForm>
+        <TextInput source="first_name" formClassName={classes.first_name} />
+        <TextInput source="last_name" formClassName={classes.last_name} />
+        <BooleanInput source="is_active" formClassName={classes.is_active} />
+        <TextInput
+          type="email"
+          source="email"
+          validation={{ email: true }}
+          fullWidth={true}
+          formClassName={classes.email}
+        />
+      </SimpleForm>
+    </Edit>
+  );
+};
 
 export default withStyles(styles)(ResourceEdit);

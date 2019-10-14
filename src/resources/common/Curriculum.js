@@ -1,16 +1,17 @@
 import React, { Component } from "react";
 import { withRouter } from "react-router-dom";
 import withStyles from "@material-ui/core/styles/withStyles";
-import { Card, CardContent, Button, Input } from "@material-ui/core";
+import { Card, CardContent, Button, Input,Snackbar } from "@material-ui/core";
 import findIndex from "lodash/findIndex";
 import find from "lodash/find";
 import uniqueId from "lodash/uniqueId";
 import filterDeep from "deepdash/filterDeep";
-import PlaceholderItem from "./PlaceholderItem";
+import PlaceholderItem from "../create/PlaceholderItem";
 import { RESOURCE_ITEMS, INPUT_TYPE } from "../../utils";
 import api from "../../api";
 import DeleteIcon from "@material-ui/icons/Clear";
 import FlareIcon from '@material-ui/icons/Flare';
+import { withSnackbar } from "notistack";
 
 export const styles = {
   first_name: { display: "inline-block" },
@@ -68,7 +69,7 @@ const PLACEHOLDER_SESSIONS = {
   files: []
 };
 
-class Cirriculum extends Component {
+class Curriculum extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -78,6 +79,7 @@ class Cirriculum extends Component {
     };
   }
   componentDidMount() {
+    const {initialData} = this.props;
     const ngoKey = localStorage.getItem("ngo_key");
     api.getFileDropdownOptionsForNgo(ngoKey).then(({ data }) => {
       const sanitizedOptions = data.map(option => {
@@ -106,6 +108,7 @@ class Cirriculum extends Component {
       })
       this.setState({sessionOptions : sanitizedOptions});
     })
+    if(initialData) this.setState({days : initialData});
   }
 
   /**
@@ -328,8 +331,8 @@ class Cirriculum extends Component {
    /**
     * submit data to server.
     */
-  handleSubmit = () => {
-    const { days } = this.state;
+  processPostData = () => {
+    const { days,curriculumName } = this.state;
     const filteredDays = days.filter((day) => {
       return day.id !== PLACEHOLDER_ID;
     })
@@ -344,7 +347,7 @@ class Cirriculum extends Component {
           if(item.id !== PLACEHOLDER_ID_MEASUREMENT) {
             item.key = item.label;
             delete item.id;
-            delete item.label;
+            // delete item.label;
             item.is_required = !!item.is_required;
             return true;
           }
@@ -354,7 +357,7 @@ class Cirriculum extends Component {
           if(item.id !== PLACEHOLDER_ID_FILE) {
             item.key = item.label;
             delete item.id;
-            delete item.label;
+            // delete item.label;
             return true;
           }
           return false;
@@ -368,31 +371,43 @@ class Cirriculum extends Component {
       day.type = "day";
       day.sessions = filteredSessions;
     })
+    return filteredDays;
+  }
+  handleSubmit = (is_submitting) => {
+    const { days,curriculumName } = this.state;
+    const filteredDays = this.processPostData();
     const payload = {
       data: filteredDays,
-      label: "curriculum_one",
-      type: "curriculum"
+      label: curriculumName,
+      type: "curriculum",
+      is_submitting
     };
     api.saveCurriculum(payload).then((response) => {
-
+      api.handleSuccess(response, this.props.enqueueSnackbar);
+      this.props.history.push(this.props.basePath);
+    }).catch(error => {
+      api.handleError(error.response, this.props.enqueueSnackbar);
     })
   };
+  handleSave = () => {
+    this.handleSubmit(false);
+  }
 
   render() {
-    const { classes, ...props } = this.props;
+    const { classes,initialData, ...props } = this.props;
     const { days } = this.state;
     console.log({ state: this.state.days });
     return (
       <div className={classes.root}>
         <div className={classes.header_wrapper}>
           <div>
-            <h3>Create Curriculum</h3>
+            <h3>{initialData ? 'Edit' : 'Create'} Curriculum</h3>
           </div>
           <div>
-            <Button contained="true" color="primary">
+            <Button onClick={this.handleSave} contained="true" color="primary">
               Save
             </Button>
-            <Button onClick={this.handleSubmit} color="primary">
+            <Button onClick={() => this.handleSubmit(true)} color="primary">
               Submit
             </Button>
           </div>
@@ -402,6 +417,7 @@ class Cirriculum extends Component {
             <Input
               style={{ width: "200px", marginBottom: "24px" }}
               placeholder="Curriculum Name"
+              onChange={({target : {value}}) => {this.setState({curriculumName:value})}}
             />
             {days.map((day, index) => {
               return day.id === PLACEHOLDER_ID ? (
@@ -441,7 +457,8 @@ class Cirriculum extends Component {
         <div key={index} className={this.props.classes.item_margin}>
           <span>{`${index + 1}. `}</span>
           <span className={this.props.classes.label_title}>
-            {find(measurementOptions,{value : item.label}).label}
+            {find(measurementOptions,{value : item.label}) ?
+            find(measurementOptions,{value : item.label}).label : ''}
             <a
               className={this.props.classes.delete_wrapper}
             >
@@ -473,7 +490,8 @@ class Cirriculum extends Component {
         <div key={index} className={this.props.classes.item_margin}>
           <span>{`${index + 1}. `}</span>
           <span className={this.props.classes.label_title}>
-            {find((fileOptions),{value : item.label}).label}
+            {find((fileOptions),{value : item.label}) ? 
+            find((fileOptions),{value : item.label}).label : ''}
             <a
               className={this.props.classes.delete_wrapper}
               onClick={() => this.handleDelete(item.id)}
@@ -538,4 +556,4 @@ class Cirriculum extends Component {
   };
 }
 
-export default withStyles(styles)(Cirriculum);
+export default withSnackbar(withStyles(styles)(Curriculum));

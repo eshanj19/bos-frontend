@@ -5,7 +5,7 @@ import { Card, CardContent, Button, Input } from "@material-ui/core";
 import find from "lodash/find";
 import uniqueId from "lodash/uniqueId";
 import filterDeep from "deepdash/filterDeep";
-import PlaceholderItem from "./PlaceholderItem";
+import PlaceholderItem from "../create/PlaceholderItem";
 import { RESOURCE_ITEMS, RESOURCE_TYPES, INPUT_TYPE } from "../../utils";
 import api from "../../api";
 
