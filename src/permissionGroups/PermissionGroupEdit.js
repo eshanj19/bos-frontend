@@ -122,7 +122,7 @@ class PermissionGroupEdit extends Component {
           handleCheckbox={this.handleCheckbox}
           {...props}
         />
-        <Button onClick={this.handleSaveButton} value="Save" />
+        <Button onClick={this.handleSaveButton}>Save</Button>
       </Paper>
     );
   }

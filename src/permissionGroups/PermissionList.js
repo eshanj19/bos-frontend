@@ -20,6 +20,8 @@ import { styles } from "./PermissionGroupCreate";
 import { Checkbox, FormControlLabel, Grid } from "@material-ui/core";
 
 import React, { Component } from "react";
+import { USER } from "../authSchema";
+import find from 'lodash/find';
 
 class PermissionList extends Component {
   constructor(props) {
@@ -31,7 +33,11 @@ class PermissionList extends Component {
   };
 
   render() {
-    var { currentGroupPermissions, classes } = this.props;
+    const { currentGroupPermissions, classes } = this.props;
+    const userPermissions = currentGroupPermissions.filter((permission) => {
+      return USER.indexOf(permission.codename) > -1;
+    })
+    console.log(userPermissions);
     if (!currentGroupPermissions) {
       currentGroupPermissions = [];
     }

@@ -4,10 +4,11 @@ import withStyles from "@material-ui/core/styles/withStyles";
 import { Card, CardContent, Button, Input } from "@material-ui/core";
 import find from "lodash/find";
 import uniqueId from "lodash/uniqueId";
-import filterDeep from "deepdash/filterDeep";
+import findIndex from "lodash/findIndex";
 import PlaceholderItem from "../create/PlaceholderItem";
 import { RESOURCE_ITEMS, RESOURCE_TYPES, INPUT_TYPE } from "../../utils";
 import api from "../../api";
+import DeleteIcon from "@material-ui/icons/Clear";
 
 export const styles = {
   first_name: { display: "inline-block" },
@@ -16,7 +17,15 @@ export const styles = {
   is_active: { display: "inline-block" },
   resource_canvas: { height: "100%" },
   label_title: { fontSize: "1rem" },
-  item_margin: { marginTop: "10px", marginBottom: "10px", marginLeft: "20px" }
+  item_margin: { marginTop: "10px", marginBottom: "10px", marginLeft: "20px" },
+  delete_icon: {
+    fontSize: "14px",
+    // position: "absolute",
+    left : '8px',
+    top: "4px",
+    cursor: "pointer"
+  },
+  delete_wrapper: { position: "relative" }
 };
 
 const randomId = () => {
@@ -116,62 +125,13 @@ class Session extends Component {
     );
   };
 
-  renderSessionItems = (items, sessionId) => {
-    const { measurementOptions, fileOptions } = this.state;
-    return items.map((item, index) => {
-      return item.id === PLACEHOLDER_ID ? (
-        <div key={uniqueId()}>
-          <PlaceholderItem
-            inputType={INPUT_TYPE.DROPDOWN}
-            onInputChange={selected =>
-              this.handleAddMeasurementInputChange(sessionId, selected)
-            }
-            title="+ Add Measurement"
-            inputPlaceholderText="Enter Item Title"
-            style={{
-              marginTop: "10px",
-              marginBottom: "10px"
-            }}
-            options={this.state.measurementOptions}
-          />
-          <PlaceholderItem
-            inputType={INPUT_TYPE.DROPDOWN}
-            onInputChange={selected =>
-              this.handleAddFileInputChange(sessionId, selected)
-            }
-            title="+ Add File"
-            inputPlaceholderText="Enter Item Title"
-            style={{
-              marginTop: "10px",
-              marginBottom: "10px"
-            }}
-            options={this.state.fileOptions}
-          />
-        </div>
-      ) : (
-        <div key={uniqueId()} className={this.props.classes.item_margin}>
-          <span className={this.props.classes.label_title}>
-            {
-              find(measurementOptions.concat(fileOptions), {
-                value: item.key
-              }) ? find(measurementOptions.concat(fileOptions), {
-                value: item.key
-              }).label : ''
-            }
-          </span>
-        </div>
-      );
-    });
-  };
-
-  renderSessions = (session, index) => {
-    return (
-      <div key={index} style={{ marginBottom: "8px", overflow: "initial" }}>
-        <span className={this.props.classes.label_title}>{session.label}</span>
-        {this.renderSessionItems(session.items, session.id)}
-      </div>
-    );
-  };
+  handleDelete = (id) => {
+    const {items} = this.state.session;
+    const i = findIndex(items,{id});
+    if(i > -1) items.splice(i,1);
+    const session = {items};
+    this.setState({session});
+  }
 
   handleSave = () => {
     this.handleSubmit(false);
@@ -263,6 +223,66 @@ class Session extends Component {
       </div>
     );
   }
+
+  renderSessionItems = (items, sessionId) => {
+    const { measurementOptions, fileOptions } = this.state;
+    return items.map((item, index) => {
+      return item.id === PLACEHOLDER_ID ? (
+        <div key={uniqueId()}>
+          <PlaceholderItem
+            inputType={INPUT_TYPE.DROPDOWN}
+            onInputChange={selected =>
+              this.handleAddMeasurementInputChange(sessionId, selected)
+            }
+            title="+ Add Measurement"
+            inputPlaceholderText="Enter Item Title"
+            style={{
+              marginTop: "10px",
+              marginBottom: "10px"
+            }}
+            options={this.state.measurementOptions}
+          />
+          <PlaceholderItem
+            inputType={INPUT_TYPE.DROPDOWN}
+            onInputChange={selected =>
+              this.handleAddFileInputChange(sessionId, selected)
+            }
+            title="+ Add File"
+            inputPlaceholderText="Enter Item Title"
+            style={{
+              marginTop: "10px",
+              marginBottom: "10px"
+            }}
+            options={this.state.fileOptions}
+          />
+        </div>
+      ) : (
+        <div key={uniqueId()} className={this.props.classes.item_margin}>
+          <span className={this.props.classes.label_title}>
+            {
+              find(measurementOptions.concat(fileOptions), {
+                value: item.key
+              }) ? find(measurementOptions.concat(fileOptions), {
+                value: item.key
+              }).label : ''
+            }
+          </span>
+          <span>
+            <DeleteIcon onClick={() => this.handleDelete(item.id)} className={this.props.classes.delete_icon} />
+          </span>
+        </div>
+      );
+    });
+  };
+
+  renderSessions = (session, index) => {
+    return (
+      <div key={index} style={{ marginBottom: "8px", overflow: "initial" }}>
+        <span className={this.props.classes.label_title}>{session.label}</span>
+        {this.renderSessionItems(session.items, session.id)}
+      </div>
+    );
+  };
 }
 
 export default withStyles(styles)(Session);

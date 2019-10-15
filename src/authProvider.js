@@ -67,105 +67,27 @@ export default async (type, params) => {
   if (type === AUTH_GET_PERMISSIONS) {
     let permissions = localStorage.getItem("permissions").split(",");
     // console.log(permissions);
-    var authPermissions = {};
+    const authPermissions = {};
+    const init = {
+      enabled: false,
+      show: false,
+      list: false,
+      create: false,
+      edit: false,
+      delete: false
+    }
     // measurements
-    var users = {
-      enabled: false,
-      show: false,
-      list: false,
-      create: false,
-      edit: false,
-      delete: false
-    };
-
-    var admins = {
-      enabled: false,
-      show: false,
-      list: false,
-      create: false,
-      edit: false,
-      delete: false
-    };
-
-    var measurements = {
-      enabled: false,
-      show: false,
-      list: false,
-      create: false,
-      edit: false,
-      delete: false
-    };
-    var ngos = {
-      enabled: false,
-      show: false,
-      list: false,
-      create: false,
-      edit: false,
-      delete: false
-    };
-
-    var athletes = {
-      enabled: false,
-      show: false,
-      list: false,
-      create: false,
-      edit: false,
-      delete: false
-    };
-
-    var coaches = {
-      enabled: false,
-      show: false,
-      list: false,
-      create: false,
-      edit: false,
-      delete: false
-    };
-
-    var curriculums = {
-      enabled: false,
-      show: false,
-      list: false,
-      create: false,
-      edit: false,
-      delete: false
-    };
-
-    var files = {
-      enabled: false,
-      show: false,
-      list: false,
-      create: false,
-      edit: false,
-      delete: false
-    };
-
-    var measurementTypes = {
-      enabled: false,
-      show: false,
-      list: false,
-      create: false,
-      edit: false,
-      delete: false
-    };
-
-    var permission_groups = {
-      enabled: false,
-      show: false,
-      list: false,
-      create: false,
-      edit: false,
-      delete: false
-    };
-
-    var resources = {
-      enabled: false,
-      show: false,
-      list: false,
-      create: false,
-      edit: false,
-      delete: false
-    };
+    const users = {...init};
+    const admins = {...init};
+    const measurements = {...init};
+    const ngos = {...init};
+    const athletes = {...init};
+    const coaches = {...init};
+    const curriculums = {...init};
+    const files = {...init};
+    const measurementTypes = {...init};
+    const permission_groups = {...init};
+    const resources = {...init};
 
     if (checkPermission(permissions, "measurements.view_measurement")) {
       measurements["show"] = true;
