@@ -15,7 +15,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import React from "react";
+import React, { Component } from "react";
+import withStyles from "@material-ui/core/styles/withStyles";
+import { Card, CardContent, Grid } from "@material-ui/core";
 import {
   Create,
   SelectArrayInput,
@@ -24,16 +26,38 @@ import {
   SimpleForm,
   BooleanInput
 } from "react-admin";
-import withStyles from "@material-ui/core/styles/withStyles";
 
 export const styles = {
   label: { display: "block" },
   uom: { display: "block" },
   type: { display: "block" },
-  is_active: { display: "block" }
+  is_active: { display: "block" },
+  paper: {
+    margin: 20,
+    textAlign: "center"
+  },
+  checkbox: {
+    marginLeft: 10,
+    textAlign: "center"
+  }
 };
 
-export const validateMeasurementCreation = values => {
+// class UserGroupCreate extends Component {
+//   render() {
+//     const { classes, ...props } = this.props;
+//     return (
+//       <div className={classes.root}>
+//         <Grid container direction="row" justify="center" alignItems="center">
+//           <Card className={classes.card}>
+//             <CardContent></CardContent>
+//           </Card>
+//         </Grid>
+//       </div>
+//     );
+//   }
+// }
+
+export const validateUserGroupCreation = values => {
   const errors = {};
   if (!values.label) {
     errors.label = ["Required"];
@@ -47,20 +71,18 @@ export const validateMeasurementCreation = values => {
   return errors;
 };
 
-const MeasurementCreate = ({ classes, ...props }) => (
+const UserGroupCreate = ({ classes, ...props }) => (
   <Create {...props}>
-    <SimpleForm redirect="list" validate={validateMeasurementCreation}>
+    <SimpleForm redirect="list" validate={validateUserGroupCreation}>
       <TextInput autoFocus source="label" formClassName={classes.label} />
-      <TextInput source="uom" formClassName={classes.uom} />
-      <TextInput source="input_type" formClassName={classes.input_type} />
       <ReferenceArrayInput
         formClassName={classes.type}
-        label="Measurement Type"
-        source="types"
+        label="Users"
+        source="users"
         filter={{ is_active: true }}
-        reference="measurement_types"
+        reference="coaches"
       >
-        <SelectArrayInput optionText="label" />
+        <SelectArrayInput optionText="first_name" />
       </ReferenceArrayInput>
       <BooleanInput
         source="is_active"
@@ -70,5 +92,4 @@ const MeasurementCreate = ({ classes, ...props }) => (
     </SimpleForm>
   </Create>
 );
-
-export default withStyles(styles)(MeasurementCreate);
+export default withStyles(styles)(UserGroupCreate);

@@ -158,6 +158,15 @@ export default async (type, params) => {
       delete: false
     };
 
+    var user_groups = {
+      enabled: false,
+      show: false,
+      list: false,
+      create: false,
+      edit: false,
+      delete: false
+    };
+
     var resources = {
       enabled: false,
       show: false,
@@ -316,6 +325,25 @@ export default async (type, params) => {
       athletes["enabled"] = true;
     }
     authPermissions["athletes"] = athletes;
+
+    if (checkPermission(permissions, "users.view_user")) {
+      user_groups["show"] = true;
+      user_groups["list"] = true;
+      user_groups["enabled"] = true;
+    }
+    if (checkPermission(permissions, "users.add_user")) {
+      user_groups["create"] = true;
+      user_groups["enabled"] = true;
+    }
+    if (checkPermission(permissions, "users.change_user")) {
+      user_groups["edit"] = true;
+      user_groups["enabled"] = true;
+    }
+    if (checkPermission(permissions, "users.delete_user")) {
+      user_groups["delete"] = true;
+      user_groups["enabled"] = true;
+    }
+    authPermissions["user_groups"] = user_groups;
 
     // TODO permissions
     if (checkPermission(permissions, "users.view_user")) {
