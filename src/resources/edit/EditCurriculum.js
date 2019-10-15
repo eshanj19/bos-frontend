@@ -2,7 +2,6 @@ import React, { useEffect,useState } from 'react';
 import Curriculum from '../common/Curriculum';
 import api from '../../api';
 import uniqueId from 'lodash/uniqueId';
-import axios from 'axios';
 
 export default function EditCurriculum(props) {
   const [initialData, setInitialData] = useState(null);
@@ -12,7 +11,6 @@ export default function EditCurriculum(props) {
      * make do server curriculum data to represent 
      * internal data state
      */
-    const ngoKey = localStorage.getItem("ngo_key");
     // axios.all([api.getFileDropdownOptionsForNgo(ngoKey),api.getMeasurementDropdownOptionsForNgo(ngoKey)])
     //   .then(axios.spread((fileMaster,measurementMaster) => {
         
