@@ -1,42 +1,31 @@
 import React from "react";
 import {
   Edit,
-  SelectInput,
-  ReferenceInput,
+  SelectArrayInput,
+  ReferenceArrayInput,
   TextInput,
   SimpleForm,
   BooleanInput
 } from "react-admin";
 import withStyles from "@material-ui/core/styles/withStyles";
 
-import { styles } from "./MeasurementCreate";
-import { required } from "ra-core";
+import { styles, validateMeasurementCreation } from "./MeasurementCreate";
 
 const MeasurementEdit = ({ classes, ...props }) => (
   <Edit title="Measurement Edit" {...props}>
-    <SimpleForm>
-      <TextInput
-        autoFocus
-        source="label"
-        formClassName={classes.label}
-        validate={required()}
-      />
+    <SimpleForm validate={validateMeasurementCreation}>
+      <TextInput autoFocus source="label" formClassName={classes.label} />
       <TextInput source="uom" formClassName={classes.uom} />
-      <TextInput
-        source="input_type"
-        formClassName={classes.input_type}
-        validate={required()}
-      />
-      <ReferenceInput
+      <TextInput source="input_type" formClassName={classes.input_type} />
+      <ReferenceArrayInput
         formClassName={classes.type}
         label="Measurement Type"
-        source="type"
+        source="types"
         filter={{ is_active: true }}
         reference="measurement_types"
-        validate={required()}
       >
-        <SelectInput optionText="label" />
-      </ReferenceInput>
+        <SelectArrayInput optionText="label" />
+      </ReferenceArrayInput>
       <BooleanInput
         source="is_active"
         formClassName={classes.is_active}
