@@ -21,8 +21,7 @@ export const styles = {
   delete_icon: {
     fontSize: "14px",
     // position: "absolute",
-    left : '8px',
-    top: "4px",
+    marginTop : "8px",
     cursor: "pointer"
   },
   delete_wrapper: { position: "relative" }
@@ -57,7 +56,7 @@ class Session extends Component {
   componentDidMount() {
     console.log(this.props);
     const ngoKey = localStorage.getItem("ngo_key");
-    const {initialData} = this.props;
+    const {initialData,sessionName} = this.props;
     api.getFileDropdownOptionsForNgo(ngoKey).then(({ data }) => {
       const sanitizedOptions = data.map(option => {
         return {
@@ -76,7 +75,11 @@ class Session extends Component {
       });
       this.setState({ measurementOptions: sanitizedOptions });
     });
-    if(initialData) this.setState({session : initialData});
+    if(initialData && sessionName) {
+      console.log(sessionName);
+      this.setState({sessionName : sessionName});
+      this.setState({session : initialData});
+    }
   }
 
   handleAddSessionItemInputChange = ({ target }) => {
@@ -215,6 +218,7 @@ class Session extends Component {
             <Input
               style={{ width: "200px", marginBottom: "24px" }}
               placeholder="Session Name"
+              value={this.state.sessionName || ''}
               onChange={({target : {value}}) => {this.setState({sessionName:value})}}
             />
             {this.renderSessionItems(session.items, session.id)}

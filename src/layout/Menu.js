@@ -31,6 +31,7 @@ import {
 
 import SubMenu from "./SubMenu";
 import admins from "../admins";
+import userGroups from "../userGroups";
 import measurements from "../measurements";
 import resources from "../resources";
 import measurementTypes from "../measurementTypes";
@@ -118,6 +119,14 @@ class Menu extends Component {
                       onClick={onMenuClick}
                     />
                   )}
+                  {hasAccess(permissions, "users.enabled") && (
+                    <MenuItemLink
+                      to={`/user_groups`}
+                      primaryText={"User Groups"}
+                      leftIcon={<userGroups.icon />}
+                      onClick={onMenuClick}
+                    />
+                  )}
                 </SubMenu>
               );
             } else {
@@ -134,7 +143,7 @@ class Menu extends Component {
                 <MenuItemLink
                   to={`/resources`}
                   primaryText={"Resources"}
-                  leftIcon={<measurements.icon />}
+                  leftIcon={<resources.icon />}
                   onClick={onMenuClick}
                 />
               );

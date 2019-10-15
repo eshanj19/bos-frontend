@@ -31,6 +31,7 @@ import drfProvider from "./dataProvider";
 import resources from "./resources";
 import coaches from "./coaches";
 import admins from "./admins";
+import userGroups from "./userGroups";
 import permissionGroups from "./permissionGroups";
 import measurements from "./measurements";
 import athletes from "./athletes";
@@ -113,6 +114,11 @@ class App extends Component {
             name="coaches"
             permissions={permissions}
             {...coaches}
+          />,
+          <ResourceWithPermissions
+            name="user_groups"
+            permissions={permissions}
+            {...userGroups}
           />
         ]}
       </Admin>
