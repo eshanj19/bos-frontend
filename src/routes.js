@@ -6,11 +6,12 @@ import Curriculum from "./resources/common/Curriculum";
 import CreateCurriculum from "./resources/create/CreateCurriculum";
 import Session from "./resources/common/Session";
 import EditCurriculum from "./resources/edit/EditCurriculum";
+import EditSession from "./resources/edit/EditSession";
 
 export default [
   <Route exact path="/configuration" component={Configuration} />,
   <Route exact path="/resources/create/curriculum" component={CreateCurriculum} />,
   <Route exact path="/resources/create/session" component={CreateSession} />,
   <Route exact path="/resources/edit/curriculum/:id" component={EditCurriculum} />,
-  <Route exact path="/resources/edit/session/:id" component={Session} />
+  <Route exact path="/resources/edit/session/:id" component={EditSession} />
 ];

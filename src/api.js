@@ -171,6 +171,14 @@ const getResource = key => {
   return axios.get(`/resources/${key}`);
 }
 
+const setAsCoachRegistrationSession = (ngoKey,body) => {
+  return axios.post(`/ngos/${ngoKey}/mark_as_coach_registration_resource/`,body)
+}
+
+const setAsAthleteRegistrationSession = (ngoKey,body) => {
+  return axios.post(`/ngos/${ngoKey}/mark_as_athlete_registration_resource/`,body)
+}
+
 const api = {
   handleSuccess,
   handleError,
@@ -190,6 +198,8 @@ const api = {
   isForgotPasswordTokenValid,
   forgotPassword,
   logout,
+  setAsAthleteRegistrationSession,
+  setAsCoachRegistrationSession,
   createAthlete,
   createCoach,
   createNGO,

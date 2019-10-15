@@ -39,13 +39,16 @@ class Session extends Component {
     this.state = {
       session: {
         items: [PLACEHOLDER_ITEMS]
-      }
+      },
+      measurementOptions : [],
+      fileOptions : []
     };
   }
 
   componentDidMount() {
     console.log(this.props);
     const ngoKey = localStorage.getItem("ngo_key");
+    const {initialData} = this.props;
     api.getFileDropdownOptionsForNgo(ngoKey).then(({ data }) => {
       const sanitizedOptions = data.map(option => {
         return {
@@ -64,6 +67,7 @@ class Session extends Component {
       });
       this.setState({ measurementOptions: sanitizedOptions });
     });
+    if(initialData) this.setState({session : initialData});
   }
 
   handleAddSessionItemInputChange = ({ target }) => {
@@ -150,7 +154,9 @@ class Session extends Component {
             {
               find(measurementOptions.concat(fileOptions), {
                 value: item.key
-              }).label
+              }) ? find(measurementOptions.concat(fileOptions), {
+                value: item.key
+              }).label : ''
             }
           </span>
         </div>
@@ -167,7 +173,11 @@ class Session extends Component {
     );
   };
 
-  handleSubmit = () => {
+  handleSave = () => {
+    this.handleSubmit(false);
+  }
+
+  handleSubmit = (is_submitting) => {
     const {
       session: { items },
       filesData,
@@ -207,7 +217,8 @@ class Session extends Component {
     const payload = {
       data: { files, measurements },
       label: sessionName,
-      type: "session"
+      type: "session",
+      is_submitting
     };
     api.saveSession(payload).then(response => {
       console.log("session saved");
@@ -231,10 +242,10 @@ class Session extends Component {
             <h4>Create Session</h4>
           </div>
           <div>
-            <Button contained="true" color="primary">
+            <Button onClick={this.handleSave} contained="true" color="primary">
               Save
             </Button>
-            <Button onClick={this.handleSubmit} color="primary">
+            <Button onClick={() => this.handleSubmit(true)} color="primary">
               Submit
             </Button>
           </div>

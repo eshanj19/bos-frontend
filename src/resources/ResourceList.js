@@ -28,16 +28,49 @@ import {
   SearchInput,
   Filter,
   DatagridBody,
-  
-  
+  crudUpdateMany,
+  UPDATE
 } from "react-admin";
+import {connect} from 'react-redux';
 import { Menu, MenuItem, Fade, Button,TableCell,TableRow,Checkbox } from "@material-ui/core";
 import withStyles from "@material-ui/core/styles/withStyles";
 import { RESOURCE_TYPES } from "../utils";
+import api from "../api";
 
 const styles = {
   nb_commands: { color: "purple" }
 };
+
+const BulkActionButtons = (props) => {
+  const setAsCoachRegistration = (id) => {
+    const ngoKey = localStorage.getItem("ngo_key");
+    api.setAsCoachRegistrationSession(ngoKey,{resource : id}).then((response) => {
+      
+    })
+  }
+  const setAsAthleteRegistration = (id) => {
+    const ngoKey = localStorage.getItem("ngo_key");
+    api.setAsAthleteRegistrationSession(ngoKey,{resource : id}).then((response) => {
+      
+    })
+  }
+  const {resourceList,selectedIds} = props;
+  if(selectedIds.length === 1 && resourceList[selectedIds[0]].type === 'session') {
+    return(
+      <>
+        <Button onClick={() => {setAsCoachRegistration(selectedIds[0])}}>
+          Set As Coach Registration
+        </Button>
+        <Button onClick={() => {setAsAthleteRegistration(selectedIds[0])}}>
+          Set As Athlete Registration
+        </Button>
+      </>
+    )
+  } else {
+    return <Button color='secondary'>Delete</Button>
+  }
+
+}
 
 const DatagridRow = ({ record, resource, id, onToggleItem, children, selected, basePath, ...props }) => (
   <TableRow key={id}>
@@ -68,7 +101,7 @@ const DatagridRow = ({ record, resource, id, onToggleItem, children, selected, b
 
 const ResourceFilter = props => (
   <Filter {...props}>
-    <SearchInput label="Name" source="name" alwaysOn />
+    <SearchInput label="Name" source="label" alwaysOn />
     <BooleanInput source="is_active" alwaysOn />
   </Filter>
 );
@@ -119,6 +152,8 @@ const BosDatagridBody = (props) => <DatagridBody {...props} row={<DatagridRow {.
 const BosDatagrid = (props) => <Datagrid {...props} body={<BosDatagridBody {...props}/>}/>
 
 const ResourcesList = ({ classes, ...props }) => (
+  <>
+  {console.log(props)}
   <List
     {...props}
     sort={{ field: "label", order: "ASC" }}
@@ -126,6 +161,9 @@ const ResourcesList = ({ classes, ...props }) => (
     filters={<ResourceFilter />}
     filterDefaultValues={{ is_active: true }}
     actions={<CreateActions {...props} />}
+    bulkActionButtons={
+      <BulkActionButtons {...props}/>
+    }
   >
     {/* <Responsive
       medium={
@@ -152,6 +190,11 @@ const ResourcesList = ({ classes, ...props }) => (
         <ShowButton />
     </BosDatagrid>
   </List>
+  </>
 );
-
-export default withStyles(styles)(ResourcesList);
+const mapStateToProps = (state) => {
+  return {
+    resourceList : state.admin.resources.resources.data
+  }
+}
+export default connect(mapStateToProps)(withStyles(styles)(ResourcesList));
