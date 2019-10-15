@@ -18,8 +18,8 @@
 import React from "react";
 import {
   Create,
-  SelectInput,
-  ReferenceInput,
+  SelectArrayInput,
+  ReferenceArrayInput,
   TextInput,
   SimpleForm,
   BooleanInput
@@ -34,31 +34,40 @@ export const styles = {
   is_active: { display: "block" }
 };
 
+export const validateMeasurementCreation = values => {
+  const errors = {};
+  if (!values.label) {
+    errors.label = ["Required"];
+  }
+  if (!values.input_type) {
+    errors.input_type = ["Required"];
+  }
+  if (!values.types || values.types.length === 0) {
+    errors.types = ["Required"];
+  }
+  return errors;
+};
+
 const MeasurementCreate = ({ classes, ...props }) => (
   <Create {...props}>
-    <SimpleForm redirect="list">
-      <TextInput
-        autoFocus
-        source="label"
-        formClassName={classes.label}
-        validate={required()}
-      />
+    <SimpleForm redirect="list" validate={validateMeasurementCreation}>
+      <TextInput autoFocus source="label" formClassName={classes.label} />
       <TextInput source="uom" formClassName={classes.uom} />
       <TextInput
         source="input_type"
         formClassName={classes.input_type}
         validate={required()}
       />
-      <ReferenceInput
+      <ReferenceArrayInput
         formClassName={classes.type}
         label="Measurement Type"
-        source="type"
+        source="types"
         filter={{ is_active: true }}
         reference="measurement_types"
         validate={required()}
       >
-        <SelectInput optionText="label" />
-      </ReferenceInput>
+        <SelectArrayInput optionText="label" />
+      </ReferenceArrayInput>
       <BooleanInput
         source="is_active"
         formClassName={classes.is_active}

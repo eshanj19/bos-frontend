@@ -8,7 +8,9 @@ import {
   List,
   TextField,
   BooleanInput,
-  ReferenceField,
+  ReferenceArrayField,
+  ChipField,
+  SingleFieldList,
   Responsive,
   SearchInput,
   ReferenceInput,
@@ -22,7 +24,7 @@ const MeasurementFilter = props => (
   <Filter {...props}>
     <SearchInput label="Label" source="label" alwaysOn />
     <BooleanInput alwaysOn source="is_active" />
-    <ReferenceInput label="Type" source="type" reference="measurement_types">
+    <ReferenceInput label="Type" source="types" reference="measurement_types">
       <SelectInput optionText="label" />
     </ReferenceInput>
   </Filter>
@@ -45,14 +47,17 @@ const MeasurementList = ({ classes, permissions, ...props }) => (
         <Datagrid>
           <TextField source="label" type="text" />
           <TextField source="uom" type="text" />
-          <ReferenceField
-            label="Type"
-            source="type"
+          <ReferenceArrayField
+            label="Types"
+            source="types"
             reference="measurement_types"
+            target="key"
             linkType={false}
           >
-            <TextField source="label" />
-          </ReferenceField>
+            <SingleFieldList>
+              <ChipField source="label" />
+            </SingleFieldList>
+          </ReferenceArrayField>
 
           <BooleanField source="is_active" type="text" />
           <DateField source="creation_time" showTime />
