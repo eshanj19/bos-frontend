@@ -56,7 +56,6 @@ const AdminList = ({ classes, permissions, ...props }) => (
       medium={
         <Datagrid>
           <FullNameField label="Full name" sortBy="first_name" />
-          <TextField source="last_name" type="text" />
           <TextField source="email" type="text" />
           <DateField label="Created on" source="creation_time" showTime />
           <BooleanField source="is_active" label="Active?" />

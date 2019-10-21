@@ -33,19 +33,7 @@ import { ATHLETE, COACH, ADMIN } from "../constants";
 import PermissionGroupList from "./PermissionGroupList";
 import instance from "../axios";
 export const styles = {
-  first_name: { marginLeft: 32, marginTop: 20 },
-  last_name: { marginLeft: 32, marginTop: 20 },
   grid_element: { marginLeft: 32, marginTop: 10, marginBottom: 10 },
-  email: { width: 544 },
-  address: { maxWidth: 544 },
-  zipcode: { display: "inline-block" },
-  city: { marginLeft: 32, marginTop: 20 },
-  comment: {
-    maxWidth: "20em",
-    overflow: "hidden",
-    textOverflow: "ellipsis",
-    whiteSpace: "nowrap"
-  },
   root: {
     margin: "0 auto",
     width: "100%",
@@ -102,11 +90,11 @@ class UserCreate extends Component {
     const ngoKey = localStorage.getItem("ngo_key");
 
     if (role === ATHLETE) {
-      apiCalls.push(api.getAthleteBaselineMeasurements());
+      apiCalls.push(api.getAthleteRegistrationResource(ngoKey));
       apiCalls.push(api.getNGOPermissionGroups(ngoKey));
     }
     if (role === COACH) {
-      apiCalls.push(api.getCoachBaselineMeasurements());
+      apiCalls.push(api.getCoachRegistrationResource(ngoKey));
       apiCalls.push(api.getNGOPermissionGroups(ngoKey));
     }
 
@@ -114,20 +102,54 @@ class UserCreate extends Component {
       instance
         .all(apiCalls)
         .then(
-          instance.spread((baselineResponse, ngoPermissionGroups) => {
+          instance.spread((resourceResponse, ngoPermissionGroups) => {
             // TODO Error handling
-            var baselineMeasurements = baselineResponse.data;
+            var measurements = resourceResponse.data.resource.data.measurements;
+
+            var measurementsAPICalls = [];
+            for (let index = 0; index < measurements.length; index++) {
+              const measurement = measurements[index];
+              measurementsAPICalls.push(api.getMeasurement(measurement.key));
+            }
             var permissionGroups = ngoPermissionGroups.data;
-            this.setState({
-              baselineMeasurements: baselineMeasurements,
-              permissionGroups: permissionGroups
-            });
+            if (measurementsAPICalls.length) {
+              instance
+                .all(measurementsAPICalls)
+                .then(
+                  instance.spread((...allResponses) => {
+                    // TODO Error handling
+                    console.log(allResponses);
+                    console.log("Error Here");
+
+                    var measurements = [];
+                    for (let index = 0; index < allResponses.length; index++) {
+                      const response = allResponses[index];
+                      console.log(response);
+                      measurements.push(response.data);
+                    }
+                    this.setState({
+                      baselineMeasurements: measurements,
+                      permissionGroups: permissionGroups
+                    });
+                  })
+                )
+                .catch(response => {
+                  console.log(response);
+                  api.handleError(response);
+                });
+            } else {
+              // TODO
+              console.log("Error 1");
+            }
           })
         )
         .catch(response => {
           console.log(response);
           api.handleError(response);
         });
+    } else {
+      // TODO
+      console.log("Error 2");
     }
   }
 
@@ -168,7 +190,7 @@ class UserCreate extends Component {
     for (let index = 0; index < baselineMeasurements.length; index++) {
       const element = baselineMeasurements[index];
       if (element.input_type === "boolean") {
-        if (element.value === true || element.value == false) {
+        if (element.value === true || element.value === false) {
           baselines.push(element);
         }
       } else if (element.value) {
@@ -215,7 +237,7 @@ class UserCreate extends Component {
             <Divider variant="middle" />
 
             <Grid container spacing={8}>
-              <Grid item xs={12} sm={6}>
+              <Grid item xs={12} sm={12}>
                 <TextField
                   autoFocus
                   name="first_name"
@@ -224,7 +246,7 @@ class UserCreate extends Component {
                   onChange={this.handleIdentityChange}
                 />
               </Grid>
-              <Grid item xs={12} sm={6}>
+              <Grid item xs={12} sm={12}>
                 <TextField
                   name="last_name"
                   label="Last Name"
@@ -232,6 +254,35 @@ class UserCreate extends Component {
                   onChange={this.handleIdentityChange}
                 />
               </Grid>
+
+              {role === COACH && (
+                <div>
+                  <Grid item xs={12} sm={12}>
+                    <TextField
+                      name="username"
+                      label="Username"
+                      className={classes.grid_element}
+                      onChange={this.handleIdentityChange}
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={12}>
+                    <TextField
+                      name="password"
+                      label="Password"
+                      className={classes.grid_element}
+                      onChange={this.handleIdentityChange}
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={12}>
+                    <TextField
+                      name="confirm_password"
+                      label="Confirm password"
+                      className={classes.grid_element}
+                      onChange={this.handleIdentityChange}
+                    />
+                  </Grid>
+                </div>
+              )}
             </Grid>
             <div className={classes.sectionHeader}>
               <Typography gutterBottom variant="headline">
@@ -248,7 +299,7 @@ class UserCreate extends Component {
 
             <Divider variant="middle" />
 
-            <div className={classes.sectionHeader}>
+            {/* <div className={classes.sectionHeader}>
               <Typography gutterBottom variant="headline">
                 Permission Group
               </Typography>
@@ -258,7 +309,7 @@ class UserCreate extends Component {
               permissionGroups={permissionGroups}
               handleCheckbox={this.handleChange}
               readOnly={false}
-            />
+            /> */}
             <Button
               variant="contained"
               size="small"

@@ -15,11 +15,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import React, { Component } from "react";
+import React from "react";
 import withStyles from "@material-ui/core/styles/withStyles";
 
 import { styles, validateUserGroupCreation } from "./UserGroupCreate";
-import { Paper, Button } from "@material-ui/core";
 import {
   Edit,
   SelectArrayInput,
@@ -41,6 +40,15 @@ const UserGroupEdit = ({ classes, permissions, ...props }) => (
         reference="coaches"
       >
         <SelectArrayInput optionText="first_name" />
+      </ReferenceArrayInput>
+      <ReferenceArrayInput
+        formClassName={classes.type}
+        label="Resources"
+        source="resources"
+        filter={{ is_active: true, type: "session" }}
+        reference="resources"
+      >
+        <SelectArrayInput optionText="label" />
       </ReferenceArrayInput>
       <BooleanInput
         source="is_active"

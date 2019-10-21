@@ -39,6 +39,7 @@ import ngos from "./ngos";
 import { ResourceWithPermissions } from "ra-auth-acl";
 import measurementTypes from "./measurementTypes";
 import { API_URL } from "./constants";
+import errorSagas from "./dataProvider/errorSaga";
 
 const i18nProvider = locale => {
   // if (locale === "fr") {
@@ -68,6 +69,7 @@ class App extends Component {
         customReducers={{ theme: themeReducer }}
         customRoutes={customRoutes}
         authProvider={authProvider}
+        customSagas={[errorSagas]}
         dashboard={Dashboard}
         loginPage={Login}
         appLayout={Layout}
@@ -119,7 +121,8 @@ class App extends Component {
             name="user_groups"
             permissions={permissions}
             {...userGroups}
-          />
+          />,
+          <Resource name="ping" />
         ]}
       </Admin>
     );

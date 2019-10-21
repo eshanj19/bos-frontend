@@ -16,70 +16,22 @@
  */
 
 import React, { Component } from "react";
-import {
-  Show,
-  TabbedShowLayout,
-  BooleanField,
-  Tab,
-  TextField
-} from "react-admin";
+import { Show, SimpleShowLayout, BooleanField, TextField } from "react-admin";
 import withStyles from "@material-ui/core/styles/withStyles";
 
 import { styles } from "../common/UserCreate";
-import api from "../api";
-import BaselineList from "../common/BaselineList";
 
 class CoachShow extends Component {
-  state = { athleteBaselineMeasurements: [] };
-
-  componentDidMount() {
-    const { basePath, id } = this.props;
-    console.log(this.props);
-    api.getCoachBaseline(basePath, id).then(result => {
-      var athleteBaselineMeasurements = [];
-      for (let index = 0; index < result.data.length; index++) {
-        const element = result.data[index];
-        var athleteBaselineMeasurement = element.measurement;
-        if (athleteBaselineMeasurement.input_type == "boolean") {
-          if (element.value == "True") {
-            athleteBaselineMeasurement["value"] = true;
-          } else {
-            athleteBaselineMeasurement["value"] = false;
-          }
-        } else {
-          athleteBaselineMeasurement["value"] = element.value;
-        }
-        athleteBaselineMeasurements.push(athleteBaselineMeasurement);
-      }
-      this.setState({
-        athleteBaselineMeasurements: athleteBaselineMeasurements
-      });
-    });
-  }
-
   render() {
     const { classes, ...props } = this.props;
-    const { athleteBaselineMeasurements } = this.state;
     return (
       <Show title="Coach Show" {...props}>
-        <TabbedShowLayout>
-          <Tab label="Identity">
-            <TextField source="username" formClassName={classes.first_name} />
-            <TextField source="first_name" formClassName={classes.first_name} />
-            <TextField source="last_name" formClassName={classes.last_name} />
-            <BooleanField
-              source="is_active"
-              formClassName={classes.is_active}
-            />
-          </Tab>
-          <Tab label="Baseline" path="baseline">
-            <BaselineList
-              baselineMeasurements={athleteBaselineMeasurements}
-              handleCheckbox={null}
-              readOnly={true}
-            />
-          </Tab>
-        </TabbedShowLayout>
+        <SimpleShowLayout>
+          {/* <TextField source="username" formClassName={classes.first_name} /> */}
+          <TextField source="first_name" formClassName={classes.first_name} />
+          <TextField source="last_name" formClassName={classes.last_name} />
+          <BooleanField source="is_active" formClassName={classes.is_active} />
+        </SimpleShowLayout>
       </Show>
     );
   }

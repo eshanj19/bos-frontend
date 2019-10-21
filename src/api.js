@@ -55,13 +55,13 @@ const getCoachBaseline = (basePath, id) => {
   return axios.get(`${url}`);
 };
 
-const getAthleteBaselineMeasurements = () => {
-  const url = "/measurements/athlete_baseline/";
+const getAthleteRegistrationResource = key => {
+  const url = `/ngos/${key}/athlete_registration_resource`;
   return axios.get(`${url}`);
 };
 
-const getCoachBaselineMeasurements = () => {
-  const url = "/measurements/coach_baseline/";
+const getCoachRegistrationResource = key => {
+  const url = `/ngos/${key}/coach_registration_resource`;
   return axios.get(`${url}`);
 };
 
@@ -159,25 +159,41 @@ const saveSession = data => {
   return axios.post("resources/", data);
 };
 
-const getSessionsForNgo = (ngo_key) => {
+const getSessionsForNgo = ngo_key => {
   return axios.get(`ngos/${ngo_key}/training_sessions/`);
-}
+};
 
 const saveCurriculum = data => {
   return axios.post("resources/", data);
-}
+};
+
+const deactivateResource = key => {
+  return axios.post(`resources/${key}/deactivate/`);
+};
+const activateResource = key => {
+  return axios.post(`resources/${key}/activate/`);
+};
 
 const getResource = key => {
   return axios.get(`/resources/${key}`);
-}
+};
+const getMeasurement = key => {
+  return axios.get(`/measurements/${key}`);
+};
 
-const setAsCoachRegistrationSession = (ngoKey,body) => {
-  return axios.post(`/ngos/${ngoKey}/mark_as_coach_registration_resource/`,body)
-}
+const setAsCoachRegistrationSession = (ngoKey, body) => {
+  return axios.post(
+    `/ngos/${ngoKey}/mark_as_coach_registration_resource/`,
+    body
+  );
+};
 
-const setAsAthleteRegistrationSession = (ngoKey,body) => {
-  return axios.post(`/ngos/${ngoKey}/mark_as_athlete_registration_resource/`,body)
-}
+const setAsAthleteRegistrationSession = (ngoKey, body) => {
+  return axios.post(
+    `/ngos/${ngoKey}/mark_as_athlete_registration_resource/`,
+    body
+  );
+};
 
 const api = {
   handleSuccess,
@@ -188,8 +204,8 @@ const api = {
   post,
   getAthleteBaseline,
   getCoachBaseline,
-  getAthleteBaselineMeasurements,
-  getCoachBaselineMeasurements,
+  getAthleteRegistrationResource: getAthleteRegistrationResource,
+  getCoachRegistrationResource: getCoachRegistrationResource,
   getNGOPermissionGroups,
   getAllPermissions,
   isAuthenticated,
@@ -209,7 +225,10 @@ const api = {
   saveSession,
   getSessionsForNgo,
   saveCurriculum,
-  getResource
+  getResource,
+  getMeasurement,
+  deactivateResource,
+  activateResource
 };
 
 export default api;

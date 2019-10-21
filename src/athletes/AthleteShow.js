@@ -16,16 +16,10 @@
  */
 
 import React, { Component } from "react";
-import {
-  Show,
-  SimpleShowLayout,
-  BooleanField,
-  Tab,
-  TextField
-} from "react-admin";
+import { Show, SimpleShowLayout, BooleanField, TextField } from "react-admin";
 import withStyles from "@material-ui/core/styles/withStyles";
 
-import { styles } from "./AthleteCreate";
+import { styles } from "../admins/AdminCreate";
 import api from "../api";
 import BaselineList from "./BaselineList";
 import { Divider, Typography } from "@material-ui/core";

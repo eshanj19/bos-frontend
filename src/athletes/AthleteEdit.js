@@ -20,44 +20,28 @@ import {
   Edit,
   TextInput,
   FormTab,
-  TabbedForm,
+  SimpleForm,
   BooleanInput
 } from "react-admin";
 import withStyles from "@material-ui/core/styles/withStyles";
 
-import { styles } from "./AthleteCreate";
-import { Tab } from "@material-ui/core";
+import { styles } from "../admins/AdminCreate";
 
 const AthleteEdit = ({ classes, ...props }) => (
   <Edit title="Athlete Edit" {...props}>
-    <TabbedForm>
-      <FormTab label="Identity">
-        <TextInput
-          autoFocus
-          source="first_name"
-          formClassName={classes.first_name}
-        />
-        <TextInput
-          autoFocus
-          source="last_name"
-          formClassName={classes.last_name}
-        />
-        <BooleanInput source="is_active" formClassName={classes.is_active} />
-      </FormTab>
-      <FormTab label="Baseline">
-        <TextInput
-          autoFocus
-          source="first_name"
-          formClassName={classes.first_name}
-        />
-        <TextInput
-          autoFocus
-          source="last_name"
-          formClassName={classes.last_name}
-        />
-        <BooleanInput source="is_active" formClassName={classes.is_active} />
-      </FormTab>
-    </TabbedForm>
+    <SimpleForm>
+      <TextInput
+        autoFocus
+        source="first_name"
+        formClassName={classes.first_name}
+      />
+      <TextInput
+        autoFocus
+        source="last_name"
+        formClassName={classes.last_name}
+      />
+      <BooleanInput source="is_active" formClassName={classes.is_active} />
+    </SimpleForm>
   </Edit>
 );
 

@@ -20,10 +20,12 @@ import UserGroupIcon from "@material-ui/icons/People";
 import UserGroupList from "./UserGroupList";
 import UserGroupCreate from "./UserGroupCreate";
 import UserGroupEdit from "./UserGroupEdit";
+import UserGroupShow from "./UserGroupShow";
 
 export default {
   list: UserGroupList,
   create: UserGroupCreate,
   edit: UserGroupEdit,
+  show: UserGroupShow,
   icon: UserGroupIcon
 };

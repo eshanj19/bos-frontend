@@ -67,10 +67,6 @@ export const styles = {
 };
 
 class BaselineList extends Component {
-  constructor(props) {
-    super(props);
-  }
-
   handleChange = name => event => {
     if (!this.props.readOnly) {
       this.props.handleCheckbox(name, event);
@@ -84,18 +80,13 @@ class BaselineList extends Component {
     }
 
     return (
-      <Grid
-        container
-        spacing={8}
-        direction="row"
-        justify="center"
-        alignItems="center"
-      >
+      <Grid container spacing={8}>
         {baselineMeasurements.map(measurement => {
           if (measurement.input_type === "text") {
             return (
-              <Grid item xs={12} sm={6}>
+              <Grid item xs={12} sm={12}>
                 <TextField
+                  key={measurement.key}
                   value={measurement.value}
                   label={measurement.label}
                   className={classes.grid_element}
@@ -107,8 +98,9 @@ class BaselineList extends Component {
           }
           if (measurement.input_type === "numeric") {
             return (
-              <Grid item xs={12} sm={6}>
+              <Grid item xs={12} sm={12}>
                 <TextField
+                  key={measurement.key}
                   label={measurement.label}
                   className={classes.grid_element}
                   value={measurement.value}
@@ -120,10 +112,11 @@ class BaselineList extends Component {
           }
           if (measurement.input_type === "boolean") {
             return (
-              <Grid item xs={12} sm={6}>
+              <Grid item xs={12} sm={12}>
                 <FormControlLabel
                   control={
                     <Select
+                      key={measurement.key}
                       value={measurement.value}
                       onChange={this.handleChange(measurement.key)}
                     >

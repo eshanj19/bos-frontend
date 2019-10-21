@@ -59,7 +59,7 @@ const MeasurementList = ({ classes, permissions, ...props }) => (
             </SingleFieldList>
           </ReferenceArrayField>
 
-          <BooleanField source="is_active" type="text" />
+          <BooleanField source="is_active" label="Active" />
           <DateField source="creation_time" showTime />
           <DateField source="last_modification_time" showTime />
           {hasAccess(permissions, "measurements.show") && <ShowButton />}

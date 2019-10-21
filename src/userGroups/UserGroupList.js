@@ -22,7 +22,13 @@ import {
   List,
   TextField,
   Responsive,
-  ShowButton
+  ShowButton,
+  DateField,
+  BooleanField,
+  Filter,
+  SearchInput,
+  SelectInput,
+  BooleanInput
 } from "react-admin";
 import withStyles from "@material-ui/core/styles/withStyles";
 import { hasAccess } from "ra-auth-acl";
@@ -31,6 +37,13 @@ const styles = {
   nb_commands: { color: "purple" }
 };
 
+const UserGroupFilter = props => (
+  <Filter {...props}>
+    <SearchInput label="Name" source="label" alwaysOn />
+    <BooleanInput source="is_active" alwaysOn />
+  </Filter>
+);
+
 const UserGroupList = ({ classes, permissions, ...props }) => (
   <List
     {...props}
@@ -38,11 +51,16 @@ const UserGroupList = ({ classes, permissions, ...props }) => (
     title={"List of user groups"}
     perPage={25}
     exporter={false}
+    filters={<UserGroupFilter />}
+    filterDefaultValues={{ is_active: true }}
   >
     <Responsive
       medium={
         <Datagrid>
-          <TextField source="label" />
+          <TextField label="Name" source="label" />
+          <BooleanField source="is_active" label="Active" />
+          <DateField source="creation_time" showTime />
+          <DateField source="last_modification_time" showTime />
           {hasAccess(permissions, "users.show") && <ShowButton />}
           {hasAccess(permissions, "users.edit") && <EditButton />}
         </Datagrid>

@@ -18,13 +18,13 @@
 import AthleteIcon from "@material-ui/icons/People";
 
 import AthleteList from "./AthleteList";
-import AthleteCreate from "./AthleteCreate";
 import AthleteEdit from "./AthleteEdit";
 import AthleteShow from "./AthleteShow";
+import UserCreate from "../common/UserCreate";
 
 export default {
   list: AthleteList,
-  create: AthleteCreate,
+  create: UserCreate,
   edit: AthleteEdit,
   show: AthleteShow,
   icon: AthleteIcon

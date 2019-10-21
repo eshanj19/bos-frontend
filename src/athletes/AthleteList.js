@@ -24,8 +24,6 @@ import {
   ShowButton,
   Filter,
   List,
-  TextField,
-  NullableBooleanInput,
   BooleanInput,
   Responsive,
   SearchInput
@@ -57,7 +55,7 @@ const AthleteList = ({ classes, permissions, ...props }) => (
       medium={
         <Datagrid>
           <FullNameField label="Full name" sortBy="first_name" />
-          <TextField source="username" type="text" />
+          {/* <TextField source="username" type="text" /> */}
           <BooleanField source="is_active" type="text" />
           <DateField source="creation_time" showTime />
           <DateField source="last_modification_time" showTime />

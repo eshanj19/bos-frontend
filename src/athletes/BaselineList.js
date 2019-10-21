@@ -20,57 +20,15 @@ import withStyles from "@material-ui/core/styles/withStyles";
 import {
   TextField,
   Grid,
-  Checkbox,
   FormControlLabel,
   Select,
   MenuItem
 } from "@material-ui/core";
 export const styles = {
-  first_name: { marginLeft: 32, marginTop: 20 },
-  last_name: { marginLeft: 32, marginTop: 20 },
-  grid_element: { marginLeft: 32, marginTop: 10, marginBottom: 10 },
-  email: { width: 544 },
-  address: { maxWidth: 544 },
-  zipcode: { display: "inline-block" },
-  city: { marginLeft: 32, marginTop: 20 },
-  comment: {
-    maxWidth: "20em",
-    overflow: "hidden",
-    textOverflow: "ellipsis",
-    whiteSpace: "nowrap"
-  },
-  root: {
-    margin: "0 auto",
-    width: "100%",
-    maxWidth: "70%",
-    backgroundColor: "white"
-  },
-  sectionHeader: {
-    width: "100%",
-    marginLeft: 20,
-    marginTop: 20,
-    marginRight: 20,
-    marginBottom: 20
-  },
-  section1: {
-    width: "100%",
-    marginLeft: 20,
-    marginRight: 20
-  },
-  section2: {
-    width: "100%",
-    margin: 20
-  },
-  icon: {
-    fontSize: 20
-  }
+  grid_element: { marginLeft: 32, marginTop: 10, marginBottom: 10 }
 };
 
 class BaselineList extends Component {
-  constructor(props) {
-    super(props);
-  }
-
   handleChange = name => event => {
     if (!this.props.readOnly) {
       this.props.handleCheckbox(name, event);
@@ -78,9 +36,9 @@ class BaselineList extends Component {
   };
 
   render() {
-    var { athleteBaselineMeasurements, classes, readOnly } = this.props;
-    if (!athleteBaselineMeasurements) {
-      athleteBaselineMeasurements = [];
+    var { baselineMeasurements, classes, readOnly } = this.props;
+    if (!baselineMeasurements) {
+      baselineMeasurements = [];
     }
 
     return (
@@ -91,10 +49,10 @@ class BaselineList extends Component {
         justify="center"
         alignItems="center"
       >
-        {athleteBaselineMeasurements.map(measurement => {
+        {baselineMeasurements.map(measurement => {
           if (measurement.input_type === "text") {
             return (
-              <Grid item xs={12} sm={6}>
+              <Grid item xs={12} sm={12}>
                 <TextField
                   value={measurement.value}
                   label={measurement.label}
@@ -107,7 +65,7 @@ class BaselineList extends Component {
           }
           if (measurement.input_type === "numeric") {
             return (
-              <Grid item xs={12} sm={6}>
+              <Grid item xs={12} sm={12}>
                 <TextField
                   label={measurement.label}
                   className={classes.grid_element}
@@ -120,7 +78,7 @@ class BaselineList extends Component {
           }
           if (measurement.input_type === "boolean") {
             return (
-              <Grid item xs={12} sm={6}>
+              <Grid item xs={12} sm={12}>
                 <FormControlLabel
                   control={
                     <Select
@@ -141,6 +99,7 @@ class BaselineList extends Component {
               </Grid>
             );
           }
+          return <div></div>;
         })}
       </Grid>
     );

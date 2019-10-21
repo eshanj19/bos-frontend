@@ -16,39 +16,68 @@
  */
 
 import React from "react";
-import { Create, FormTab, TabbedForm, TextInput } from "react-admin";
+import {
+  Create,
+  FormTab,
+  TabbedForm,
+  TextInput,
+  SimpleForm
+} from "react-admin";
 import withStyles from "@material-ui/core/styles/withStyles";
 import { Checkbox } from "@material-ui/core";
 
 export const styles = {
-  first_name: { display: "inline-block" },
-  last_name: { display: "inline-block", marginLeft: 32 },
-  email: { width: 544 },
-  is_active: { display: "inline-block" }
+  first_name: { display: "block" },
+  last_name: { display: "block" },
+  email: { display: "block" },
+  is_active: { display: "block" }
+};
+
+export const validateAdminCreation = values => {
+  const errors = {};
+  if (!values.first_name) {
+    errors.first_name = ["Required"];
+  } else if (!values.last_name) {
+    errors.last_name = ["Required"];
+  } else if (!values.username) {
+    errors.username = ["Required"];
+  } else if (!values.email) {
+    errors.email = ["Required"];
+  } else if (!values.password) {
+    errors.password = ["Required"];
+  } else if (!values.confirm_password) {
+    errors.confirm_password = ["Required"];
+  }
+
+  return errors;
 };
 
 const AdminCreate = ({ classes, ...props }) => (
   <Create {...props}>
-    <TabbedForm redirect="list">
-      <FormTab label="Personal">
-        <TextInput
-          autoFocus
-          source="first_name"
-          formClassName={classes.first_name}
-        />
-        <TextInput source="last_name" formClassName={classes.last_name} />
-        <TextInput
-          type="email"
-          source="email"
-          validation={{ email: true }}
-          fullWidth={true}
-          formClassName={classes.email}
-        />
-      </FormTab>
-      <FormTab label="Permissions">
-        <Checkbox />
-      </FormTab>
-    </TabbedForm>
+    <SimpleForm redirect="list" validate={validateAdminCreation}>
+      <TextInput
+        autoFocus
+        source="first_name"
+        formClassName={classes.first_name}
+      />
+      <TextInput source="last_name" formClassName={classes.last_name} />
+      <TextInput
+        type="username"
+        source="username"
+        formClassName={classes.username}
+      />
+      <TextInput
+        type="password"
+        source="password"
+        formClassName={classes.password}
+      />
+      <TextInput
+        type="password"
+        source="confirm_password"
+        formClassName={classes.password}
+      />
+      <TextInput type="email" source="email" formClassName={classes.email} />
+    </SimpleForm>
   </Create>
 );
 

@@ -19,21 +19,23 @@ import React from "react";
 import { Edit, BooleanInput, SimpleForm, TextInput } from "react-admin";
 import withStyles from "@material-ui/core/styles/withStyles";
 
-import { styles } from "./AdminCreate";
+import { styles, validateAdminCreation } from "./AdminCreate";
 
 const AdminEdit = ({ classes, ...props }) => (
   <Edit {...props}>
-    <SimpleForm>
-      <TextInput source="first_name" formClassName={classes.first_name} />
-      <TextInput source="last_name" formClassName={classes.last_name} />
-      <BooleanInput source="is_active" formClassName={classes.is_active} />
+    <SimpleForm validate={validateAdminCreation}>
       <TextInput
-        type="email"
-        source="email"
-        validation={{ email: true }}
-        fullWidth={true}
-        formClassName={classes.email}
+        autoFocus
+        source="first_name"
+        formClassName={classes.first_name}
       />
+      <TextInput source="last_name" formClassName={classes.last_name} />
+      <TextInput
+        type="username"
+        source="username"
+        formClassName={classes.username}
+      />
+      <TextInput type="email" source="email" formClassName={classes.email} />
     </SimpleForm>
   </Edit>
 );

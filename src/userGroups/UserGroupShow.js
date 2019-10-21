@@ -15,77 +15,50 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import React, { Component } from "react";
+import React from "react";
+
 import withStyles from "@material-ui/core/styles/withStyles";
+import { styles } from "./UserGroupCreate";
 import {
-  Create,
   SelectArrayInput,
   ReferenceArrayInput,
-  TextInput,
-  SimpleForm,
-  BooleanInput
+  TextField,
+  SimpleShowLayout,
+  BooleanField,
+  Show,
+  ReferenceArrayField,
+  ChipField
 } from "react-admin";
 
-export const styles = {
-  label: { display: "block" },
-  uom: { display: "block" },
-  type: { display: "block" },
-  is_active: { display: "block" },
-  paper: {
-    margin: 20,
-    textAlign: "center"
-  },
-  checkbox: {
-    marginLeft: 10,
-    textAlign: "center"
-  }
-};
-
-export const validateUserGroupCreation = values => {
-  const errors = {};
-  if (!values.label) {
-    errors.label = ["Required"];
-  }
-  if (!values.input_type) {
-    errors.input_type = ["Required"];
-  }
-  if (!values.types || values.types.length === 0) {
-    errors.types = ["Required"];
-  }
-  return errors;
-};
-
-const optionRenderer = choice => `${choice.first_name} ${choice.last_name}`;
-
-const UserGroupCreate = ({ classes, ...props }) => (
-  <Create {...props}>
-    <SimpleForm redirect="list" validate={validateUserGroupCreation}>
-      <TextInput autoFocus source="label" formClassName={classes.label} />
-      <ReferenceArrayInput
+const UserGroupShow = ({ classes, permissions, ...props }) => (
+  <Show {...props}>
+    <SimpleShowLayout redirect="list">
+      <TextField autoFocus source="label" formClassName={classes.label} />
+      {/* <ReferenceArrayInput
         formClassName={classes.type}
         label="Users"
         source="users"
         filter={{ is_active: true }}
         reference="coaches"
       >
-        <SelectArrayInput optionText={optionRenderer} />
-      </ReferenceArrayInput>
-
-      <ReferenceArrayInput
+        <SelectArrayInput optionText="first_name" />
+      </ReferenceArrayInput> */}
+      <ReferenceArrayField
         formClassName={classes.type}
         label="Resources"
         source="resources"
         filter={{ is_active: true, type: "session" }}
         reference="resources"
       >
-        <SelectArrayInput optionText="label" />
-      </ReferenceArrayInput>
-      <BooleanInput
+        <ChipField optionText="label" />
+      </ReferenceArrayField>
+      <BooleanField
         source="is_active"
         formClassName={classes.is_active}
         defaultValue={true}
       />
-    </SimpleForm>
-  </Create>
+    </SimpleShowLayout>
+  </Show>
 );
-export default withStyles(styles)(UserGroupCreate);
+
+export default withStyles(styles)(UserGroupShow);
