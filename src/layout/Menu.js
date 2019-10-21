@@ -127,6 +127,14 @@ class Menu extends Component {
                       onClick={onMenuClick}
                     />
                   )}
+                  {hasAccess(permissions, "users.enabled") && (
+                    <MenuItemLink
+                      to={`/organisation`}
+                      primaryText={"Organisation"}
+                      leftIcon={<userGroups.icon />}
+                      onClick={onMenuClick}
+                    />
+                  )}
                 </SubMenu>
               );
             } else {

@@ -1,28 +1,99 @@
 .App {
-    text-align: center;
+  text-align: center;
 }
 
 .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-    height: 80px;
+  animation: App-logo-spin infinite 20s linear;
+  height: 80px;
 }
 
 .App-header {
-    background-color: #222;
-    height: 150px;
-    padding: 20px;
-    color: white;
+  background-color: #222;
+  height: 150px;
+  padding: 20px;
+  color: white;
 }
 
 .App-intro {
-    font-size: large;
+  font-size: large;
 }
 
 @keyframes App-logo-spin {
-    from {
-        transform: rotate(0deg);
-    }
-    to {
-        transform: rotate(360deg);
-    }
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+.reactOrgChart {
+  margin: 2px 2px 0px 2px;
+}
+
+.reactOrgChart .orgNodeChildGroup .node {
+  border: solid 1px #87878a;
+  display: inline-block;
+  padding: 4px;
+  width: 100px;
+}
+
+.reactOrgChart .orgNodeChildGroup .nodeCell {
+  text-align: center;
+}
+
+.reactOrgChart .orgNodeChildGroup .nodeGroupCell {
+  vertical-align: top;
+  min-width: 250px;
+}
+
+.reactOrgChart .orgNodeChildGroup .nodeGroupLineVerticalMiddle {
+  height: 25px;
+  width: 50%;
+  border-right: 2px solid #87878a;
+}
+
+.reactOrgChart .nodeLineBorderTop {
+  border-top: solid 2px #87878a;
+}
+
+.reactOrgChart table {
+  border-collapse: collapse;
+  border: none;
+  margin: 0 auto;
+}
+
+.reactOrgChart td {
+  padding: 0;
+}
+
+.reactOrgChart table.nodeLineTable {
+  width: 100%;
+}
+
+.reactOrgChart table td.nodeCell {
+  width: 50%;
+}
+
+.org-chart-node {
+  position: relative;
+}
+
+.org-chart-node-body {
+  background: #fff;
+  border: 2px solid #87878a;
+  box-sizing: border-box;
+  border-radius: 8px;
+  padding: 5px;
+  font-family: Open Sans;
+  font-style: normal;
+  font-weight: normal;
+  line-height: 16px;
+  font-size: 12px;
+  text-align: center;
+  letter-spacing: 0.05em;
+  color: #313236;
+}
+
+table.orgNodeChildGroup {
+  margin-bottom: 10px;
 }
