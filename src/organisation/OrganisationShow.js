@@ -59,7 +59,7 @@ const flat_hierarchy = [
 class OrgnisationShow extends Component {
   constructor(props) {
     super(props);
-    this.state = { userHierarchy: flat_hierarchy };
+    this.state = { userHierarchy: null,zeroEdgeNodes:[] };
   }
 
   componentDidMount() {
@@ -68,9 +68,11 @@ class OrgnisationShow extends Component {
       .getUserHierarchy(ngoKey)
       .then(response => {
         // TODO Error handling
-        var userHierarchy = response.data;
+        const hierarchyData = response.data;
+        const {root, zeroEdgeNodes} = this.getHierarchy(hierarchyData);
         this.setState({
-          userHierarchy: userHierarchy
+          userHierarchy : root,
+          zeroEdgeNodes
         });
       })
       .catch(response => {
@@ -78,34 +80,39 @@ class OrgnisationShow extends Component {
         api.handleError(response);
       });
   }
-  getHierarchy = () => {
-    const { userHierarchy } = this.state;
-    const flat = userHierarchy;
+  getHierarchy = (hierarchyData) => {
     let root = {};
-    const separateList = [];
-    flat.forEach((node, index, array) => {
+    const topLevelNodes = [];
+    const zeroEdgeNodes = [];
+
+    hierarchyData.forEach((node, index, array) => {
       const { children } = node;
       if (children) {
         node.children = children.map(child => {
-          return find(flat, { key: child.key });
+          return find(hierarchyData, { key: child.key });
         });
       }
     });
-    const arr = [];
-    flat.forEach(node => {
+    hierarchyData.forEach(node => {
       const { parent_node, children } = node;
-      if (!parent_node && children.length > 0) arr.push(node);
+      if(!parent_node && children.length === 0) {
+        zeroEdgeNodes.push(node);
+        return;
+      }         
+      if (!parent_node) {
+        topLevelNodes.push(node);
+        return;
+      }
     });
-    if (arr.length > 1) {
-      root = { label: "ghost_node", children: arr };
+    if (topLevelNodes.length > 1) {
+      root = { label: "ghost_node", children: topLevelNodes };
     } else {
-      root = head(arr);
+      root = head(topLevelNodes) || null;
     }
-    console.log(root);
-    return { root, separateList };
+    return { root, zeroEdgeNodes };
   };
   render() {
-    const { root, separateList } = this.getHierarchy();
+    const {userHierarchy,zeroEdgeNodes} = this.state;
     return (
       <Card>
         <CardContent>
@@ -118,13 +125,13 @@ class OrgnisationShow extends Component {
               marginRight: "auto"
             }}
           >
-            {renderOrgChartChildren(
-              root
+            {userHierarchy ? renderOrgChartChildren(
+              userHierarchy
               // { label: "amogh _o" }
-            )}
+            ) : null}
           </div>
           <div>
-            {separateList.map(item => {
+            {zeroEdgeNodes.map(item => {
               return <div>{item.label}</div>;
             })}
           </div>

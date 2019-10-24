@@ -198,6 +198,10 @@ const setAsAthleteRegistrationSession = (ngoKey, body) => {
   );
 };
 
+const submitFile = (ngoKey,file) => {
+  return axios.post(`/ping/`,file);
+}
+
 const api = {
   handleSuccess,
   handleError,
@@ -232,7 +236,8 @@ const api = {
   getMeasurement,
   deactivateResource,
   activateResource,
-  getUserHierarchy
+  getUserHierarchy,
+  submitFile
 };
 
 export default api;

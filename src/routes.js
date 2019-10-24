@@ -8,6 +8,7 @@ import CreateCurriculum from "./resources/create/CreateCurriculum";
 import Session from "./resources/common/Session";
 import EditCurriculum from "./resources/edit/EditCurriculum";
 import EditSession from "./resources/edit/EditSession";
+import CreateFile from "./resources/create/CreateFile";
 
 export default [
   <Route exact path="/organisation" component={OrganisationShow} />,
@@ -18,6 +19,7 @@ export default [
     component={CreateCurriculum}
   />,
   <Route exact path="/resources/create/session" component={CreateSession} />,
+  <Route exact path="/resources/create/file" component={CreateFile} />,
   <Route
     exact
     path="/resources/edit/curriculum/:id"

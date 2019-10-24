@@ -257,7 +257,7 @@ const CreateActions = props => {
           Curriculum
         </MenuItem>
         <MenuItem onClick={() => handleMenuSelect("session")}>Session</MenuItem>
-        <MenuItem onClick={() => handleMenuSelect("curriculum")}>File</MenuItem>
+        <MenuItem onClick={() => handleMenuSelect("file")}>File</MenuItem>
       </Menu>
     </>
   );
