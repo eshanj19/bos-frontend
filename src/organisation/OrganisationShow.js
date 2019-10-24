@@ -3,6 +3,7 @@ import { Card, CardContent } from "@material-ui/core";
 import renderOrgChartChildren from "./renderOrgChartChildren";
 import find from "lodash/find";
 import head from "lodash/head";
+import api from "../api";
 
 const flat_hierarchy = [
   {
@@ -58,10 +59,28 @@ const flat_hierarchy = [
 class OrgnisationShow extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = { userHierarchy: flat_hierarchy };
+  }
+
+  componentDidMount() {
+    const ngoKey = localStorage.getItem("ngo_key");
+    api
+      .getUserHierarchy(ngoKey)
+      .then(response => {
+        // TODO Error handling
+        var userHierarchy = response.data;
+        this.setState({
+          userHierarchy: userHierarchy
+        });
+      })
+      .catch(response => {
+        console.log(response);
+        api.handleError(response);
+      });
   }
   getHierarchy = () => {
-    const flat = flat_hierarchy;
+    const { userHierarchy } = this.state;
+    const flat = userHierarchy;
     let root = {};
     const separateList = [];
     flat.forEach((node, index, array) => {

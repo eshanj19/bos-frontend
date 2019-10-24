@@ -180,6 +180,9 @@ const getResource = key => {
 const getMeasurement = key => {
   return axios.get(`/measurements/${key}`);
 };
+const getUserHierarchy = key => {
+  return axios.get(`/ngos/${key}/user_hierarchy`);
+};
 
 const setAsCoachRegistrationSession = (ngoKey, body) => {
   return axios.post(
@@ -228,7 +231,8 @@ const api = {
   getResource,
   getMeasurement,
   deactivateResource,
-  activateResource
+  activateResource,
+  getUserHierarchy
 };
 
 export default api;
