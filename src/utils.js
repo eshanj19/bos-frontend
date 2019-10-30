@@ -46,3 +46,58 @@ export const INPUT_TYPE = {
   DROPDOWN: 2,
   CREATABLE_DROPDOWN: 3
 };
+
+
+
+
+
+export const flat_hierarchy = [
+  {
+    key: "a1",
+    label: "root",
+    parent_node: null,
+    children: [{ key: "a2" }, { key: "a3" }]
+  },
+  {
+    key: "a2",
+    label: "1st",
+    parent_node: "a1",
+    children: [{ key: "a21" }, { key: "a22" }]
+  },
+  {
+    key: "a3",
+    label: "2nd",
+    parent_node: "a1",
+    children: []
+  },
+  {
+    key: "a21",
+    label: "1-1st",
+    parent_node: "a2",
+    children: []
+  },
+  {
+    key: "a22",
+    label: "2-1st",
+    parent_node: "a2",
+    children: []
+  },
+  {
+    key: "a1-sib",
+    label: "2-1st",
+    parent_node: null,
+    children: [{ key: "a99" }]
+  },
+  {
+    key: "a99",
+    label: "2-99",
+    parent_node: "a1-sib",
+    children: []
+  },
+  {
+    key: "a101",
+    label: "2-101",
+    parent_node: null,
+    children: []
+  }
+];

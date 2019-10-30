@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import OrgChartNode from "./OrgChartNode";
 
-const renderOrgChartChildren = node => {
+const renderOrgChartChildren = (node,setParentNode,flatttenedHierarchyStructure) => {
   const hasRightSibling = childIndex => {
     return (node.children || []).length > childIndex + 1;
   };
@@ -56,7 +56,7 @@ const renderOrgChartChildren = node => {
 
   const children = (node.children || []).map((child, childIndex) => (
     <td colSpan="2" className="nodeGroupCell" key={childIndex}>
-      {renderOrgChartChildren(child)}
+      {renderOrgChartChildren(child,setParentNode,flatttenedHierarchyStructure)}
     </td>
   ));
 
@@ -65,7 +65,7 @@ const renderOrgChartChildren = node => {
       <tbody>
         <tr>
           <td className="nodeCell" colSpan={(node.children || []).length * 2}>
-            <OrgChartNode node={node} />
+            <OrgChartNode node={node} setParentNode={setParentNode} flatttenedHierarchyStructure={flatttenedHierarchyStructure}/>
           </td>
         </tr>
         <tr>{(node.children || []).length > 0 && nodeLineBelow}</tr>
