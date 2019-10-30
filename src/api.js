@@ -202,6 +202,10 @@ const submitFile = (ngoKey,file) => {
   return axios.post(`/ping/`,file);
 }
 
+const submitOrgHierarchy = (data,key) => {
+  return axios.post(`/ngos/${key}/user_hierarchy`,data);
+}
+
 const api = {
   handleSuccess,
   handleError,
@@ -237,7 +241,8 @@ const api = {
   deactivateResource,
   activateResource,
   getUserHierarchy,
-  submitFile
+  submitFile,
+  submitOrgHierarchy
 };
 
 export default api;

@@ -79,11 +79,15 @@
 }
 
 .org-chart-node-body {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding: 4px 16px;
   background: #fff;
   border: 2px solid #87878a;
   box-sizing: border-box;
   border-radius: 8px;
-  padding: 5px;
   font-family: Open Sans;
   font-style: normal;
   font-weight: normal;
