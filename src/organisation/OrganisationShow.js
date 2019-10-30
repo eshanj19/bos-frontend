@@ -184,7 +184,7 @@ class OrgnisationShow extends Component {
     const payload = [orgHierarchy].concat(zeroEdgeNodes);
     const ngoKey = localStorage.getItem("ngo_key");
     console.log(payload);
-    return;
+    // return;
     api.submitOrgHierarchy(payload,ngoKey).then((response) => {  })
   }
 
