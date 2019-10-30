@@ -198,9 +198,9 @@ const setAsAthleteRegistrationSession = (ngoKey, body) => {
   );
 };
 
-const submitFile = (ngoKey,file) => {
-  return axios.post(`/ping/`,file);
-}
+const submitFile = file => {
+  return axios.post(`/resources/`, file);
+};
 
 const api = {
   handleSuccess,
