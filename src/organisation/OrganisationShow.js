@@ -51,6 +51,8 @@ class OrgnisationShow extends Component {
       .then(response => {
         // TODO Error handling
         const hierarchyData = response.data;
+        console.log(hierarchyData);
+        // return;
         // const hierarchyData = flat_hierarchy;
         const flatttenedHierarchyStructure = hierarchyData;
         const { root, zeroEdgeNodes } = this.getHierarchy(hierarchyData);
@@ -88,8 +90,8 @@ class OrgnisationShow extends Component {
     hierarchyData.forEach((node, index, array) => {
       const { children } = node;
       if (children) {
-        node.children = children.map(child => {
-          return find(hierarchyData, { key: child.key });
+        node.children = children.map(childKey => {
+          return find(hierarchyData, { key: childKey });
         });
       }
     });
@@ -122,6 +124,8 @@ class OrgnisationShow extends Component {
       this.findNodeByKey(orgHierarchy, nodeKey) ||
       find(zeroEdgeNodes, { key: nodeKey });
     const newParentNode = this.findNodeByKey(orgHierarchy, parentKey);
+    const { parent_node: oldParentNodeKey } = node;
+    if(newParentNode && newParentNode.key === oldParentNodeKey) return;
 
     /**
      * if users sets parent to NULL,
@@ -142,13 +146,22 @@ class OrgnisationShow extends Component {
       orgHierarchy.children.push(node);
       /**
        * if the node is from zero-edge node,
-       * handle relevant changes to the data.
+       * remove the node from zeroEdgeNodes array
        */
-      if (findIndex(zeroEdgeNodes, { key: nodeKey }) > -1) {
-        zeroEdgeNodes.splice(findIndex(zeroEdgeNodes, { key: nodeKey }), 1);
-      }
-      this.setState({ orgHierarchy, zeroEdgeNodes });
-      return;
+      // if (findIndex(zeroEdgeNodes, { key: nodeKey }) > -1) {
+      //   zeroEdgeNodes.splice(findIndex(zeroEdgeNodes, { key: nodeKey }), 1);
+      // }
+      /**
+       * remove the node from existing parent
+       */
+      // const { parent_node: oldParentNodeKey } = node;
+      // if(oldParentNodeKey) {
+      //   const oldParentNode = this.findNodeByKey(orgHierarchy, oldParentNodeKey);
+      //   const i = findIndex(oldParentNode.children, { key: node.key });
+      //   oldParentNode.children.splice(i, 1);
+      // }
+      // this.setState({ orgHierarchy, zeroEdgeNodes });
+      // return;
     }
     /**
      * check for cyclic tree
@@ -156,11 +169,9 @@ class OrgnisationShow extends Component {
      * 1. has no children
      * 2. new parent is not a decendent of the node in current hierarchy.
      */
-    if (this.isDecendentByKeyIn(newParentNode.key, node)) {
+    if (newParentNode && this.isDecendentByKeyIn(newParentNode.key, node)) {
       console.log("is decendent!");
     }
-
-    const { parent_node: oldParentNodeKey } = node;
     /**
      * if node already had a parent,
      * remove the node from parent's children array.
@@ -171,15 +182,27 @@ class OrgnisationShow extends Component {
       oldParentNode.children.splice(i, 1);
     } else {
       /**
-       * if there was no parent earlier, it must have been in the ZeroEdgeNodes array.
+       * if there was no parent earlier, it can be remove zeroEdgeNodes array
        * remove from there as well.
        */
-      zeroEdgeNodes.splice(findIndex(zeroEdgeNodes, { key: nodeKey }), 1);
+      if(findIndex(zeroEdgeNodes, { key: nodeKey }) > -1) {
+        zeroEdgeNodes.splice(findIndex(zeroEdgeNodes, { key: nodeKey }), 1);
+      } else {
+        /**
+         * else the earlier parent was a ghost node.
+         */
+        if(findIndex(orgHierarchy.children,{key:nodeKey}) > -1) {
+          const i = findIndex(orgHierarchy.children,{key:nodeKey});
+          orgHierarchy.children.splice(i,1);
+        }
+      }
+      
     }
 
+    //set parent_node value to the node
     //insert node in the children array of new parent
-    newParentNode.children.push(node);
-    this.setState({ orgHierarchy });
+    if(newParentNode) newParentNode.children.push({...node,parent_node:parentKey});
+    this.setState({ orgHierarchy,zeroEdgeNodes });
   };
 
   isDecendentByKeyIn = (nodeKey, node) => {
