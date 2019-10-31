@@ -202,9 +202,9 @@ const submitFile = file => {
   return axios.post(`/resources/`, file);
 };
 
-const submitOrgHierarchy = (data,key) => {
-  return axios.post(`/ngos/${key}/user_hierarchy`,data);
-}
+const submitOrgHierarchy = (data, key) => {
+  return axios.post(`/ngos/${key}/save_user_hierarchy/`, data);
+};
 
 const api = {
   handleSuccess,
