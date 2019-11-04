@@ -11,9 +11,12 @@ import renderOrgChartChildren from "./renderOrgChartChildren";
 import PersonAddIcon from "@material-ui/icons/PersonAdd";
 import find from "lodash/find";
 import findIndex from "lodash/findIndex";
+import filter from "lodash/filter";
 import head from "lodash/head";
+import sortBy from "lodash/sortBy";
 import api from "../api";
-import { flat_hierarchy } from "../utils";
+import { withSnackbar } from "notistack";
+import UserSelectionMenu from "./UserSelectionMenu";
 
 /**
  * example user hierarchy stored in state --
@@ -39,8 +42,9 @@ class OrgnisationShow extends Component {
       orgHierarchy: null,
       zeroEdgeNodes: [],
       menuAnchorEl: null,
-      flatttenedHierarchyStructure: [],
-      selectedZeroEdgeNode : null
+      searchedUserList: [],
+      selectedZeroEdgeNode: null,
+      searchTerm: ""
     };
   }
 
@@ -54,12 +58,21 @@ class OrgnisationShow extends Component {
         console.log(hierarchyData);
         // return;
         // const hierarchyData = flat_hierarchy;
-        const flatttenedHierarchyStructure = hierarchyData;
+        const flatttenedHierarchyStructure = sortBy(
+          hierarchyData,
+          o => o.label
+        );
         const { root, zeroEdgeNodes } = this.getHierarchy(hierarchyData);
+        const possibleUserOptions = filter(flatttenedHierarchyStructure, o => {
+          return this.findNodeByKey(root, o.key);
+        });
+        console.log(possibleUserOptions);
         this.setState({
           orgHierarchy: root,
           zeroEdgeNodes,
-          flatttenedHierarchyStructure
+          possibleUserOptions,
+          flatttenedHierarchyStructure,
+          searchedUserList: possibleUserOptions
         });
       })
       .catch(response => {
@@ -106,26 +119,39 @@ class OrgnisationShow extends Component {
         return;
       }
     });
-    if (topLevelNodes.length > 1) {
-      root = {
-        label: "Ghost Node",
-        key: "ghost_node",
-        children: topLevelNodes
-      };
-    } else {
-      root = head(topLevelNodes) || null;
-    }
+    const ghostNode = find(topLevelNodes,{key:"ghost_node"});
+    const topNodes = filter(topLevelNodes,(node) => node.key !== "ghost_node");
+    root = {...ghostNode,children:topNodes};
     return { root, zeroEdgeNodes };
   };
 
   setParentForNode = (nodeKey, parentKey) => {
-    let { orgHierarchy, zeroEdgeNodes } = this.state;
+    let {
+      orgHierarchy,
+      zeroEdgeNodes,
+      flatttenedHierarchyStructure
+    } = this.state;
+    /**
+     * check for cyclic tree
+     * must prevent that from happening.
+     */
+    if (parentKey && this.isDecendentByKeyIn(nodeKey, parentKey)) {
+      this.props.enqueueSnackbar("is decendent!", {
+        variant: "error",
+        autoHideDuration:4000,
+        anchorOrigin: {
+          vertical: "top",
+          horizontal: "right"
+        }
+      });
+      return;
+    }
     const node =
       this.findNodeByKey(orgHierarchy, nodeKey) ||
       find(zeroEdgeNodes, { key: nodeKey });
     const newParentNode = this.findNodeByKey(orgHierarchy, parentKey);
     const { parent_node: oldParentNodeKey } = node;
-    if(newParentNode && newParentNode.key === oldParentNodeKey) return;
+    if (newParentNode && newParentNode.key === oldParentNodeKey) return;
 
     /**
      * if users sets parent to NULL,
@@ -144,33 +170,6 @@ class OrgnisationShow extends Component {
         };
       }
       orgHierarchy.children.push(node);
-      /**
-       * if the node is from zero-edge node,
-       * remove the node from zeroEdgeNodes array
-       */
-      // if (findIndex(zeroEdgeNodes, { key: nodeKey }) > -1) {
-      //   zeroEdgeNodes.splice(findIndex(zeroEdgeNodes, { key: nodeKey }), 1);
-      // }
-      /**
-       * remove the node from existing parent
-       */
-      // const { parent_node: oldParentNodeKey } = node;
-      // if(oldParentNodeKey) {
-      //   const oldParentNode = this.findNodeByKey(orgHierarchy, oldParentNodeKey);
-      //   const i = findIndex(oldParentNode.children, { key: node.key });
-      //   oldParentNode.children.splice(i, 1);
-      // }
-      // this.setState({ orgHierarchy, zeroEdgeNodes });
-      // return;
-    }
-    /**
-     * check for cyclic tree
-     * following check must pass --
-     * 1. has no children
-     * 2. new parent is not a decendent of the node in current hierarchy.
-     */
-    if (newParentNode && this.isDecendentByKeyIn(newParentNode.key, node)) {
-      console.log("is decendent!");
     }
     /**
      * if node already had a parent,
@@ -185,28 +184,42 @@ class OrgnisationShow extends Component {
        * if there was no parent earlier, it can be remove zeroEdgeNodes array
        * remove from there as well.
        */
-      if(findIndex(zeroEdgeNodes, { key: nodeKey }) > -1) {
+      if (findIndex(zeroEdgeNodes, { key: nodeKey }) > -1) {
         zeroEdgeNodes.splice(findIndex(zeroEdgeNodes, { key: nodeKey }), 1);
       } else {
         /**
          * else the earlier parent was a ghost node.
          */
-        if(findIndex(orgHierarchy.children,{key:nodeKey}) > -1) {
-          const i = findIndex(orgHierarchy.children,{key:nodeKey});
-          orgHierarchy.children.splice(i,1);
+        if (findIndex(orgHierarchy.children, { key: nodeKey }) > -1) {
+          const i = findIndex(orgHierarchy.children, { key: nodeKey });
+          orgHierarchy.children.splice(i, 1);
         }
       }
-      
     }
 
     //set parent_node value to the node
     //insert node in the children array of new parent
-    if(newParentNode) newParentNode.children.push({...node,parent_node:parentKey});
-    this.setState({ orgHierarchy,zeroEdgeNodes });
+    if (newParentNode)
+      newParentNode.children.push({ ...node, parent_node: parentKey });
+    const possibleUserOptions = filter(flatttenedHierarchyStructure, o => {
+      return this.findNodeByKey(orgHierarchy, o.key);
+    });
+    this.setState({
+      orgHierarchy,
+      zeroEdgeNodes,
+      possibleUserOptions,
+      searchedUserList: possibleUserOptions
+    });
   };
 
-  isDecendentByKeyIn = (nodeKey, node) => {
-    const found = this.findNodeByKey(nodeKey, node);
+  isDecendentByKeyIn = (selectedNodeKey, toBeParentKey) => {
+    const { orgHierarchy } = this.state;
+    /**
+     * check whether toBeParent is children/grandchildren of selectedNode
+     */
+    const selectedNode = this.findNodeByKey(orgHierarchy, selectedNodeKey);
+    const toBeParentNode = this.findNodeByKey(orgHierarchy, toBeParentKey);
+    const found = this.findNodeByKey(selectedNode, toBeParentKey);
     return !!found;
   };
 
@@ -216,16 +229,17 @@ class OrgnisationShow extends Component {
     const ngoKey = localStorage.getItem("ngo_key");
     console.log(payload);
     // return;
-    api.submitOrgHierarchy(payload, ngoKey).then(response => {});
+    api.submitOrgHierarchy(payload, ngoKey).then((response) => {
+      console.log(response);
+      api.handleSuccess(response,this.props.enqueueSnackbar)
+    }).catch(error => {
+      api.handleError(error);
+    });
   };
 
   render() {
-    const {
-      orgHierarchy,
-      zeroEdgeNodes,
-      flatttenedHierarchyStructure
-    } = this.state;
-    console.log({ orgHierarchy, flatttenedHierarchyStructure });
+    const { orgHierarchy, zeroEdgeNodes, searchedUserList } = this.state;
+    console.log({ orgHierarchy });
     return (
       <div>
         <div
@@ -239,9 +253,6 @@ class OrgnisationShow extends Component {
             <h3>View/Edit Organisation</h3>
           </div>
           <div>
-            <Button onClick={this.handleSave} contained="true" color="primary">
-              Save
-            </Button>
             <Button onClick={() => this.handleSubmit(true)} color="primary">
               Submit
             </Button>
@@ -262,7 +273,9 @@ class OrgnisationShow extends Component {
                 ? renderOrgChartChildren(
                     orgHierarchy,
                     this.setParentForNode,
-                    flatttenedHierarchyStructure
+                    searchedUserList,
+                    this.handleSearchUser,
+                    this.state.searchTerm
                     // { label: "amogh _o" }
                   )
                 : null}
@@ -283,10 +296,7 @@ class OrgnisationShow extends Component {
   }
 
   renderZeroEdgeNodes = () => {
-    const {
-      orgHierarchy,
-      zeroEdgeNodes,
-    } = this.state;
+    const { orgHierarchy, zeroEdgeNodes } = this.state;
     return zeroEdgeNodes.map(item => {
       return (
         <Fragment key={item.key}>
@@ -299,7 +309,10 @@ class OrgnisationShow extends Component {
                 color="primary"
                 variant="flat"
                 onClick={event => {
-                  this.setState({ menuAnchorEl: event.currentTarget, selectedZeroEdgeNode : item });
+                  this.setState({
+                    menuAnchorEl: event.currentTarget,
+                    selectedZeroEdgeNode: item
+                  });
                 }}
               >
                 <PersonAddIcon />{" "}
@@ -312,45 +325,66 @@ class OrgnisationShow extends Component {
     });
   };
 
+  handleSearchUser = searchTerm => {
+    const { searchedUserList, possibleUserOptions } = this.state;
+    if (!searchTerm || searchTerm.length === 0) {
+      this.resetSearchedTerm();
+      return;
+    }
+    const filtered = filter(possibleUserOptions, o => {
+      return o.label.toLowerCase().includes(searchTerm.toLowerCase());
+    });
+    this.setState({ searchedUserList: filtered, searchTerm });
+  };
+
+  resetSearchedTerm = () => {
+    const { searchedUserList, possibleUserOptions } = this.state;
+    this.setState({ searchedUserList: possibleUserOptions, searchTerm: "" });
+  };
+
   renderMenuItems = () => {
-    const {
-      flatttenedHierarchyStructure,
-      selectedZeroEdgeNode
-    } = this.state;
+    const { searchedUserList, selectedZeroEdgeNode } = this.state;
+
     return (
-      <Menu
-        id="simple-menu"
-        anchorEl={this.state.menuAnchorEl}
-        keepMounted
-        open={Boolean(this.state.menuAnchorEl)}
-        onClose={() => {
+      <UserSelectionMenu
+        onUserSelected={userOption => {
+          this.setParentForNode(
+            selectedZeroEdgeNode.key,
+            userOption ? userOption.key : null
+          );
           this.setState({ menuAnchorEl: null });
         }}
-      >
-        {flatttenedHierarchyStructure.map(node => {
-          return (
-            <MenuItem
-              key={node.key}
-              onClick={() => {
-                this.setParentForNode(selectedZeroEdgeNode.key, node.key);
-                this.setState({ menuAnchorEl: null });
-              }}
-            >
-              {node.label}
-            </MenuItem>
-          );
-        })}
-        <MenuItem
-          onClick={() => {
-            this.setParentForNode(selectedZeroEdgeNode.key, null);
-            this.setState({ menuAnchorEl: null });
-          }}
-        >
-          --Empty--
-        </MenuItem>
-      </Menu>
+        userOptions={searchedUserList}
+        isOpen={Boolean(this.state.menuAnchorEl)}
+        menuAnchorEl={this.state.menuAnchorEl}
+        onClose={() => {
+          this.resetSearchedTerm();
+          this.setState({ menuAnchorEl: null });
+        }}
+        onSearchUser={this.handleSearchUser}
+        searchTerm={this.state.searchTerm}
+      />
     );
   };
 }
 
-export default OrgnisationShow;
+export default withSnackbar(OrgnisationShow);
+
+/**
+ * if the node is from zero-edge node,
+ * remove the node from zeroEdgeNodes array
+ */
+// if (findIndex(zeroEdgeNodes, { key: nodeKey }) > -1) {
+//   zeroEdgeNodes.splice(findIndex(zeroEdgeNodes, { key: nodeKey }), 1);
+// }
+/**
+ * remove the node from existing parent
+ */
+// const { parent_node: oldParentNodeKey } = node;
+// if(oldParentNodeKey) {
+//   const oldParentNode = this.findNodeByKey(orgHierarchy, oldParentNodeKey);
+//   const i = findIndex(oldParentNode.children, { key: node.key });
+//   oldParentNode.children.splice(i, 1);
+// }
+// this.setState({ orgHierarchy, zeroEdgeNodes });
+// return;

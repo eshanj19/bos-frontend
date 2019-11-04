@@ -1,20 +1,24 @@
 import React, { Component } from "react";
 import PersonAddIcon from "@material-ui/icons/PersonAdd";
-import { Card, CardContent, Menu, MenuItem, Button } from "@material-ui/core";
-import { flat_hierarchy } from "../utils";
+import { ATHLETE, COACH } from "../constants";
+import UserSelectionMenu from "./UserSelectionMenu";
+
+const TRANSPERANCY = "3d"; //transperance 24%
 
 class OrgChartNode extends Component {
   state = { menuAnchorEl: null };
   render() {
-    const { node,flatttenedHierarchyStructure } = this.props;
-    console.log({flatttenedHierarchyStructure})
+    const { node,searchedUserList } = this.props;
+    const {role} = node;
+    const borderColor = role === ATHLETE ? '#d35400' : role === COACH ? '#2980b9' : '#f39c12';
+    const backgroundColor = borderColor + TRANSPERANCY;
     return (
       <div>
         <div
           className="org-chart-node"
           style={{ width: "180px", margin: "auto" }}
         >
-          <div className="org-chart-node-body">
+          <div className="org-chart-node-body" style={{borderColor,backgroundColor}}>
             {node.label}
             <div>
               <PersonAddIcon
@@ -22,34 +26,18 @@ class OrgChartNode extends Component {
                   this.setState({ menuAnchorEl: event.currentTarget });
                 }}
               />
-              <Menu
-                id="simple-menu"
-                anchorEl={this.state.menuAnchorEl}
-                keepMounted
-                open={Boolean(this.state.menuAnchorEl)}
-                onClose={() => {
-                  this.setState({ menuAnchorEl: null });
-                }}
-              >
-                {flatttenedHierarchyStructure.map(option => {
-                  return (
-                    <MenuItem
-                      onClick={() => {
-                        this.props.setParentNode(node.key, option.key);
-                      }}
-                    >
-                      {option.label}
-                    </MenuItem>
-                  );
-                })}
-                <MenuItem
-                  onClick={() => {
-                    this.props.setParentNode(node.key, null);
-                  }}
-                >
-                  --Empty--
-                </MenuItem>
-              </Menu>
+              <UserSelectionMenu 
+                onUserSelected={(userOption) => {
+                  this.props.setParentNode(node.key, userOption ? userOption.key : null);
+                  this.setState({menuAnchorEl:null})}
+                }
+                userOptions={searchedUserList}
+                isOpen={Boolean(this.state.menuAnchorEl)}
+                menuAnchorEl={this.state.menuAnchorEl}
+                onClose={() => {this.setState({menuAnchorEl:null})}}
+                onSearchUser={this.props.onSearchUser}
+                searchTerm={this.props.searchTerm}
+                />
             </div>
           </div>
         </div>

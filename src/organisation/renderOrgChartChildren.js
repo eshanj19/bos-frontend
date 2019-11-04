@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import OrgChartNode from "./OrgChartNode";
 
-const renderOrgChartChildren = (node,setParentNode,flatttenedHierarchyStructure) => {
+const renderOrgChartChildren = (node,setParentNode,searchedUserList,onSearchUser,searchTerm) => {
   const hasRightSibling = childIndex => {
     return (node.children || []).length > childIndex + 1;
   };
@@ -56,7 +56,7 @@ const renderOrgChartChildren = (node,setParentNode,flatttenedHierarchyStructure)
 
   const children = (node.children || []).map((child, childIndex) => (
     <td colSpan="2" className="nodeGroupCell" key={childIndex}>
-      {renderOrgChartChildren(child,setParentNode,flatttenedHierarchyStructure)}
+      {renderOrgChartChildren(child,setParentNode,searchedUserList,onSearchUser,searchTerm)}
     </td>
   ));
 
@@ -65,7 +65,13 @@ const renderOrgChartChildren = (node,setParentNode,flatttenedHierarchyStructure)
       <tbody>
         <tr>
           <td className="nodeCell" colSpan={(node.children || []).length * 2}>
-            <OrgChartNode node={node} setParentNode={setParentNode} flatttenedHierarchyStructure={flatttenedHierarchyStructure}/>
+            <OrgChartNode 
+              node={node} 
+              setParentNode={setParentNode} 
+              onSearchUser={onSearchUser}
+              searchedUserList={searchedUserList}
+              searchTerm={searchTerm}
+              />
           </td>
         </tr>
         <tr>{(node.children || []).length > 0 && nodeLineBelow}</tr>

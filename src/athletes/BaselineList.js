@@ -25,7 +25,14 @@ import {
   MenuItem
 } from "@material-ui/core";
 export const styles = {
-  grid_element: { marginLeft: 32, marginTop: 10, marginBottom: 10 }
+  grid_element: { marginLeft: 32, marginTop: 10, marginBottom: 10 },
+  empty_label : {
+    color: "rgba(0, 0, 0, 0.87)",
+    fontSize: "0.875rem",
+    fontWeight: 400,
+    lineHeight: "1.46429em",
+    marginTop:'15px',
+  }
 };
 
 class BaselineList extends Component {
@@ -38,7 +45,9 @@ class BaselineList extends Component {
   render() {
     var { baselineMeasurements, classes, readOnly } = this.props;
     if (!baselineMeasurements) {
-      baselineMeasurements = [];
+      return (
+        <div className={this.props.classes.empty_label}><span>No Baseline Measurements Recorded.</span></div>
+      )
     }
 
     return (

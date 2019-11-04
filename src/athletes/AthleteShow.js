@@ -16,7 +16,7 @@
  */
 
 import React, { Component } from "react";
-import { Show, SimpleShowLayout, BooleanField, TextField } from "react-admin";
+import { Show, SimpleShowLayout, BooleanField, TextField,Title } from "react-admin";
 import withStyles from "@material-ui/core/styles/withStyles";
 
 import { styles } from "../admins/AdminCreate";
@@ -67,7 +67,6 @@ class AthleteShow extends Component {
           <TextField source="first_name" formClassName={classes.first_name} />
           <TextField source="last_name" formClassName={classes.last_name} />
           <BooleanField source="is_active" formClassName={classes.is_active} />
-          <Divider variant="middle" />
           <Typography gutterBottom variant="headline">
             Baseline
           </Typography>

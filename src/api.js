@@ -138,6 +138,7 @@ const handleSuccess = (success, enqueueSnackbar) => {
 const showSnackbar = (enqueueSnackbar, message, variant) => {
   if (enqueueSnackbar) {
     enqueueSnackbar(message, {
+      autoHideDuration:4000,
       variant: variant,
       anchorOrigin: {
         vertical: "bottom",

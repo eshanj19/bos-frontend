@@ -54,7 +54,7 @@ class Menu extends Component {
   render() {
     const { onMenuClick, open, logout, translate } = this.props;
     return (
-      <div>
+      <div style={{width:'290px'}}>
         <DashboardMenuItem onClick={onMenuClick} />
 
         <WithPermissions
