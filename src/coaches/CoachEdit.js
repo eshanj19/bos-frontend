@@ -15,28 +15,87 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import React from "react";
-import { Edit, BooleanInput, SimpleForm, TextInput } from "react-admin";
+import React, { useState,useEffect } from "react";
+import {
+  Edit,
+  TextInput,
+  ShowButton,
+  SimpleForm,
+  BooleanInput
+} from "react-admin";
 import withStyles from "@material-ui/core/styles/withStyles";
-import { styles } from "../common/UserCreate";
+import {
+  Button,
+  CardActions,
+} from "@material-ui/core";
+import api from "../api";
+import ResetPasswordDialog from "../common/ResetPasswordDialog";
 
-const CoachEdit = ({ classes, ...props }) => (
-  <Edit title="Coach Edit" {...props}>
-    <SimpleForm>
-      <TextInput
-        autoFocus
-        source="first_name"
-        formClassName={classes.first_name}
-      />
-      <TextInput
-        autoFocus
-        source="last_name"
-        formClassName={classes.last_name}
-      />
+const styles = {
+  inlineBlock: { display: 'inline-flex', marginRight: '1rem' },
+}
 
-      <BooleanInput source="is_active" formClassName={classes.is_active} />
-    </SimpleForm>
-  </Edit>
-);
+
+const CoachEditActions = ({ basePath, data, resource, onToggleDialog }) => {
+  console.log(data);
+  return (
+    <CardActions style={{ justifyContent: "flex-end" }}>
+      <ShowButton basePath={basePath} record={data} />
+      <Button color="primary" onClick={() => onToggleDialog(data.key)}>Reset Password</Button>
+    </CardActions>
+  );
+};
+
+const CoachEdit = ({ classes, ...props }) => {
+  const [showDialog, toggleDialog] = useState(false);
+  const [password, handleChangePassword] = useState("");
+  const [confirmPassword, handleChangeConfirmPassword] = useState("");
+  const [userKey, setUserKey] = useState(null);
+  useEffect(() => {
+    handleChangePassword('');
+    handleChangeConfirmPassword('');
+  },[showDialog])
+  const resetPassword = () => {
+    if (!password || password.length === 0) return;
+    if (password === confirmPassword) {
+      api.resetPassword(userKey, password).then(() => {
+        toggleDialog(!showDialog);
+      });
+    }
+  };
+  return (
+    <div>
+      <Edit
+        title="Coach Edit"
+        actions={<CoachEditActions onToggleDialog={(userKey) => {toggleDialog(!showDialog);setUserKey(userKey)}} {...props} />}
+        {...props}
+      >
+        <SimpleForm>
+          <TextInput
+            autoFocus
+            source="first_name"
+            formClassName={classes.first_name}
+          />
+          <TextInput
+            autoFocus
+            source="last_name"
+            formClassName={classes.last_name}
+          />
+
+          <BooleanInput source="is_active" formClassName={classes.is_active} />
+        </SimpleForm>
+      </Edit>
+      <ResetPasswordDialog
+        showDialog={showDialog}
+        password={password}
+        confirmPassword={confirmPassword}
+        onChangePassword={handleChangePassword}
+        onChangeConfirmPassword={handleChangeConfirmPassword}
+        toggleDialog={() => {toggleDialog(!showDialog)}}
+        resetPassword={resetPassword}
+      />
+    </div>
+  );
+};
 
 export default withStyles(styles)(CoachEdit);

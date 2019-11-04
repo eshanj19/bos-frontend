@@ -15,29 +15,87 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import React from "react";
-import { Edit, BooleanInput, SimpleForm, TextInput } from "react-admin";
+import React, { useState, useEffect } from "react";
+import {
+  Edit,
+  TextInput,
+  ShowButton,
+  SimpleForm,
+  BooleanInput
+} from "react-admin";
 import withStyles from "@material-ui/core/styles/withStyles";
+import {
+  Button,
+  CardActions,
+} from "@material-ui/core";
+import api from "../api";
+import ResetPasswordDialog from "../common/ResetPasswordDialog";
 
-import { styles, validateAdminCreation } from "./AdminCreate";
+import { validateAdminCreation } from "./AdminCreate";
 
-const AdminEdit = ({ classes, ...props }) => (
-  <Edit {...props}>
-    <SimpleForm validate={validateAdminCreation}>
-      <TextInput
-        autoFocus
-        source="first_name"
-        formClassName={classes.first_name}
+const styles = {
+  inlineBlock: { display: 'inline-flex', marginRight: '1rem' },
+}
+
+
+const AdminEditActions = ({ basePath, data, resource, onToggleDialog }) => {
+  return (
+    <CardActions style={{ justifyContent: "flex-end" }}>
+      <ShowButton basePath={basePath} record={data} />
+      <Button color='primary' onClick={() => onToggleDialog(data.key)}>Reset Password</Button>
+    </CardActions>
+  );
+};
+
+const AdminEdit = ({ classes, ...props }) => {
+  const [showDialog, toggleDialog] = useState(false);
+  const [password, handleChangePassword] = useState("");
+  const [confirmPassword, handleChangeConfirmPassword] = useState("");
+  const [userKey, setUserKey] = useState(null);
+  useEffect(() => {
+    handleChangePassword('');
+    handleChangeConfirmPassword('');
+  },[showDialog])
+  const resetPassword = () => {
+    if (!password || password.length === 0) return;
+    if (password === confirmPassword) {
+      api.resetPassword(userKey, password).then(() => {
+        toggleDialog(!showDialog);
+      });
+    }
+  };
+  return(
+    <div>
+      <Edit actions={<AdminEditActions 
+        onToggleDialog={(userKey) => {toggleDialog(!showDialog);setUserKey(userKey)}} 
+        {...props}/>} 
+      {...props}>
+        <SimpleForm validate={validateAdminCreation}>
+          <TextInput
+            autoFocus
+            source="first_name"
+            formClassName={classes.first_name}
+          />
+          <TextInput source="last_name" formClassName={classes.last_name} />
+          <TextInput
+            type="username"
+            source="username"
+            formClassName={classes.username}
+          />
+          <TextInput type="email" source="email" formClassName={classes.email} />
+        </SimpleForm>
+      </Edit>
+      <ResetPasswordDialog
+        showDialog={showDialog}
+        password={password}
+        confirmPassword={confirmPassword}
+        onChangePassword={handleChangePassword}
+        onChangeConfirmPassword={handleChangeConfirmPassword}
+        toggleDialog={() => {toggleDialog(!showDialog)}}
+        resetPassword={resetPassword}
       />
-      <TextInput source="last_name" formClassName={classes.last_name} />
-      <TextInput
-        type="username"
-        source="username"
-        formClassName={classes.username}
-      />
-      <TextInput type="email" source="email" formClassName={classes.email} />
-    </SimpleForm>
-  </Edit>
-);
+    </div>
+  )
+}
 
 export default withStyles(styles)(AdminEdit);

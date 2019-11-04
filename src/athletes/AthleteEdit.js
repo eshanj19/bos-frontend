@@ -43,7 +43,7 @@ const AthleteEditActions = ({basePath,data,resource,onToggleDialog}) => {
   return(
     <CardActions style={{justifyContent:'flex-end'}}>
       <ShowButton basePath={basePath} record={data}/>
-      <Button color="primary" onClick={() => onToggleDialog(data.key)}>Reset Password</Button>
+      {/* <Button color="primary" onClick={() => onToggleDialog(data.key)}>Reset Password</Button> */}
     </CardActions>
   )
 }
