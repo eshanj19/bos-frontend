@@ -75,20 +75,21 @@ export default async (type, params) => {
       create: false,
       edit: false,
       delete: false
-    }
+    };
     // measurements
-    const users = {...init};
-    const admins = {...init};
-    const measurements = {...init};
-    const ngos = {...init};
-    const athletes = {...init};
-    const coaches = {...init};
-    const curriculums = {...init};
-    const files = {...init};
-    const measurementTypes = {...init};
-    const permission_groups = {...init};
-    const user_groups = {...init};
-    const resources = {...init};
+    const users = { ...init };
+    const admins = { ...init };
+    const measurements = { ...init };
+    const ngos = { ...init };
+    const athletes = { ...init };
+    const coaches = { ...init };
+    const curricula = { ...init };
+    const files = { ...init };
+    const measurementTypes = { ...init };
+    const permission_groups = { ...init };
+    const user_groups = { ...init };
+    const resources = { ...init };
+    const sessions = { ...init };
 
     if (checkPermission(permissions, "measurements.view_measurement")) {
       measurements["show"] = true;
@@ -153,151 +154,170 @@ export default async (type, params) => {
       permission_groups["create"] = true;
       permission_groups["edit"] = true;
       permission_groups["enabled"] = true;
-      resources["show"] = true;
-      resources["list"] = true;
-      resources["create"] = true;
-      resources["edit"] = true;
-      resources["enabled"] = true;
     }
     authPermissions["permission_groups"] = permission_groups;
-    authPermissions["resources"] = resources;
 
-    if (checkPermission(permissions, "users.view_user")) {
-      users["show"] = true;
-      users["list"] = true;
-      users["enabled"] = true;
-    }
-    if (checkPermission(permissions, "users.add_user")) {
-      users["create"] = true;
-      users["enabled"] = true;
-    }
-    if (checkPermission(permissions, "users.change_user")) {
-      users["edit"] = true;
-      users["enabled"] = true;
-    }
-    if (checkPermission(permissions, "users.delete_user")) {
-      users["delete"] = true;
-      users["enabled"] = true;
-    }
-    authPermissions["users"] = users;
-
-    if (checkPermission(permissions, "users.view_user")) {
+    if (checkPermission(permissions, "users.view_admin")) {
       admins["show"] = true;
       admins["list"] = true;
       admins["enabled"] = true;
     }
-    if (checkPermission(permissions, "users.add_user")) {
+    if (checkPermission(permissions, "users.add_admin")) {
       admins["create"] = true;
       admins["enabled"] = true;
     }
-    if (checkPermission(permissions, "users.change_user")) {
+    if (checkPermission(permissions, "users.change_admin")) {
       admins["edit"] = true;
       admins["enabled"] = true;
     }
-    if (checkPermission(permissions, "users.delete_user")) {
+    if (checkPermission(permissions, "users.delete_admin")) {
       admins["delete"] = true;
       admins["enabled"] = true;
     }
     authPermissions["admins"] = admins;
 
-    // TODO permissions
-    if (checkPermission(permissions, "users.view_user")) {
+    if (checkPermission(permissions, "users.view_coach")) {
       coaches["show"] = true;
       coaches["list"] = true;
       coaches["enabled"] = true;
     }
-    if (checkPermission(permissions, "users.add_user")) {
+    if (checkPermission(permissions, "users.add_coach")) {
       coaches["create"] = true;
       coaches["enabled"] = true;
     }
-    if (checkPermission(permissions, "users.change_user")) {
+    if (checkPermission(permissions, "users.change_coach")) {
       coaches["edit"] = true;
       coaches["enabled"] = true;
     }
-    if (checkPermission(permissions, "users.delete_user")) {
+    if (checkPermission(permissions, "users.delete_coach")) {
       coaches["delete"] = true;
       coaches["enabled"] = true;
     }
     authPermissions["coaches"] = coaches;
 
-    // TODO permissions
-    if (checkPermission(permissions, "users.view_user")) {
+    if (checkPermission(permissions, "users.view_athlete")) {
       athletes["show"] = true;
       athletes["list"] = true;
       athletes["enabled"] = true;
     }
-    if (checkPermission(permissions, "users.add_user")) {
+    if (checkPermission(permissions, "users.add_athlete")) {
       athletes["create"] = true;
       athletes["enabled"] = true;
     }
-    if (checkPermission(permissions, "users.change_user")) {
+    if (checkPermission(permissions, "users.change_athlete")) {
       athletes["edit"] = true;
       athletes["enabled"] = true;
     }
-    if (checkPermission(permissions, "users.delete_user")) {
+    if (checkPermission(permissions, "users.delete_athlete")) {
       athletes["delete"] = true;
       athletes["enabled"] = true;
     }
     authPermissions["athletes"] = athletes;
 
-    if (checkPermission(permissions, "users.view_user")) {
+    if (checkPermission(permissions, "users.view_customusergroup")) {
       user_groups["show"] = true;
       user_groups["list"] = true;
       user_groups["enabled"] = true;
     }
-    if (checkPermission(permissions, "users.add_user")) {
+    if (checkPermission(permissions, "users.add_customusergroup")) {
       user_groups["create"] = true;
       user_groups["enabled"] = true;
     }
-    if (checkPermission(permissions, "users.change_user")) {
+    if (checkPermission(permissions, "users.change_customusergroup")) {
       user_groups["edit"] = true;
       user_groups["enabled"] = true;
     }
-    if (checkPermission(permissions, "users.delete_user")) {
+    if (checkPermission(permissions, "users.delete_customusergroup")) {
       user_groups["delete"] = true;
       user_groups["enabled"] = true;
     }
     authPermissions["user_groups"] = user_groups;
 
-    // TODO permissions
-    if (checkPermission(permissions, "users.view_user")) {
-      curriculums["show"] = true;
-      curriculums["list"] = true;
-      curriculums["enabled"] = true;
+    if (
+      athletes["enabled"] ||
+      coaches["enabled"] ||
+      admins["enabled"] ||
+      user_groups["enabled"]
+    ) {
+      users["enabled"] = true;
     }
-    if (checkPermission(permissions, "users.add_user")) {
-      curriculums["create"] = true;
-      curriculums["enabled"] = true;
-    }
-    if (checkPermission(permissions, "users.change_user")) {
-      curriculums["edit"] = true;
-      curriculums["enabled"] = true;
-    }
-    if (checkPermission(permissions, "users.delete_user")) {
-      curriculums["delete"] = true;
-      curriculums["enabled"] = true;
-    }
-    authPermissions["curriculums"] = curriculums;
+    authPermissions["users"] = users;
 
-    // TODO permissions
-    if (checkPermission(permissions, "users.view_user")) {
+    if (checkPermission(permissions, "resources.view_resource")) {
+      resources["show"] = true;
+      resources["list"] = true;
+      resources["enabled"] = true;
+    }
+    if (checkPermission(permissions, "resources.add_resource")) {
+      resources["create"] = true;
+      resources["enabled"] = true;
+    }
+    if (checkPermission(permissions, "resources.change_resource")) {
+      resources["edit"] = true;
+      resources["enabled"] = true;
+    }
+    if (checkPermission(permissions, "resources.delete_resource")) {
+      resources["delete"] = true;
+      resources["enabled"] = true;
+    }
+    authPermissions["resources"] = resources;
+
+    if (checkPermission(permissions, "resources.view_curriculum")) {
+      curricula["show"] = true;
+      curricula["list"] = true;
+      curricula["enabled"] = true;
+    }
+    if (checkPermission(permissions, "resources.add_curriculum")) {
+      curricula["create"] = true;
+      curricula["enabled"] = true;
+    }
+    if (checkPermission(permissions, "resources.change_curriculum")) {
+      curricula["edit"] = true;
+      curricula["enabled"] = true;
+    }
+    if (checkPermission(permissions, "resources.delete_curriculum")) {
+      curricula["delete"] = true;
+      curricula["enabled"] = true;
+    }
+    authPermissions["curricula"] = curricula;
+
+    if (checkPermission(permissions, "resources.view_file")) {
       files["show"] = true;
       files["list"] = true;
       files["enabled"] = true;
     }
-    if (checkPermission(permissions, "users.add_user")) {
+    if (checkPermission(permissions, "resources.add_file")) {
       files["create"] = true;
       files["enabled"] = true;
     }
-    if (checkPermission(permissions, "users.change_user")) {
+    if (checkPermission(permissions, "resources.change_file")) {
       files["edit"] = true;
       files["enabled"] = true;
     }
-    if (checkPermission(permissions, "users.delete_user")) {
+    if (checkPermission(permissions, "resources.delete_file")) {
       files["delete"] = true;
       files["enabled"] = true;
     }
     authPermissions["files"] = files;
+
+    if (checkPermission(permissions, "resources.view_trainingsession")) {
+      sessions["show"] = true;
+      sessions["list"] = true;
+      sessions["enabled"] = true;
+    }
+    if (checkPermission(permissions, "resources.add_trainingsession")) {
+      sessions["create"] = true;
+      sessions["enabled"] = true;
+    }
+    if (checkPermission(permissions, "resources.change_trainingsession")) {
+      sessions["edit"] = true;
+      sessions["enabled"] = true;
+    }
+    if (checkPermission(permissions, "resources.delete_trainingsession")) {
+      sessions["delete"] = true;
+      sessions["enabled"] = true;
+    }
+    authPermissions["sessions"] = sessions;
     return Promise.resolve(authPermissions);
   }
   return Promise.reject("Unkown method");
