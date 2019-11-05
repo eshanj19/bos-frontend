@@ -60,9 +60,14 @@ export default async (type, params) => {
     return Promise.resolve();
   }
   if (type === AUTH_CHECK) {
-    return localStorage.getItem("username")
-      ? Promise.resolve()
-      : Promise.reject();
+    const {data} = await api.isAuthenticated()
+    const {is_authenticated} = data;
+    console.log(`IS AUTH ${is_authenticated}`);
+    if(!is_authenticated) {
+      return Promise.reject();
+    } else {
+      return Promise.resolve();
+    }
   }
   if (type === AUTH_GET_PERMISSIONS) {
     let permissions = localStorage.getItem("permissions").split(",");

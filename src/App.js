@@ -40,6 +40,7 @@ import { ResourceWithPermissions } from "ra-auth-acl";
 import measurementTypes from "./measurementTypes";
 import { API_URL } from "./constants";
 import errorSagas from "./dataProvider/errorSaga";
+import api from "./api";
 
 const i18nProvider = locale => {
   // if (locale === "fr") {

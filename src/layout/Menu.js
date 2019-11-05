@@ -38,10 +38,11 @@ import measurementTypes from "../measurementTypes";
 import ngos from "../ngos";
 import permissionGroups from "../permissionGroups";
 import { hasAccess } from "ra-auth-acl";
+import api from "../api";
 
 class Menu extends Component {
   state = {};
-
+  
   static propTypes = {
     onMenuClick: PropTypes.func,
     logout: PropTypes.object
