@@ -15,13 +15,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Edit,
   TextInput,
   ShowButton,
   SimpleForm,
   BooleanInput,
+  AutocompleteArrayInput
 } from "react-admin";
 import withStyles from "@material-ui/core/styles/withStyles";
 import { Card,
@@ -53,6 +54,17 @@ const AthleteEdit = ({ classes, ...props }) => {
   const [password,handleChangePassword] = useState('');
   const [confirmPassword,handleChangeConfirmPassword] = useState('');
   const [userKey, setUserKey] = useState(null);
+  const [resourceChoices, setResourceChoices] = useState([]);
+  useEffect(() => {
+    //fetch possible resource choices.
+    const ngoKey = localStorage.getItem("ngo_key");
+    api.getResourcesByNgo(ngoKey).then(({data}) => {
+      console.log(data);
+      const choices = data.map((d) => ({id : d.key, name:d.label}));
+      setResourceChoices(choices);
+    })
+  },[]);
+
   const resetPassword = () => {
     console.log(password)
     console.log(confirmPassword)
@@ -63,6 +75,16 @@ const AthleteEdit = ({ classes, ...props }) => {
       })
     }
   }
+  const handleResourceChoiceChange = data => {
+    const arr = Object.values(data);
+    if (arr.length > 2) {
+      arr.pop();
+      const value = arr.pop();
+      if (value && arr.includes(value)) {
+        data.preventDefault();
+      }
+    }
+  };
   return (
     <div>
     <Edit title="Athlete Edit" actions={
@@ -78,6 +100,11 @@ const AthleteEdit = ({ classes, ...props }) => {
           autoFocus
           source="last_name"
           formClassName={classes.inlineBlock}
+        />
+        <AutocompleteArrayInput
+          source="resources"
+          choices={resourceChoices}
+          onChange={handleResourceChoiceChange}
         />
         <BooleanInput source="is_active" formClassName={[classes.is_active]} />
       </SimpleForm>

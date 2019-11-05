@@ -207,6 +207,10 @@ const submitOrgHierarchy = (data, key) => {
   return axios.post(`/ngos/${key}/save_user_hierarchy/`, data);
 };
 
+const getResourcesByNgo = (ngoKey) => {
+  return axios.get(`/ngos/${ngoKey}/all_resources`);
+}
+
 const api = {
   handleSuccess,
   handleError,
@@ -215,6 +219,7 @@ const api = {
   put,
   post,
   getAthleteBaseline,
+  getResourcesByNgo,
   getCoachBaseline,
   getAthleteRegistrationResource: getAthleteRegistrationResource,
   getCoachRegistrationResource: getCoachRegistrationResource,

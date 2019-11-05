@@ -21,7 +21,8 @@ import {
   TextInput,
   ShowButton,
   SimpleForm,
-  BooleanInput
+  BooleanInput,
+  AutocompleteArrayInput
 } from "react-admin";
 import withStyles from "@material-ui/core/styles/withStyles";
 import {
@@ -51,16 +52,33 @@ const CoachEdit = ({ classes, ...props }) => {
   const [password, handleChangePassword] = useState("");
   const [confirmPassword, handleChangeConfirmPassword] = useState("");
   const [userKey, setUserKey] = useState(null);
+  const [resourceChoices, setResourceChoices] = useState([]);
+
+  useEffect(() => {
+    //fetch possible resource choices.
+  },[]);
   useEffect(() => {
     handleChangePassword('');
     handleChangeConfirmPassword('');
-  },[showDialog])
+  },[showDialog]);
+
   const resetPassword = () => {
     if (!password || password.length === 0) return;
     if (password === confirmPassword) {
       api.resetPassword(userKey, password).then(() => {
         toggleDialog(!showDialog);
       });
+    }
+  };
+
+  const handleResourceChoiceChange = data => {
+    const arr = Object.values(data);
+    if (arr.length > 2) {
+      arr.pop();
+      const value = arr.pop();
+      if (value && arr.includes(value)) {
+        data.preventDefault();
+      }
     }
   };
   return (
@@ -81,7 +99,11 @@ const CoachEdit = ({ classes, ...props }) => {
             source="last_name"
             formClassName={classes.last_name}
           />
-
+          <AutocompleteArrayInput
+            source="category"
+            choices={resourceChoices}
+            onChange={handleResourceChoiceChange}
+          />
           <BooleanInput source="is_active" formClassName={classes.is_active} />
         </SimpleForm>
       </Edit>
