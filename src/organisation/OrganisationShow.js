@@ -263,10 +263,8 @@ class OrgnisationShow extends Component {
             <div
               className="reactOrgChart"
               style={{
-                width: "90%",
                 marginTop: "20px",
-                marginLeft: "auto",
-                marginRight: "auto"
+                overflowX:'scroll'
               }}
             >
               {orgHierarchy

@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import withStyles from "@material-ui/core/styles/withStyles";
 
 import { styles, validateUserGroupCreation } from "./UserGroupCreate";
@@ -25,38 +25,51 @@ import {
   ReferenceArrayInput,
   TextInput,
   SimpleForm,
-  BooleanInput
+  BooleanInput,
+  AutocompleteArrayInput
 } from "react-admin";
 
-const UserGroupEdit = ({ classes, permissions, ...props }) => (
-  <Edit {...props}>
-    <SimpleForm redirect="list" validate={validateUserGroupCreation}>
-      <TextInput autoFocus source="label" formClassName={classes.label} />
-      <ReferenceArrayInput
-        formClassName={classes.type}
-        label="Users"
-        source="users"
-        filter={{ is_active: true }}
-        reference="coaches"
-      >
-        <SelectArrayInput optionText="first_name" />
-      </ReferenceArrayInput>
-      <ReferenceArrayInput
-        formClassName={classes.type}
-        label="Resources"
-        source="resources"
-        filter={{ is_active: true, type: "session" }}
-        reference="resources"
-      >
-        <SelectArrayInput optionText="label" />
-      </ReferenceArrayInput>
-      <BooleanInput
-        source="is_active"
-        formClassName={classes.is_active}
-        defaultValue={true}
-      />
-    </SimpleForm>
-  </Edit>
-);
+const UserGroupEdit = ({ classes, permissions, ...props }) => {
+  const [resourceChoices, setResourceChoices] = useState([]);
+  useEffect(() => {
+    //fetch possible resource choices.
+  },[]);
+  const handleResourceChoiceChange = data => {
+    const arr = Object.values(data);
+    if (arr.length > 2) {
+      arr.pop();
+      const value = arr.pop();
+      if (value && arr.includes(value)) {
+        data.preventDefault();
+      }
+    }
+  };
+  return (
+    <Edit {...props}>
+      <SimpleForm redirect="list" validate={validateUserGroupCreation}>
+        <TextInput autoFocus source="label" formClassName={classes.label} />
+        <ReferenceArrayInput
+          formClassName={classes.type}
+          label="Users"
+          source="users"
+          filter={{ is_active: true }}
+          reference="coaches"
+        >
+          <SelectArrayInput optionText="first_name" />
+        </ReferenceArrayInput>
+        <AutocompleteArrayInput
+          source="resources"
+          choices={resourceChoices}
+          onChange={handleResourceChoiceChange}
+        />
+        <BooleanInput
+          source="is_active"
+          formClassName={classes.is_active}
+          defaultValue={true}
+        />
+      </SimpleForm>
+    </Edit>
+  );
+};
 
 export default withStyles(styles)(UserGroupEdit);
