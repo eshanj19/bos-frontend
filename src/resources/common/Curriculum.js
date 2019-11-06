@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { withRouter } from "react-router-dom";
 import withStyles from "@material-ui/core/styles/withStyles";
-import { Card, CardContent, Button, Input,Snackbar } from "@material-ui/core";
+import { Card, CardContent, Button, Input,Switch,FormControlLabel } from "@material-ui/core";
 import findIndex from "lodash/findIndex";
 import find from "lodash/find";
 import uniqueId from "lodash/uniqueId";
@@ -40,7 +40,10 @@ export const styles = {
     top : '4px',
     cursor:'pointer'
   },
-  delete_wrapper: { position: "relative" }
+  delete_wrapper: { position: "relative" },
+  border_wrapper : {
+    border: "2px solid #dcdcdc", padding: "16px", borderRadius: "4px"
+  }
 };
 
 const randomId = type => {
@@ -233,7 +236,7 @@ class Curriculum extends Component {
         const {measurements} = session;
         const index = findIndex(measurements,{id:id});
         if(index > -1) {
-          measurements[index].is_required = true;
+          measurements[index].is_required = !measurements[index].is_required;
         }
       })
     })
@@ -414,11 +417,20 @@ class Curriculum extends Component {
         </div>
         <Card style={{ marginBottom: "8px", overflow: "initial" }}>
           <CardContent>
-            <Input
-              style={{ width: "200px", marginBottom: "24px" }}
-              placeholder="Curriculum Name"
-              onChange={({target : {value}}) => {this.setState({curriculumName:value})}}
-            />
+            <div>
+              <Input
+                style={{ width: "200px", marginBottom: "24px" }}
+                placeholder="Curriculum Name"
+                onChange={({target : {value}}) => {this.setState({curriculumName:value})}}
+              />
+            </div>
+            <div>
+              <Input
+                style={{ width: "400px", marginBottom: "24px" }}
+                placeholder="Curriculum Description"
+                onChange={({target : {value}}) => {this.setState({curriculumName:value})}}
+              />
+            </div>
             {days.map((day, index) => {
               return day.id === PLACEHOLDER_ID ? (
                 <PlaceholderItem
@@ -450,7 +462,7 @@ class Curriculum extends Component {
             this.handleAddMeasurementInputChange(sessionId, dayId, selected)
           }
           title="+ Add Measurement"
-          style={{ marginLeft: "20px" }}
+          style={{ marginLeft: "20px",marginTop:'10px' }}
           options={this.state.measurementOptions}
         />
       ) : (
@@ -463,9 +475,16 @@ class Curriculum extends Component {
               className={this.props.classes.delete_wrapper}
             >
               <DeleteIcon onClick={() => this.handleDelete(item.id)} className={this.props.classes.delete_icon} />
-              <FlareIcon onClick={() => this.handleSetCompulsory(item.id)}  className={this.props.classes.compulsory_icon}/>
             </a>
           </span>
+          <div>
+            <FormControlLabel control=
+            {
+              <Switch checked={item.is_required} 
+              onChange={() => {this.handleSetCompulsory(item.id)}}/>
+            } 
+              label="Make Field Mandatory" />
+          </div>
         </div>
       );
     });
@@ -482,7 +501,7 @@ class Curriculum extends Component {
             this.handleAddFileInputChange(sessionId, dayId, selected)
           }
           title="+ Add File"
-          style={{ marginLeft: "20px" }}
+          style={{ marginLeft: "20px",marginTop:'10px' }}
           options={this.state.fileOptions}
         />
       ) :
@@ -514,12 +533,13 @@ class Curriculum extends Component {
           onInputChange={selected => this.handleAddSessionOptionSelected(dayId,selected)}
           onCreateOption={(value) => {this.handleSessionCreateOption(value,dayId)}}
           title="+ Add Session"
-          style={{ marginLeft: "10px" }}
+          style={{ marginLeft: "10px",marginTop:'10px' }}
           inputPlaceholderText="Enter Session Title"
           options={this.state.sessionOptions}
         />
       ) : (
-        <div key={index} className={this.props.classes.item_margin}>
+        <div key={index} className={this.props.classes.item_margin}
+          style={{border: "2px solid #dcdcdc", padding: "16px", borderRadius: "4px"}}>
           <span className={this.props.classes.label_title}>
             {session.label}
             <a
@@ -538,7 +558,7 @@ class Curriculum extends Component {
 
   renderDays = (day, index) => {
     return (
-      <div key={index} style={{ marginBottom: "8px" }}>
+      <div className={this.props.classes.border_wrapper} key={index} style={{ marginBottom: "8px"}}>
         {/* <CardContent> */}
         <span className={this.props.classes.label_title}>
           {day.label}

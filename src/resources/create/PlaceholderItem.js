@@ -39,9 +39,11 @@ function PlaceholderItem({ onInputChange, onAddClick, title, ...props }) {
   return showInput ? (
     <div className={props.classes.item_input} style={{ ...props.style }}>
       {props.inputType === INPUT_TYPE.DROPDOWN ? (
-        <Select isSearchable options={props.options} onChange={onInputChange} />
+        <Select style={{marginTop:'10px'}} isSearchable options={props.options} onChange={onInputChange} />
       ) : props.inputType === INPUT_TYPE.CREATABLE_DROPDOWN ? (
         <CreatableSelect
+          style={{marginTop:'10px'}}
+          placeholder="Select existing or create..."
           isClearable
           onChange={onInputChange}
           options={props.options}
