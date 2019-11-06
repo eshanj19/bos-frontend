@@ -64,7 +64,7 @@ class OrgnisationShow extends Component {
         );
         const { root, zeroEdgeNodes } = this.getHierarchy(hierarchyData);
         const possibleUserOptions = filter(flatttenedHierarchyStructure, o => {
-          return this.findNodeByKey(root, o.key);
+          return this.findNodeByKey(root, o.key) && o.key !== "ghost_node";
         });
         console.log(possibleUserOptions);
         this.setState({
@@ -110,7 +110,7 @@ class OrgnisationShow extends Component {
     });
     hierarchyData.forEach(node => {
       const { parent_node, children } = node;
-      if (!parent_node && children.length === 0) {
+      if (!parent_node && children.length === 0 && node.key !== "ghost_node") {
         zeroEdgeNodes.push(node);
         return;
       }
@@ -202,7 +202,7 @@ class OrgnisationShow extends Component {
     if (newParentNode)
       newParentNode.children.push({ ...node, parent_node: parentKey });
     const possibleUserOptions = filter(flatttenedHierarchyStructure, o => {
-      return this.findNodeByKey(orgHierarchy, o.key);
+      return this.findNodeByKey(orgHierarchy, o.key) && o.key !== "ghost_node";
     });
     this.setState({
       orgHierarchy,
