@@ -47,10 +47,6 @@ export const INPUT_TYPE = {
   CREATABLE_DROPDOWN: 3
 };
 
-
-
-
-
 export const flat_hierarchy = [
   {
     key: "a1",
@@ -101,3 +97,7 @@ export const flat_hierarchy = [
     children: []
   }
 ];
+
+export function capitalizeFirstLetter(string) {
+  return string.charAt(0).toUpperCase() + string.slice(1);
+}

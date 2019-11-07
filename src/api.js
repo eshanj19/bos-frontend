@@ -138,7 +138,7 @@ const handleSuccess = (success, enqueueSnackbar) => {
 const showSnackbar = (enqueueSnackbar, message, variant) => {
   if (enqueueSnackbar) {
     enqueueSnackbar(message, {
-      autoHideDuration:4000,
+      autoHideDuration: 4000,
       variant: variant,
       anchorOrigin: {
         vertical: "bottom",
@@ -203,13 +203,17 @@ const submitFile = file => {
   return axios.post(`/resources/`, file);
 };
 
-const submitOrgHierarchy = (data, key) => {
+const saveOrgHierarchy = (data, key) => {
   return axios.post(`/ngos/${key}/save_user_hierarchy/`, data);
 };
 
-const getResourcesByNgo = (ngoKey) => {
-  return axios.get(`/ngos/${ngoKey}/all_resources`);
-}
+const getResourcesByNgo = ngoKey => {
+  return axios.get(`/ngos/${ngoKey}/all_resources/`);
+};
+
+const getPermissionGroups = ngoKey => {
+  return axios.get(`/ngos/${ngoKey}/permission_groups/`);
+};
 
 const api = {
   handleSuccess,
@@ -248,7 +252,8 @@ const api = {
   activateResource,
   getUserHierarchy,
   submitFile,
-  submitOrgHierarchy
+  saveOrgHierarchy,
+  getPermissionGroups
 };
 
 export default api;

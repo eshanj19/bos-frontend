@@ -35,7 +35,7 @@ import UserSelectionMenu from "./UserSelectionMenu";
  * }
  */
 
-class OrgnisationShow extends Component {
+class OrganisationShow extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -119,9 +119,9 @@ class OrgnisationShow extends Component {
         return;
       }
     });
-    const ghostNode = find(topLevelNodes,{key:"ghost_node"});
-    const topNodes = filter(topLevelNodes,(node) => node.key !== "ghost_node");
-    root = {...ghostNode,children:topNodes};
+    const ghostNode = find(topLevelNodes, { key: "ghost_node" });
+    const topNodes = filter(topLevelNodes, node => node.key !== "ghost_node");
+    root = { ...ghostNode, children: topNodes };
     return { root, zeroEdgeNodes };
   };
 
@@ -138,7 +138,7 @@ class OrgnisationShow extends Component {
     if (parentKey && this.isDecendentByKeyIn(nodeKey, parentKey)) {
       this.props.enqueueSnackbar("is decendent!", {
         variant: "error",
-        autoHideDuration:4000,
+        autoHideDuration: 4000,
         anchorOrigin: {
           vertical: "top",
           horizontal: "right"
@@ -223,18 +223,21 @@ class OrgnisationShow extends Component {
     return !!found;
   };
 
-  handleSubmit = () => {
+  handleSave = () => {
     const { orgHierarchy, zeroEdgeNodes } = this.state;
     const payload = [orgHierarchy].concat(zeroEdgeNodes);
     const ngoKey = localStorage.getItem("ngo_key");
     console.log(payload);
     // return;
-    api.submitOrgHierarchy(payload, ngoKey).then((response) => {
-      console.log(response);
-      api.handleSuccess(response,this.props.enqueueSnackbar)
-    }).catch(error => {
-      api.handleError(error);
-    });
+    api
+      .saveOrgHierarchy(payload, ngoKey)
+      .then(response => {
+        console.log(response);
+        api.handleSuccess(response, this.props.enqueueSnackbar);
+      })
+      .catch(error => {
+        api.handleError(error);
+      });
   };
 
   render() {
@@ -253,8 +256,8 @@ class OrgnisationShow extends Component {
             <h3>View/Edit Organisation</h3>
           </div>
           <div>
-            <Button onClick={() => this.handleSubmit(true)} color="primary">
-              Submit
+            <Button onClick={() => this.handleSave(true)} color="primary">
+              Save
             </Button>
           </div>
         </div>
@@ -264,7 +267,7 @@ class OrgnisationShow extends Component {
               className="reactOrgChart"
               style={{
                 marginTop: "20px",
-                overflowX:'scroll'
+                overflowX: "scroll"
               }}
             >
               {orgHierarchy
@@ -366,7 +369,7 @@ class OrgnisationShow extends Component {
   };
 }
 
-export default withSnackbar(OrgnisationShow);
+export default withSnackbar(OrganisationShow);
 
 /**
  * if the node is from zero-edge node,

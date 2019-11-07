@@ -15,16 +15,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
   Create,
-  FormTab,
-  TabbedForm,
+  AutocompleteArrayInput,
   TextInput,
   SimpleForm
 } from "react-admin";
 import withStyles from "@material-ui/core/styles/withStyles";
 import { Checkbox } from "@material-ui/core";
+import api from "../api";
 
 export const styles = {
   first_name: { display: "block" },
@@ -52,33 +52,65 @@ export const validateAdminCreation = values => {
   return errors;
 };
 
-const AdminCreate = ({ classes, ...props }) => (
-  <Create {...props}>
-    <SimpleForm redirect="list" validate={validateAdminCreation}>
-      <TextInput
-        autoFocus
-        source="first_name"
-        formClassName={classes.first_name}
-      />
-      <TextInput source="last_name" formClassName={classes.last_name} />
-      <TextInput
-        type="username"
-        source="username"
-        formClassName={classes.username}
-      />
-      <TextInput
-        type="password"
-        source="password"
-        formClassName={classes.password}
-      />
-      <TextInput
-        type="password"
-        source="confirm_password"
-        formClassName={classes.password}
-      />
-      <TextInput type="email" source="email" formClassName={classes.email} />
-    </SimpleForm>
-  </Create>
-);
+const AdminCreate = ({ classes, ...props }) => {
+  const [permissionGroupChoices, setPermissionGroupChoices] = useState([]);
+  useEffect(() => {
+    //fetch possible resource choices.
+    const ngoKey = localStorage.getItem("ngo_key");
+    api.getPermissionGroups(ngoKey).then(({ data }) => {
+      console.log(data);
+      const choices = data.map(d => ({
+        id: d.id,
+        name: d.name.replace(ngoKey + "_", "")
+      }));
+      setPermissionGroupChoices(choices);
+    });
+  }, []);
+
+  const handlePermissionGroupChoiceChange = data => {
+    const arr = Object.values(data);
+    if (arr.length > 2) {
+      arr.pop();
+      const value = arr.pop();
+      if (value && arr.includes(value)) {
+        data.preventDefault();
+      }
+    }
+  };
+  return (
+    <Create {...props}>
+      <SimpleForm redirect="list" validate={validateAdminCreation}>
+        <TextInput
+          autoFocus
+          source="first_name"
+          formClassName={classes.first_name}
+        />
+        <TextInput source="last_name" formClassName={classes.last_name} />
+        <TextInput
+          type="username"
+          source="username"
+          formClassName={classes.username}
+        />
+        <TextInput
+          type="password"
+          source="password"
+          formClassName={classes.password}
+        />
+        <TextInput
+          type="password"
+          source="confirm_password"
+          formClassName={classes.password}
+        />
+        <TextInput type="email" source="email" formClassName={classes.email} />
+        <AutocompleteArrayInput
+          label="Permission group"
+          source="permission_groups"
+          choices={permissionGroupChoices}
+          onChange={handlePermissionGroupChoiceChange}
+        />
+      </SimpleForm>
+    </Create>
+  );
+};
 
 export default withStyles(styles)(AdminCreate);

@@ -32,6 +32,7 @@ import {
 import withStyles from "@material-ui/core/styles/withStyles";
 import FullNameField from "../athletes/AthleteFullNameField";
 import { hasAccess } from "ra-auth-acl";
+import { PERMISSION_ADMIN_SHOW, PERMISSION_ADMIN_EDIT } from "../constants";
 
 const styles = {
   nb_commands: { color: "purple" }
@@ -51,6 +52,7 @@ const AdminList = ({ classes, permissions, ...props }) => (
     sort={{ field: "first_name", order: "ASC" }}
     perPage={25}
     filterDefaultValues={{ is_active: true }}
+    exporter={false}
   >
     <Responsive
       medium={
@@ -59,8 +61,8 @@ const AdminList = ({ classes, permissions, ...props }) => (
           <TextField source="email" type="text" />
           <DateField label="Created on" source="creation_time" showTime />
           <BooleanField source="is_active" label="Active?" />
-          {hasAccess(permissions, "users.show") && <ShowButton />}
-          {hasAccess(permissions, "users.edit") && <EditButton />}
+          {/* {hasAccess(permissions, PERMISSION_ADMIN_SHOW) && <ShowButton />} */}
+          {hasAccess(permissions, PERMISSION_ADMIN_EDIT) && <EditButton />}
         </Datagrid>
       }
     />

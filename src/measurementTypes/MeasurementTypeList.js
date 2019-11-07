@@ -50,6 +50,7 @@ const MeasurementTypeList = ({ classes, permissions, ...props }) => (
     sort={{ field: "label", order: "ASC" }}
     perPage={25}
     filterDefaultValues={{ is_active: true }}
+    exporter={false}
   >
     <Responsive
       medium={

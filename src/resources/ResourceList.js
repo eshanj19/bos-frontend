@@ -47,6 +47,7 @@ import { RESOURCE_TYPES } from "../utils";
 import api from "../api";
 import { refreshView as refreshViewAction } from "react-admin";
 import { withDataProvider } from "ra-core";
+import ResourceTypeField from "./common/ResourceTypeField";
 
 const styles = {
   nb_commands: { color: "purple" }
@@ -256,7 +257,9 @@ const CreateActions = props => {
         <MenuItem onClick={() => handleMenuSelect("curriculum")}>
           Curriculum
         </MenuItem>
-        <MenuItem onClick={() => handleMenuSelect("session")}>Session</MenuItem>
+        <MenuItem onClick={() => handleMenuSelect("session")}>
+          Training Session
+        </MenuItem>
         <MenuItem onClick={() => handleMenuSelect("file")}>File</MenuItem>
       </Menu>
     </>
@@ -295,7 +298,7 @@ const ResourcesList = ({ classes, ...props }) => (
     /> */}
     <BosDatagrid {...props}>
       <TextField source="label" type="text" />
-      <TextField source="type" type="text" />
+      <ResourceTypeField source="type" type="text" />
       <BooleanField source="is_active" label="Active" />
       <DateField label="Created on" source="creation_time" showTime />
       <DateField label="Modified on" source="last_modification_time" showTime />

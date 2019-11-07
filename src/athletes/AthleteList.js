@@ -31,6 +31,7 @@ import {
 import withStyles from "@material-ui/core/styles/withStyles";
 import FullNameField from "./AthleteFullNameField";
 import { hasAccess } from "ra-auth-acl";
+import { PERMISSION_ATHLETE_EDIT } from "../constants";
 
 const AthleteFilter = props => (
   <Filter {...props}>
@@ -50,6 +51,7 @@ const AthleteList = ({ classes, permissions, ...props }) => (
     sort={{ field: "first_name", order: "ASC" }}
     perPage={25}
     filterDefaultValues={{ is_active: true }}
+    exporter={false}
   >
     <Responsive
       medium={
@@ -59,8 +61,8 @@ const AthleteList = ({ classes, permissions, ...props }) => (
           <BooleanField source="is_active" type="text" />
           <DateField source="creation_time" showTime />
           <DateField source="last_modification_time" showTime />
-          {hasAccess(permissions, "athletes.show") && <ShowButton />}
-          {hasAccess(permissions, "athletes.edit") && <EditButton />}
+          {/* {hasAccess(permissions, "athletes.show") && <ShowButton />} */}
+          {hasAccess(permissions, PERMISSION_ATHLETE_EDIT) && <EditButton />}
         </Datagrid>
       }
     />

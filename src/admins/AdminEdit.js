@@ -21,28 +21,27 @@ import {
   TextInput,
   ShowButton,
   SimpleForm,
-  BooleanInput
+  BooleanInput,
+  AutocompleteArrayInput
 } from "react-admin";
 import withStyles from "@material-ui/core/styles/withStyles";
-import {
-  Button,
-  CardActions,
-} from "@material-ui/core";
+import { Button, CardActions } from "@material-ui/core";
 import api from "../api";
 import ResetPasswordDialog from "../common/ResetPasswordDialog";
 
 import { validateAdminCreation } from "./AdminCreate";
 
 const styles = {
-  inlineBlock: { display: 'inline-flex', marginRight: '1rem' },
-}
-
+  inlineBlock: { display: "inline-flex", marginRight: "1rem" }
+};
 
 const AdminEditActions = ({ basePath, data, resource, onToggleDialog }) => {
   return (
     <CardActions style={{ justifyContent: "flex-end" }}>
       <ShowButton basePath={basePath} record={data} />
-      <Button color='primary' onClick={() => onToggleDialog(data.key)}>Reset Password</Button>
+      <Button color="primary" onClick={() => onToggleDialog(data.key)}>
+        Reset Password
+      </Button>
     </CardActions>
   );
 };
@@ -51,11 +50,24 @@ const AdminEdit = ({ classes, ...props }) => {
   const [showDialog, toggleDialog] = useState(false);
   const [password, handleChangePassword] = useState("");
   const [confirmPassword, handleChangeConfirmPassword] = useState("");
+  const [permissionGroupChoices, setPermissionGroupChoices] = useState([]);
   const [userKey, setUserKey] = useState(null);
   useEffect(() => {
-    handleChangePassword('');
-    handleChangeConfirmPassword('');
-  },[showDialog])
+    handleChangePassword("");
+    handleChangeConfirmPassword("");
+  }, [showDialog]);
+  useEffect(() => {
+    //fetch possible resource choices.
+    const ngoKey = localStorage.getItem("ngo_key");
+    api.getPermissionGroups(ngoKey).then(({ data }) => {
+      console.log(data);
+      const choices = data.map(d => ({
+        id: d.id,
+        name: d.name.replace(ngoKey + "_", "")
+      }));
+      setPermissionGroupChoices(choices);
+    });
+  }, []);
   const resetPassword = () => {
     if (!password || password.length === 0) return;
     if (password === confirmPassword) {
@@ -64,12 +76,31 @@ const AdminEdit = ({ classes, ...props }) => {
       });
     }
   };
-  return(
+  const handlePermissionGroupChoiceChange = data => {
+    const arr = Object.values(data);
+    if (arr.length > 2) {
+      arr.pop();
+      const value = arr.pop();
+      if (value && arr.includes(value)) {
+        data.preventDefault();
+      }
+    }
+  };
+
+  return (
     <div>
-      <Edit actions={<AdminEditActions 
-        onToggleDialog={(userKey) => {toggleDialog(!showDialog);setUserKey(userKey)}} 
-        {...props}/>} 
-      {...props}>
+      <Edit
+        actions={
+          <AdminEditActions
+            onToggleDialog={userKey => {
+              toggleDialog(!showDialog);
+              setUserKey(userKey);
+            }}
+            {...props}
+          />
+        }
+        {...props}
+      >
         <SimpleForm validate={validateAdminCreation}>
           <TextInput
             autoFocus
@@ -82,7 +113,22 @@ const AdminEdit = ({ classes, ...props }) => {
             source="username"
             formClassName={classes.username}
           />
-          <TextInput type="email" source="email" formClassName={classes.email} />
+          <TextInput
+            type="email"
+            source="email"
+            formClassName={classes.email}
+          />
+          <AutocompleteArrayInput
+            label="Permission group"
+            source="permission_groups"
+            choices={permissionGroupChoices}
+            onChange={handlePermissionGroupChoiceChange}
+          />
+          <BooleanInput
+            label="Active"
+            source="is_active"
+            formClassName={classes.email}
+          />
         </SimpleForm>
       </Edit>
       <ResetPasswordDialog
@@ -91,11 +137,13 @@ const AdminEdit = ({ classes, ...props }) => {
         confirmPassword={confirmPassword}
         onChangePassword={handleChangePassword}
         onChangeConfirmPassword={handleChangeConfirmPassword}
-        toggleDialog={() => {toggleDialog(!showDialog)}}
+        toggleDialog={() => {
+          toggleDialog(!showDialog);
+        }}
         resetPassword={resetPassword}
       />
     </div>
-  )
-}
+  );
+};
 
 export default withStyles(styles)(AdminEdit);
