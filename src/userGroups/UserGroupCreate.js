@@ -15,16 +15,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import React, { Component } from "react";
+import React, { Component,useState,useEffect } from "react";
 import withStyles from "@material-ui/core/styles/withStyles";
 import {
   Create,
   SelectArrayInput,
-  ReferenceArrayInput,
+  AutocompleteArrayInput,
   TextInput,
   SimpleForm,
   BooleanInput
 } from "react-admin";
+import api from "../api";
 
 export const styles = {
   label: { display: "block" },
@@ -57,11 +58,40 @@ export const validateUserGroupCreation = values => {
 
 const optionRenderer = choice => `${choice.first_name} ${choice.last_name}`;
 
-const UserGroupCreate = ({ classes, ...props }) => (
-  <Create {...props}>
-    <SimpleForm redirect="list" validate={validateUserGroupCreation}>
-      <TextInput autoFocus source="label" formClassName={classes.label} />
-      <ReferenceArrayInput
+const UserGroupCreate = ({ classes, ...props }) => {
+  const [resourceChoices, setResourceChoices] = useState([]);
+  const [userChoices, setUserChoices] = useState([]);
+  useEffect(() => {
+    //fetch possible resource choices.
+    const ngoKey = localStorage.getItem("ngo_key");
+    api.getResourcesByNgo(ngoKey).then(({ data }) => {
+      console.log(data);
+      const choices = data.map(d => ({ id: d.key, name: d.label }));
+      setResourceChoices(choices);
+    });
+    api.getAllUsersByNgo(ngoKey).then(({ data }) => {
+      const choices = data.map(d => ({
+        id: d.key,
+        name: `${d.first_name + d.last_name}`
+      }));
+      setUserChoices(choices);
+    });
+  }, []);
+  const handleChoiceChange = data => {
+    const arr = Object.values(data);
+    if (arr.length > 2) {
+      arr.pop();
+      const value = arr.pop();
+      if (value && arr.includes(value)) {
+        data.preventDefault();
+      }
+    }
+  };
+  return (
+    <Create {...props}>
+      <SimpleForm redirect="list" validate={validateUserGroupCreation}>
+        <TextInput autoFocus source="label" formClassName={classes.label} />
+        {/* <ReferenceArrayInput
         formClassName={classes.type}
         label="Users"
         source="users"
@@ -79,13 +109,24 @@ const UserGroupCreate = ({ classes, ...props }) => (
         reference="resources"
       >
         <SelectArrayInput optionText="label" />
-      </ReferenceArrayInput>
-      <BooleanInput
-        source="is_active"
-        formClassName={classes.is_active}
-        defaultValue={true}
-      />
-    </SimpleForm>
-  </Create>
-);
+      </ReferenceArrayInput> */}
+        <AutocompleteArrayInput
+          source="users"
+          choices={userChoices}
+          onChange={handleChoiceChange}
+        />
+        <AutocompleteArrayInput
+          source="resources"
+          choices={resourceChoices}
+          onChange={handleChoiceChange}
+        />
+        <BooleanInput
+          source="is_active"
+          formClassName={classes.is_active}
+          defaultValue={true}
+        />
+      </SimpleForm>
+    </Create>
+  );
+};
 export default withStyles(styles)(UserGroupCreate);
