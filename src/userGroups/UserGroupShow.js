@@ -15,50 +15,58 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 import withStyles from "@material-ui/core/styles/withStyles";
 import { styles } from "./UserGroupCreate";
 import {
-  SelectArrayInput,
-  ReferenceArrayInput,
+  SingleFieldList,
+  ArrayField,
   TextField,
   SimpleShowLayout,
   BooleanField,
   Show,
-  ReferenceArrayField,
   ChipField
 } from "react-admin";
+import api from "../api";
 
-const UserGroupShow = ({ classes, permissions, ...props }) => (
-  <Show {...props}>
-    <SimpleShowLayout redirect="list">
-      <TextField autoFocus source="label" formClassName={classes.label} />
-      {/* <ReferenceArrayInput
-        formClassName={classes.type}
-        label="Users"
-        source="users"
-        filter={{ is_active: true }}
-        reference="coaches"
-      >
-        <SelectArrayInput optionText="first_name" />
-      </ReferenceArrayInput> */}
-      <ReferenceArrayField
-        formClassName={classes.type}
-        label="Resources"
-        source="resources"
-        filter={{ is_active: true, type: "session" }}
-        reference="resources"
-      >
-        <ChipField optionText="label" />
-      </ReferenceArrayField>
-      <BooleanField
-        source="is_active"
-        formClassName={classes.is_active}
-        defaultValue={true}
-      />
-    </SimpleShowLayout>
-  </Show>
-);
+const UserGroupShow = ({ classes, permissions, ...props }) => {
+  const [resourceChoices, setResourceChoices] = useState([]);
+  const [userChoices, setUserChoices] = useState([]);
+  useEffect(() => {
+    //fetch possible resource choices.
+    const ngoKey = localStorage.getItem("ngo_key");
+    api.getResourcesByNgo(ngoKey).then(({ data }) => {
+      console.log(data);
+      const choices = data.map(d => ({ id: d.key, name: d.label }));
+      setResourceChoices(choices);
+    });
+    api.getAllUsersByNgo(ngoKey).then(({ data }) => {
+      const choices = data.map(d => ({
+        id: d.key,
+        name: `${d.first_name + d.last_name}`
+      }));
+      setUserChoices(choices);
+    });
+  }, []);
+
+  return (
+    <Show {...props}>
+      <SimpleShowLayout redirect="list">
+        <TextField autoFocus source="label" formClassName={classes.label} />
+        <ArrayField source="resources" choices={resourceChoices}>
+          <SingleFieldList>
+            <ChipField source="name" />
+          </SingleFieldList>
+        </ArrayField>
+        <BooleanField
+          source="is_active"
+          formClassName={classes.is_active}
+          defaultValue={true}
+        />
+      </SimpleShowLayout>
+    </Show>
+  );
+};
 
 export default withStyles(styles)(UserGroupShow);

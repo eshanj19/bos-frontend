@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import React, { useState,useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Edit,
   TextInput,
@@ -25,24 +25,22 @@ import {
   AutocompleteArrayInput
 } from "react-admin";
 import withStyles from "@material-ui/core/styles/withStyles";
-import {
-  Button,
-  CardActions,
-} from "@material-ui/core";
+import { Button, CardActions } from "@material-ui/core";
 import api from "../api";
 import ResetPasswordDialog from "../common/ResetPasswordDialog";
 
 const styles = {
-  inlineBlock: { display: 'inline-flex', marginRight: '1rem' },
-}
-
+  flex: { display: "flex", marginRight: "1rem" }
+};
 
 const CoachEditActions = ({ basePath, data, resource, onToggleDialog }) => {
   console.log(data);
   return (
     <CardActions style={{ justifyContent: "flex-end" }}>
       <ShowButton basePath={basePath} record={data} />
-      <Button color="primary" onClick={() => onToggleDialog(data.key)}>Reset Password</Button>
+      <Button color="primary" onClick={() => onToggleDialog(data.key)}>
+        Reset Password
+      </Button>
     </CardActions>
   );
 };
@@ -57,16 +55,16 @@ const CoachEdit = ({ classes, ...props }) => {
   useEffect(() => {
     //fetch possible resource choices.
     const ngoKey = localStorage.getItem("ngo_key");
-    api.getResourcesByNgo(ngoKey).then(({data}) => {
+    api.getResourcesByNgo(ngoKey).then(({ data }) => {
       console.log(data);
-      const choices = data.map((d) => ({id : d.key, name:d.label}));
+      const choices = data.map(d => ({ id: d.key, name: d.label }));
       setResourceChoices(choices);
-    })
-  },[]);
+    });
+  }, []);
   useEffect(() => {
-    handleChangePassword('');
-    handleChangeConfirmPassword('');
-  },[showDialog]);
+    handleChangePassword("");
+    handleChangeConfirmPassword("");
+  }, [showDialog]);
 
   const resetPassword = () => {
     if (!password || password.length === 0) return;
@@ -91,26 +89,34 @@ const CoachEdit = ({ classes, ...props }) => {
     <div>
       <Edit
         title="Coach Edit"
-        actions={<CoachEditActions onToggleDialog={(userKey) => {toggleDialog(!showDialog);setUserKey(userKey)}} {...props} />}
+        actions={
+          <CoachEditActions
+            onToggleDialog={userKey => {
+              toggleDialog(!showDialog);
+              setUserKey(userKey);
+            }}
+            {...props}
+          />
+        }
         {...props}
       >
         <SimpleForm>
           <TextInput
             autoFocus
             source="first_name"
-            formClassName={classes.first_name}
+            formClassName={classes.flex}
           />
           <TextInput
             autoFocus
             source="last_name"
-            formClassName={classes.last_name}
+            formClassName={classes.flex}
           />
           <AutocompleteArrayInput
             source="resources"
             choices={resourceChoices}
             onChange={handleResourceChoiceChange}
           />
-          <BooleanInput source="is_active" formClassName={classes.is_active} />
+          <BooleanInput source="is_active" formClassName={classes.flex} />
         </SimpleForm>
       </Edit>
       <ResetPasswordDialog
@@ -119,7 +125,9 @@ const CoachEdit = ({ classes, ...props }) => {
         confirmPassword={confirmPassword}
         onChangePassword={handleChangePassword}
         onChangeConfirmPassword={handleChangeConfirmPassword}
-        toggleDialog={() => {toggleDialog(!showDialog)}}
+        toggleDialog={() => {
+          toggleDialog(!showDialog);
+        }}
         resetPassword={resetPassword}
       />
     </div>
