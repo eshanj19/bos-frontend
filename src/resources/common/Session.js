@@ -50,7 +50,8 @@ class Session extends Component {
         items: [PLACEHOLDER_ITEMS]
       },
       measurementOptions : [],
-      fileOptions : []
+      fileOptions : [],
+      isEdit : false
     };
   }
 
@@ -78,8 +79,9 @@ class Session extends Component {
     });
     if(initialData && sessionName) {
       console.log(sessionName);
-      this.setState({sessionName : sessionName});
-      this.setState({session : initialData});
+      this.setState({sessionName : sessionName,
+        session : initialData,
+        isEdit : true});
     }
   }
 
@@ -156,9 +158,14 @@ class Session extends Component {
       session: { items },
       filesData,
       sessionName,
-      sessionDescription
+      sessionDescription,
+      isEdit
     } = this.state;
-    console.log(sessionDescription);
+    const {
+      match: {
+        params: { id: resourceKey }
+      }
+    } = this.props;
     // return;
     /**
      * filter the placeholders
@@ -198,9 +205,15 @@ class Session extends Component {
       is_submitting,
       ...!!sessionDescription && {description:sessionDescription},
     };
-    api.saveSession(payload).then(response => {
-      console.log("session saved");
-    });
+    if(isEdit) {
+      api.saveSession(resourceKey,payload).then(response => {
+        console.log("session saved");
+      });
+    } else {
+      api.createSession(payload).then(response => {
+        console.log("session saved");
+      });
+    }
     // console.log(filtered);
   };
   render() {
@@ -323,4 +336,4 @@ class Session extends Component {
   };
 }
 
-export default withStyles(styles)(Session);
+export default withRouter(withStyles(styles)(Session));

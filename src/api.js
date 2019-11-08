@@ -156,9 +156,13 @@ const getFileDropdownOptionsForNgo = ngo_key => {
   return axios.get(`ngos/${ngo_key}/files/`);
 };
 
-const saveSession = data => {
-  return axios.post("resources/", data);
+const saveSession = (sessionKey,data) => {
+  return axios.put(`resources/${sessionKey}/`, data);
 };
+
+const createSession = data => {
+  return axios.post("resources/", data);
+}
 
 const getSessionsForNgo = ngo_key => {
   return axios.get(`ngos/${ngo_key}/training_sessions/`);
@@ -232,6 +236,7 @@ const api = {
   post,
   getAthleteBaseline,
   getResourcesByNgo,
+  createSession,
   getCoachBaseline,
   getAthleteRegistrationResource: getAthleteRegistrationResource,
   getCoachRegistrationResource: getCoachRegistrationResource,
