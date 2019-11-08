@@ -390,11 +390,6 @@ class Curriculum extends Component {
   };
   handleSubmit = is_submitting => {
     const { days, curriculumName, isEdit, curriculumDescription } = this.state;
-    const {
-      match: {
-        params: { id: resourceKey }
-      }
-    } = this.props;
     if(!!curriculumName) return;
     const filteredDays = this.processPostData();
     const payload = {
@@ -405,6 +400,11 @@ class Curriculum extends Component {
       is_submitting
     };
     if (isEdit) {
+      const {
+        match: {
+          params: { id: resourceKey }
+        }
+      } = this.props;
       api
         .saveCurriculum(resourceKey, payload)
         .then(response => {

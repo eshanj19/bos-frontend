@@ -9,6 +9,7 @@ import Session from "./resources/common/Session";
 import EditCurriculum from "./resources/edit/EditCurriculum";
 import EditSession from "./resources/edit/EditSession";
 import CreateFile from "./resources/create/CreateFile";
+import EditFile from "./resources/edit/EditFile";
 
 export default [
   <Route exact path="/organisation" component={OrganisationShow} />,
@@ -25,5 +26,6 @@ export default [
     path="/resources/edit/curriculum/:id"
     component={EditCurriculum}
   />,
-  <Route exact path="/resources/edit/session/:id" component={EditSession} />
+  <Route exact path="/resources/edit/session/:id" component={EditSession} />,
+  <Route exact path="/resources/edit/file/:id" component={EditFile} />
 ];

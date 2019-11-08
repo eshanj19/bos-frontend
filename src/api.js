@@ -228,6 +228,10 @@ const submitFile = file => {
   return axios.post(`/resources/`, file);
 };
 
+const editFile = (fileKey,file) => {
+  return axios.put(`resources/${fileKey}/`,file);
+}
+
 const saveOrgHierarchy = (data, key) => {
   return axios.post(`/ngos/${key}/save_user_hierarchy/`, data);
 };
@@ -285,7 +289,8 @@ const api = {
   getUserHierarchy,
   submitFile,
   saveOrgHierarchy,
-  getPermissionGroups
+  getPermissionGroups,
+  editFile
 };
 
 export default api;
