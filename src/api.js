@@ -215,6 +215,10 @@ const getPermissionGroups = ngoKey => {
   return axios.get(`/ngos/${ngoKey}/permission_groups/`);
 };
 
+const getAllUsersByNgo = ngoKey => {
+  return axios.get(`/ngos/${ngoKey}/all_users/`);
+}
+
 const api = {
   handleSuccess,
   handleError,
@@ -238,6 +242,7 @@ const api = {
   setAsAthleteRegistrationSession,
   setAsCoachRegistrationSession,
   createAthlete,
+  getAllUsersByNgo,
   createCoach,
   createNGO,
   createPermissionGroup,

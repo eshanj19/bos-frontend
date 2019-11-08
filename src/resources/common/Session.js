@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { withRouter } from "react-router-dom";
 import withStyles from "@material-ui/core/styles/withStyles";
-import { Card, CardContent, Button, Input } from "@material-ui/core";
+import { Card, CardContent, Button, Input,FormControlLabel, Switch } from "@material-ui/core";
 import find from "lodash/find";
 import uniqueId from "lodash/uniqueId";
 import findIndex from "lodash/findIndex";
@@ -20,8 +20,9 @@ export const styles = {
   item_margin: { marginTop: "10px", marginBottom: "10px", marginLeft: "20px" },
   delete_icon: {
     fontSize: "14px",
-    // position: "absolute",
-    marginTop : "8px",
+    position: "absolute",
+    top : '2px',
+    left : '4px',
     cursor: "pointer"
   },
   delete_wrapper: { position: "relative" }
@@ -128,6 +129,16 @@ class Session extends Component {
     );
   };
 
+  handleSetCompulsory = (id) => {
+    const {items} = this.state.session;
+    const i = findIndex(items,{id});
+    if(i > -1) {
+      items[i].is_required = !items[i].is_required;
+    };
+    const session = {items};
+    this.setState({session});
+  }
+
   handleDelete = (id) => {
     const {items} = this.state.session;
     const i = findIndex(items,{id});
@@ -144,8 +155,11 @@ class Session extends Component {
     const {
       session: { items },
       filesData,
-      sessionName
+      sessionName,
+      sessionDescription
     } = this.state;
+    console.log(sessionDescription);
+    // return;
     /**
      * filter the placeholders
      * don't need to have the placeholders to be
@@ -181,7 +195,8 @@ class Session extends Component {
       data: { files, measurements },
       label: sessionName,
       type: "session",
-      is_submitting
+      is_submitting,
+      ...!!sessionDescription && {description:sessionDescription},
     };
     api.saveSession(payload).then(response => {
       console.log("session saved");
@@ -215,12 +230,23 @@ class Session extends Component {
         </div>
         <Card style={{ overflow: "initial" }}>
           <CardContent>
-            <Input
-              style={{ width: "200px", marginBottom: "24px" }}
-              placeholder="Session Name"
-              value={this.state.sessionName || ''}
-              onChange={({target : {value}}) => {this.setState({sessionName:value})}}
-            />
+            <div>
+              <Input
+                style={{ width: "200px", marginBottom: "24px" }}
+                placeholder="Session Name"
+                value={this.state.sessionName || ''}
+                onChange={({target : {value}}) => {this.setState({sessionName:value})}}
+              />
+            </div>
+            <div>
+              <Input
+                style={{ width: "500px", marginBottom: "24px" }}
+                placeholder="Session Description"
+                multiline
+                value={this.state.sessionDescription || ''}
+                onChange={({target : {value}}) => {this.setState({sessionDescription:value})}}
+              />
+            </div>
             {this.renderSessionItems(session.items, session.id)}
           </CardContent>
         </Card>
@@ -271,9 +297,17 @@ class Session extends Component {
               }).label : ''
             }
           </span>
-          <span>
+          <a style={{position:'relative'}}>
             <DeleteIcon onClick={() => this.handleDelete(item.id)} className={this.props.classes.delete_icon} />
-          </span>
+          </a>
+          <div>
+            <FormControlLabel control=
+            {
+              <Switch checked={item.is_required} 
+              onChange={() => {this.handleSetCompulsory(item.id)}}/>
+            } 
+              label="Make Field Mandatory" />
+          </div>
         </div>
       );
     });

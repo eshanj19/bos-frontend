@@ -37,7 +37,6 @@ export const styles = {
   root: {
     margin: "0 auto",
     width: "100%",
-    maxWidth: "70%",
     backgroundColor: "white"
   },
   sectionHeader: {

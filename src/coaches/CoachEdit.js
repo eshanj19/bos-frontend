@@ -56,6 +56,12 @@ const CoachEdit = ({ classes, ...props }) => {
 
   useEffect(() => {
     //fetch possible resource choices.
+    const ngoKey = localStorage.getItem("ngo_key");
+    api.getResourcesByNgo(ngoKey).then(({data}) => {
+      console.log(data);
+      const choices = data.map((d) => ({id : d.key, name:d.label}));
+      setResourceChoices(choices);
+    })
   },[]);
   useEffect(() => {
     handleChangePassword('');
@@ -100,7 +106,7 @@ const CoachEdit = ({ classes, ...props }) => {
             formClassName={classes.last_name}
           />
           <AutocompleteArrayInput
-            source="category"
+            source="resources"
             choices={resourceChoices}
             onChange={handleResourceChoiceChange}
           />

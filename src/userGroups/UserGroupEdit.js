@@ -28,13 +28,25 @@ import {
   BooleanInput,
   AutocompleteArrayInput
 } from "react-admin";
+import api from "../api";
 
 const UserGroupEdit = ({ classes, permissions, ...props }) => {
   const [resourceChoices, setResourceChoices] = useState([]);
+  const [userChoices, setUserChoices] = useState([]);
   useEffect(() => {
     //fetch possible resource choices.
+    const ngoKey = localStorage.getItem("ngo_key");
+    api.getResourcesByNgo(ngoKey).then(({data}) => {
+      console.log(data);
+      const choices = data.map((d) => ({id : d.key, name:d.label}));
+      setResourceChoices(choices);
+    })
+    api.getAllUsersByNgo(ngoKey).then(({data}) => {
+      const choices = data.map((d) => ({id : d.key, name:`${d.first_name + d.last_name}`}));
+      setUserChoices(choices);
+    })
   },[]);
-  const handleResourceChoiceChange = data => {
+  const handleChoiceChange = data => {
     const arr = Object.values(data);
     if (arr.length > 2) {
       arr.pop();
@@ -48,7 +60,7 @@ const UserGroupEdit = ({ classes, permissions, ...props }) => {
     <Edit {...props}>
       <SimpleForm redirect="list" validate={validateUserGroupCreation}>
         <TextInput autoFocus source="label" formClassName={classes.label} />
-        <ReferenceArrayInput
+        {/* <ReferenceArrayInput
           formClassName={classes.type}
           label="Users"
           source="users"
@@ -56,11 +68,16 @@ const UserGroupEdit = ({ classes, permissions, ...props }) => {
           reference="coaches"
         >
           <SelectArrayInput optionText="first_name" />
-        </ReferenceArrayInput>
+        </ReferenceArrayInput> */}
+        <AutocompleteArrayInput
+          source="users"
+          choices={userChoices}
+          onChange={handleChoiceChange}
+        />
         <AutocompleteArrayInput
           source="resources"
           choices={resourceChoices}
-          onChange={handleResourceChoiceChange}
+          onChange={handleChoiceChange}
         />
         <BooleanInput
           source="is_active"

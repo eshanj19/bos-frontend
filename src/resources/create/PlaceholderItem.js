@@ -23,7 +23,7 @@ const styles = {
     borderRadius: "4px",
     backgroundColor: "#28369354",
     cursor: "pointer",
-    width: "150px",
+    width: "180px",
     "&:hover": { backgroundColor: "#3342a5c7" }
   },
   item_input: { padding: "4px", backgroundColor: "white", width: "250px" },

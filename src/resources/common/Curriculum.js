@@ -377,11 +377,13 @@ class Curriculum extends Component {
     return filteredDays;
   }
   handleSubmit = (is_submitting) => {
-    const { days,curriculumName } = this.state;
+    const { days,curriculumName,curriculumDescription } = this.state;
+    if(!curriculumName || curriculumName.length === 0) return;
     const filteredDays = this.processPostData();
     const payload = {
       data: filteredDays,
       label: curriculumName,
+      description : curriculumDescription,
       type: "curriculum",
       is_submitting
     };
@@ -428,7 +430,8 @@ class Curriculum extends Component {
               <Input
                 style={{ width: "400px", marginBottom: "24px" }}
                 placeholder="Curriculum Description"
-                onChange={({target : {value}}) => {this.setState({curriculumName:value})}}
+                multiline
+                onChange={({target : {value}}) => {this.setState({curriculumDescription:value})}}
               />
             </div>
             {days.map((day, index) => {
