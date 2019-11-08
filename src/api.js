@@ -118,12 +118,29 @@ const logout = () => {
 };
 
 const handleError = (error, enqueueSnackbar) => {
-  const { data } = error;
-  if (data && data.message) {
-    showSnackbar(enqueueSnackbar, data.message, SNACKBAR_ERROR);
+  if (error.response) {
+    /*
+     * The request was made and the server responded with a
+     * status code that falls out of the range of 2xx
+     */
+    const { data } = error.response;
+    if (data && data.message) {
+      showSnackbar(enqueueSnackbar, data.message, SNACKBAR_ERROR);
+    } else {
+      showSnackbar(enqueueSnackbar, API_ERROR_UNKNOWN, SNACKBAR_ERROR);
+    }
+  } else if (error.request) {
+    /*
+     * The request was made but no response was received, `error.request`
+     * is an instance of XMLHttpRequest in the browser and an instance
+     * of http.ClientRequest in Node.js
+     */
+    console.log(error.request);
   } else {
-    showSnackbar(enqueueSnackbar, API_ERROR_UNKNOWN, SNACKBAR_ERROR);
+    // Something happened in setting up the request and triggered an Error
+    console.log("Error", error.message);
   }
+  console.log(error.config);
 };
 
 const handleSuccess = (success, enqueueSnackbar) => {
@@ -156,13 +173,13 @@ const getFileDropdownOptionsForNgo = ngo_key => {
   return axios.get(`ngos/${ngo_key}/files/`);
 };
 
-const saveSession = (sessionKey,data) => {
+const saveSession = (sessionKey, data) => {
   return axios.put(`resources/${sessionKey}/`, data);
 };
 
 const createSession = data => {
   return axios.post("resources/", data);
-}
+};
 
 const getSessionsForNgo = ngo_key => {
   return axios.get(`ngos/${ngo_key}/training_sessions/`);
@@ -225,7 +242,7 @@ const getPermissionGroups = ngoKey => {
 
 const getAllUsersByNgo = ngoKey => {
   return axios.get(`/ngos/${ngoKey}/all_users/`);
-}
+};
 
 const api = {
   handleSuccess,
