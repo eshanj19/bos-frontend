@@ -1,7 +1,14 @@
 import React, { Component } from "react";
 import { withRouter } from "react-router-dom";
 import withStyles from "@material-ui/core/styles/withStyles";
-import { Card, CardContent, Button, Input,FormControlLabel, Switch } from "@material-ui/core";
+import {
+  Card,
+  CardContent,
+  Button,
+  Input,
+  FormControlLabel,
+  Switch
+} from "@material-ui/core";
 import find from "lodash/find";
 import uniqueId from "lodash/uniqueId";
 import findIndex from "lodash/findIndex";
@@ -21,8 +28,8 @@ export const styles = {
   delete_icon: {
     fontSize: "14px",
     position: "absolute",
-    top : '2px',
-    left : '4px',
+    top: "2px",
+    left: "4px",
     cursor: "pointer"
   },
   delete_wrapper: { position: "relative" }
@@ -49,16 +56,16 @@ class Session extends Component {
       session: {
         items: [PLACEHOLDER_ITEMS]
       },
-      measurementOptions : [],
-      fileOptions : [],
-      isEdit : false
+      measurementOptions: [],
+      fileOptions: [],
+      isEdit: false
     };
   }
 
   componentDidMount() {
     console.log(this.props);
     const ngoKey = localStorage.getItem("ngo_key");
-    const {initialData,sessionName} = this.props;
+    const { initialData, sessionName, sessionDescription } = this.props;
     api.getFileDropdownOptionsForNgo(ngoKey).then(({ data }) => {
       const sanitizedOptions = data.map(option => {
         return {
@@ -66,7 +73,7 @@ class Session extends Component {
           value: option.key
         };
       });
-      this.setState({ fileOptions: sanitizedOptions, filesData : data });
+      this.setState({ fileOptions: sanitizedOptions, filesData: data });
     });
     api.getMeasurementDropdownOptionsForNgo(ngoKey).then(({ data }) => {
       const sanitizedOptions = data.map(option => {
@@ -77,11 +84,14 @@ class Session extends Component {
       });
       this.setState({ measurementOptions: sanitizedOptions });
     });
-    if(initialData && sessionName) {
+    if (initialData && sessionName) {
       console.log(sessionName);
-      this.setState({sessionName : sessionName,
-        session : initialData,
-        isEdit : true});
+      this.setState({
+        sessionName: sessionName,
+        sessionDescription: sessionDescription,
+        session: initialData,
+        isEdit: true
+      });
     }
   }
 
@@ -131,29 +141,29 @@ class Session extends Component {
     );
   };
 
-  handleSetCompulsory = (id) => {
-    const {items} = this.state.session;
-    const i = findIndex(items,{id});
-    if(i > -1) {
+  handleSetCompulsory = id => {
+    const { items } = this.state.session;
+    const i = findIndex(items, { id });
+    if (i > -1) {
       items[i].is_required = !items[i].is_required;
-    };
-    const session = {items};
-    this.setState({session});
-  }
+    }
+    const session = { items };
+    this.setState({ session });
+  };
 
-  handleDelete = (id) => {
-    const {items} = this.state.session;
-    const i = findIndex(items,{id});
-    if(i > -1) items.splice(i,1);
-    const session = {items};
-    this.setState({session});
-  }
+  handleDelete = id => {
+    const { items } = this.state.session;
+    const i = findIndex(items, { id });
+    if (i > -1) items.splice(i, 1);
+    const session = { items };
+    this.setState({ session });
+  };
 
   handleSave = () => {
     this.handleSubmit(false);
-  }
+  };
 
-  handleSubmit = (is_submitting) => {
+  handleSubmit = is_submitting => {
     const {
       session: { items },
       filesData,
@@ -179,11 +189,13 @@ class Session extends Component {
       .map(item => {
         delete item.type;
         delete item.id;
-        const selectedFile = find(filesData,{key:item.key});
-        const {data,label,key} = selectedFile;
+        const selectedFile = find(filesData, { key: item.key });
+        const { data, label, key } = selectedFile;
         return {
-          data,label,key
-        }
+          data,
+          label,
+          key
+        };
       });
 
     const measurements = items
@@ -203,11 +215,11 @@ class Session extends Component {
       label: sessionName,
       type: "session",
       is_submitting,
-      ...!!sessionDescription && {description:sessionDescription},
+      ...(!!sessionDescription && { description: sessionDescription })
     };
-    if(isEdit) {
-      api.saveSession(resourceKey,payload).then(response => {
-        console.log("session saved");
+    if (isEdit) {
+      api.saveSession(resourceKey, payload).then(response => {
+        api.handleSuccess(response, this.props.enqueueSnackbar);
       });
     } else {
       api.createSession(payload).then(response => {
@@ -218,8 +230,7 @@ class Session extends Component {
   };
   render() {
     const { classes, ...props } = this.props;
-    const { session } = this.state;
-    console.log({ state: this.state });
+    const { session, isEdit, sessionDescription, sessionName } = this.state;
     return (
       <div className={classes.root}>
         <div
@@ -230,7 +241,9 @@ class Session extends Component {
           }}
         >
           <div>
-            <h4>Create Session</h4>
+            <h4>
+              {isEdit ? "Create Training Session" : "Edit Training Session"}
+            </h4>
           </div>
           <div>
             <Button onClick={this.handleSave} contained="true" color="primary">
@@ -246,18 +259,22 @@ class Session extends Component {
             <div>
               <Input
                 style={{ width: "200px", marginBottom: "24px" }}
-                placeholder="Session Name"
-                value={this.state.sessionName || ''}
-                onChange={({target : {value}}) => {this.setState({sessionName:value})}}
+                placeholder="Name"
+                value={sessionName || ""}
+                onChange={({ target: { value } }) => {
+                  this.setState({ sessionName: value });
+                }}
               />
             </div>
             <div>
               <Input
                 style={{ width: "500px", marginBottom: "24px" }}
-                placeholder="Session Description"
+                placeholder="Description"
                 multiline
-                value={this.state.sessionDescription || ''}
-                onChange={({target : {value}}) => {this.setState({sessionDescription:value})}}
+                value={sessionDescription || ""}
+                onChange={({ target: { value } }) => {
+                  this.setState({ sessionDescription: value });
+                }}
               />
             </div>
             {this.renderSessionItems(session.items, session.id)}
@@ -302,24 +319,32 @@ class Session extends Component {
       ) : (
         <div key={uniqueId()} className={this.props.classes.item_margin}>
           <span className={this.props.classes.label_title}>
-            {
-              find(measurementOptions.concat(fileOptions), {
-                value: item.key
-              }) ? find(measurementOptions.concat(fileOptions), {
-                value: item.key
-              }).label : ''
-            }
+            {find(measurementOptions.concat(fileOptions), {
+              value: item.key
+            })
+              ? find(measurementOptions.concat(fileOptions), {
+                  value: item.key
+                }).label
+              : ""}
           </span>
-          <a style={{position:'relative'}}>
-            <DeleteIcon onClick={() => this.handleDelete(item.id)} className={this.props.classes.delete_icon} />
+          <a style={{ position: "relative" }}>
+            <DeleteIcon
+              onClick={() => this.handleDelete(item.id)}
+              className={this.props.classes.delete_icon}
+            />
           </a>
           <div>
-            <FormControlLabel control=
-            {
-              <Switch checked={item.is_required} 
-              onChange={() => {this.handleSetCompulsory(item.id)}}/>
-            } 
-              label="Make Field Mandatory" />
+            <FormControlLabel
+              control={
+                <Switch
+                  checked={item.is_required}
+                  onChange={() => {
+                    this.handleSetCompulsory(item.id);
+                  }}
+                />
+              }
+              label="Make Field Mandatory"
+            />
           </div>
         </div>
       );

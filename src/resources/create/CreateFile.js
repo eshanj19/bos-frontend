@@ -4,6 +4,7 @@ import withStyles from "@material-ui/core/styles/withStyles";
 import { withRouter } from "react-router-dom";
 import head from "lodash/head";
 import api from "../../api";
+import { withSnackbar } from "notistack";
 
 const styles = {
   custom_file_upload: {
@@ -36,7 +37,8 @@ class CreateFile extends Component {
     this.state = {
       selectedFile: null,
       error: null,
-      selectFileName: null
+      selectFileName: null,
+      fileDescription: ""
     };
   }
   handleChange = event => {
@@ -62,18 +64,27 @@ class CreateFile extends Component {
     });
   };
   handleSubmit = () => {
-    const { selectedFile, selectFileName } = this.state;
+    const { selectedFile, selectFileName, fileDescription } = this.state;
     if (!selectedFile) return;
     if (!selectFileName) return;
+
     const data = new FormData();
     data.append("file", selectedFile);
     data.append("label", selectFileName);
+    data.append("description", fileDescription);
     data.append("type", "file");
     data.append("is_active", true);
     data.append("is_shared", false);
-    api.submitFile(data).then(({ data }) => {
-      this.props.history.goBack();
-    });
+
+    api
+      .submitFile(data)
+      .then(response => {
+        api.handleSuccess(response, this.props.enqueueSnackbar);
+        this.props.history.goBack();
+      })
+      .catch(error => {
+        api.handleError(error, this.props.enqueueSnackbar);
+      });
   };
   render() {
     const { selectedFile, error, selectFileName } = this.state;
@@ -85,7 +96,7 @@ class CreateFile extends Component {
           </div>
           <div>
             <Button onClick={this.handleSubmit} color="primary">
-              Submit
+              Save
             </Button>
           </div>
         </div>
@@ -121,31 +132,29 @@ class CreateFile extends Component {
             ) : null}
 
             {selectedFile ? (
-              <TextField
-                label="File name"
-                // className={classes.grid_element}
-                value={selectFileName}
-                onChange={this.handleChange}
-              />
+              <>
+                <div>
+                  <TextField
+                    label="File name"
+                    // className={classes.grid_element}
+                    value={selectFileName}
+                    onChange={this.handleChange}
+                  />
+                </div>
+                <div>
+                  <TextField
+                    label="File Description"
+                    // className={classes.grid_element}
+                    value={this.state.fileDescription}
+                    style={{ width: "250px" }}
+                    multiline
+                    onChange={({ target }) => {
+                      this.setState({ fileDescription: target.value });
+                    }}
+                  />
+                </div>
+              </>
             ) : null}
-
-            {/* <div className={this.props.classes.file_upload_wrapper}>
-              <div style={{ display: "flex", alignItems: "center" }}>
-                <label
-                  htmlFor="file-name"
-                  className={this.props.classes.custom_file_upload}
-                >
-                  <span>File name</span>
-                </label>
-                <input
-                  onChange={this.handleChange}
-                  id="file-name"
-                  value={selectFileName}
-                  className={this.props.classes.file_input}
-                  type="text"
-                />
-              </div>
-            </div> */}
           </CardContent>
         </Card>
       </div>
@@ -153,4 +162,4 @@ class CreateFile extends Component {
   }
 }
 
-export default withRouter(withStyles(styles)(CreateFile));
+export default withRouter(withSnackbar(withStyles(styles)(CreateFile)));
