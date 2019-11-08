@@ -61,8 +61,8 @@ const UserGroupList = ({ classes, permissions, ...props }) => (
           <BooleanField source="is_active" label="Active" />
           <DateField source="creation_time" showTime />
           <DateField source="last_modification_time" showTime />
-          {hasAccess(permissions, "users.show") || true && <ShowButton />}
-          {hasAccess(permissions, "users.edit") || true && <EditButton />}
+          {hasAccess(permissions, "users.show") && <ShowButton />}
+          {hasAccess(permissions, "users.edit") && <EditButton />}
         </Datagrid>
       }
     />

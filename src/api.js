@@ -164,7 +164,11 @@ const getSessionsForNgo = ngo_key => {
   return axios.get(`ngos/${ngo_key}/training_sessions/`);
 };
 
-const saveCurriculum = data => {
+const saveCurriculum = (curriculumKey, data) => {
+  return axios.put(`resources/${curriculumKey}/`, data);
+};
+
+const createCurriculum = data => {
   return axios.post("resources/", data);
 };
 
@@ -250,6 +254,7 @@ const api = {
   getFileDropdownOptionsForNgo,
   saveSession,
   getSessionsForNgo,
+  createCurriculum,
   saveCurriculum,
   getResource,
   getMeasurement,
