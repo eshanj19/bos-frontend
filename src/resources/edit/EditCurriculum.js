@@ -16,8 +16,9 @@ export default function EditCurriculum(props) {
         
     //   }))
     api.getResource(props.match.params.id).then(({data : response}) => {
-      const {data : days} = response;
-      const initialData = days.map((day) => {
+      const {data : days, label : curriculumName,
+        description : curriculumDescription} = response;
+      const serverDays = days.map((day) => {
         const id = randomId('day');
         const {label} = day;
         const sessions = day.sessions.map((session) => {
@@ -28,7 +29,8 @@ export default function EditCurriculum(props) {
           })
           files.push({ "id": -998 });
           const measurements = session.measurements.map((measurement) => {
-            return {label : measurement.key,id : randomId('measurement')}
+            return {label : measurement.key,
+              id : randomId('measurement'),is_required:measurement.is_required}
           })
           measurements.push({ "id": -997 });
           return {label,id,files,measurements};
@@ -36,9 +38,9 @@ export default function EditCurriculum(props) {
         sessions.push({ "id": -999, "measurements": [], "files": [] });
         return {id,label,sessions};
       })
-      initialData.push({ "id": -999 });
+      serverDays.push({ "id": -999 });
       // console.log(initialData);
-      setInitialData(initialData);
+      setInitialData({days : serverDays, curriculumName, curriculumDescription});
     })
   },[]);
   return(

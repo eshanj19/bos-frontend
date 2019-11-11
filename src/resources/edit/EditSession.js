@@ -5,8 +5,6 @@ import uniqueId from "lodash/uniqueId";
 
 export default function EditSession(props) {
   const [initialData, setInitialData] = useState(null);
-  const [sessionName, setSessionName] = useState(null);
-  const [sessionDescription, setSessionDescription] = useState(null);
   const randomId = type => uniqueId(`${type}_`);
   useEffect(() => {
     /**
@@ -19,7 +17,7 @@ export default function EditSession(props) {
 
     //   }))
     api.getResource(props.match.params.id).then(({ data: response }) => {
-      const { data, label, description } = response;
+      const { data, label : sessionName, description : sessionDescription } = response;
       const { files, measurements } = data;
       const fileItems = files.map(file => {
         return {
@@ -31,6 +29,7 @@ export default function EditSession(props) {
       const measurementItems = measurements.map(measurement => {
         return {
           key: measurement.key,
+          is_required : measurement.is_required,
           id: randomId("measurement"),
           type: 3
         };
@@ -38,16 +37,11 @@ export default function EditSession(props) {
       const items = fileItems.concat(measurementItems);
       items.push({ id: 199 });
       const session = { items };
-      // console.log(initialData);
-      setInitialData(session);
-      setSessionName(label);
-      setSessionDescription(description);
+      setInitialData({session,sessionName,sessionDescription});
     });
   }, []);
-  return !initialData || !sessionName ? null : (
+  return !initialData ? null : (
     <Session
-      sessionName={sessionName}
-      sessionDescription={sessionDescription}
       initialData={initialData}
     />
   );

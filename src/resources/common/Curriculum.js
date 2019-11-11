@@ -123,7 +123,10 @@ class Curriculum extends Component {
       });
       this.setState({ sessionOptions: sanitizedOptions });
     });
-    if (initialData) this.setState({ days: initialData });
+    if (initialData) {
+      const {days, curriculumName, curriculumDescription} = initialData;
+      this.setState({ days,curriculumName,curriculumDescription });
+    } 
   }
 
   /**
@@ -390,7 +393,8 @@ class Curriculum extends Component {
   };
   handleSubmit = is_submitting => {
     const { days, curriculumName, isEdit, curriculumDescription } = this.state;
-    if(!!curriculumName) return;
+    console.log(curriculumName);
+    if(!curriculumName) return;
     const filteredDays = this.processPostData();
     const payload = {
       data: filteredDays,
@@ -433,7 +437,7 @@ class Curriculum extends Component {
   render() {
     const { classes, initialData, ...props } = this.props;
     const { days, isEdit } = this.state;
-    console.log({ state: this.state.days });
+    console.log({ state: this.state });
     return (
       <div className={classes.root}>
         <div className={classes.header_wrapper}>
@@ -458,6 +462,7 @@ class Curriculum extends Component {
                 onChange={({ target: { value } }) => {
                   this.setState({ curriculumName: value });
                 }}
+                value={this.state.curriculumName || ''}
               />
             </div>
             <div>
@@ -465,6 +470,7 @@ class Curriculum extends Component {
                 style={{ width: "400px", marginBottom: "24px" }}
                 placeholder="Curriculum Description"
                 multiline
+                value={this.state.curriculumDescription || ''}
                 onChange={({target : {value}}) => {this.setState({curriculumDescription:value})}}
               />
             </div>
