@@ -47,7 +47,7 @@ const MeasurementList = ({ classes, permissions, ...props }) => (
       medium={
         <Datagrid>
           <TextField source="label" type="text" />
-          <TextField source="uom" type="text" />
+          {/* <TextField source="uom" type="text" /> */}
           <ReferenceArrayField
             label="Types"
             source="types"

@@ -44,11 +44,18 @@ class File extends Component {
   componentDidMount() {
     const { initialData } = this.props;
     if (initialData) {
-      const { selectedFileName, fileDescription } = initialData;
+      const {
+        selectedFileName,
+        fileDescription,
+        isActive,
+        isShared
+      } = initialData;
       this.setState({
         isEdit: !!initialData,
         selectedFileName,
         fileDescription,
+        isActive,
+        isShared,
         selectedFile: {}
       });
     }
@@ -76,7 +83,13 @@ class File extends Component {
     });
   };
   handleSubmit = () => {
-    const { selectedFile, selectedFileName, fileDescription } = this.state;
+    const {
+      selectedFile,
+      selectedFileName,
+      fileDescription,
+      isActive,
+      isShared
+    } = this.state;
     if (!selectedFile) return;
     if (!selectedFileName) return;
 
@@ -84,6 +97,8 @@ class File extends Component {
     data.append("label", selectedFileName);
     data.append("description", fileDescription);
     data.append("type", "file");
+    data.append("is_active", isActive);
+    data.append("is_shared", isShared);
     if (this.state.isEdit) {
       const {
         match: {
@@ -120,7 +135,7 @@ class File extends Component {
       <div>
         <div className={this.props.classes.header_wrapper}>
           <div>
-            <h3>Create File Resource</h3>
+            <h3> {this.state.isEdit ? "Edit" : "Create"} File Resource</h3>
           </div>
           <div>
             <Button onClick={this.handleSubmit} color="primary">

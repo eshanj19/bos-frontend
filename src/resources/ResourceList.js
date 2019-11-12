@@ -45,9 +45,9 @@ import {
 import withStyles from "@material-ui/core/styles/withStyles";
 import { RESOURCE_TYPES } from "../utils";
 import api from "../api";
-import { refreshView as refreshViewAction } from "react-admin";
 import { withDataProvider } from "ra-core";
 import ResourceTypeField from "./common/ResourceTypeField";
+import { withSnackbar } from "notistack";
 
 const styles = {
   nb_commands: { color: "purple" }
@@ -56,37 +56,34 @@ const styles = {
 const BulkActionButtons = props => {
   const setAsCoachRegistration = id => {
     const ngoKey = localStorage.getItem("ngo_key");
+    // crudUpdateMany("ping", id, null, "/ping");
+    console.log(props);
     api
       .setAsCoachRegistrationSession(ngoKey, { resource: id })
-      .then(response => {});
+      .then(response => {
+        api.handleSuccess(response, props.enqueueSnackbar);
+        props.history.push(props.basePath);
+      })
+      .catch(error => {
+        api.handleError(error, props.enqueueSnackbar);
+      });
   };
   const setAsAthleteRegistration = id => {
     const ngoKey = localStorage.getItem("ngo_key");
     api
       .setAsAthleteRegistrationSession(ngoKey, { resource: id })
-      .then(response => {});
+      .then(response => {
+        api.handleSuccess(response, props.enqueueSnackbar);
+      })
+      .catch(error => {
+        api.handleError(error, props.enqueueSnackbar);
+      });
   };
   const deactivateResource = id => {
-    api.deactivateResource(id).then(response => {
-      const { dataProvider } = props;
-      dataProvider(
-        UPDATE,
-        "ping",
-        { id: id, data: null },
-        {
-          onSuccess: {
-            unselectAll: true
-          },
-          onFailure: {}
-        }
-      );
-      props.refreshView();
-    });
+    api.deactivateResource(id).then(response => {});
   };
   const activateResource = id => {
-    api.activateResource(id).then(response => {
-      props.refreshView();
-    });
+    api.activateResource(id).then(response => {});
   };
   const { resourceList, selectedIds } = props;
 
@@ -311,7 +308,9 @@ const mapStateToProps = state => {
     resourceList: state.admin.resources.resources.data
   };
 };
-export default connect(
-  mapStateToProps,
-  { refreshView: refreshViewAction }
-)(withDataProvider(ResourcesList));
+export default withSnackbar(
+  connect(
+    mapStateToProps,
+    { crudUpdateMany }
+  )(withDataProvider(ResourcesList))
+);

@@ -16,6 +16,7 @@ import PlaceholderItem from "../create/PlaceholderItem";
 import { RESOURCE_ITEMS, RESOURCE_TYPES, INPUT_TYPE } from "../../utils";
 import api from "../../api";
 import DeleteIcon from "@material-ui/icons/Clear";
+import { withSnackbar } from "notistack";
 
 export const styles = {
   first_name: { display: "inline-block" },
@@ -85,10 +86,9 @@ class Session extends Component {
       this.setState({ measurementOptions: sanitizedOptions });
     });
     if (initialData && sessionName) {
-      console.log(sessionName);
       this.setState({
-        sessionName: sessionName,
-        sessionDescription: sessionDescription,
+        sessionName,
+        sessionDescription,
         session: initialData,
         isEdit: true
       });
@@ -214,17 +214,29 @@ class Session extends Component {
       data: { files, measurements },
       label: sessionName,
       type: "session",
-      is_submitting,
-      ...(!!sessionDescription && { description: sessionDescription })
+      description: sessionDescription,
+      is_submitting
     };
     if (isEdit) {
-      api.saveSession(resourceKey, payload).then(response => {
-        api.handleSuccess(response, this.props.enqueueSnackbar);
-      });
+      api
+        .saveSession(resourceKey, payload)
+        .then(response => {
+          api.handleSuccess(response, this.props.enqueueSnackbar);
+          this.props.history.goBack();
+        })
+        .catch(error => {
+          api.handleError(error, this.props.enqueueSnackbar);
+        });
     } else {
-      api.createSession(payload).then(response => {
-        console.log("session saved");
-      });
+      api
+        .createSession(payload)
+        .then(response => {
+          api.handleSuccess(response, this.props.enqueueSnackbar);
+          this.props.history.goBack();
+        })
+        .catch(error => {
+          api.handleError(error, this.props.enqueueSnackbar);
+        });
     }
     // console.log(filtered);
   };
@@ -242,16 +254,16 @@ class Session extends Component {
         >
           <div>
             <h4>
-              {isEdit ? "Create Training Session" : "Edit Training Session"}
+              {isEdit ? "Edit Training Session" : "Create Training Session"}
             </h4>
           </div>
           <div>
             <Button onClick={this.handleSave} contained="true" color="primary">
               Save
             </Button>
-            <Button onClick={() => this.handleSubmit(true)} color="primary">
+            {/* <Button onClick={() => this.handleSubmit(true)} color="primary">
               Submit
-            </Button>
+            </Button> */}
           </div>
         </div>
         <Card style={{ overflow: "initial" }}>
@@ -361,4 +373,4 @@ class Session extends Component {
   };
 }
 
-export default withRouter(withStyles(styles)(Session));
+export default withRouter(withSnackbar(withStyles(styles)(Session)));

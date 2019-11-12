@@ -60,10 +60,10 @@ export default async (type, params) => {
     return Promise.resolve();
   }
   if (type === AUTH_CHECK) {
-    const {data} = await api.isAuthenticated()
-    const {is_authenticated} = data;
+    const { data } = await api.isAuthenticated();
+    const { is_authenticated } = data;
     console.log(`IS AUTH ${is_authenticated}`);
-    if(!is_authenticated) {
+    if (!is_authenticated) {
       return Promise.reject();
     } else {
       return Promise.resolve();
@@ -134,20 +134,20 @@ export default async (type, params) => {
     }
     authPermissions["measurement_types"] = measurementTypes;
 
-    if (checkPermission(permissions, "users.bos_admin")) {
+    if (checkPermission(permissions, "ngos.view_ngo")) {
       ngos["show"] = true;
       ngos["list"] = true;
       ngos["enabled"] = true;
     }
-    if (checkPermission(permissions, "users.bos_admin")) {
+    if (checkPermission(permissions, "ngos.add_ngo")) {
       ngos["create"] = true;
       ngos["enabled"] = true;
     }
-    if (checkPermission(permissions, "users.bos_admin")) {
+    if (checkPermission(permissions, "ngos.change_ngo")) {
       ngos["edit"] = true;
       ngos["enabled"] = true;
     }
-    if (checkPermission(permissions, "users.bos_admin")) {
+    if (checkPermission(permissions, "ngos.delete_ngo")) {
       ngos["delete"] = true;
       ngos["enabled"] = true;
     }

@@ -35,7 +35,7 @@ const Welcome = ({ classes, translate }) => (
       <Typography variant="headline" component="h2">
         Welcome to Bridges of Sports platform
       </Typography>
-      <Typography component="p">This page is under development</Typography>
+      {/* <Typography component="p">This page is under development</Typography> */}
     </CardContent>
   </Card>
 );

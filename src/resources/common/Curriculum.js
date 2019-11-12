@@ -390,12 +390,12 @@ class Curriculum extends Component {
   };
   handleSubmit = is_submitting => {
     const { days, curriculumName, isEdit, curriculumDescription } = this.state;
-    if(!!curriculumName) return;
+    if (!curriculumName) return;
     const filteredDays = this.processPostData();
     const payload = {
       data: filteredDays,
       label: curriculumName,
-      description : curriculumDescription,
+      description: curriculumDescription,
       type: "curriculum",
       is_submitting
     };
@@ -409,7 +409,7 @@ class Curriculum extends Component {
         .saveCurriculum(resourceKey, payload)
         .then(response => {
           api.handleSuccess(response, this.props.enqueueSnackbar);
-          this.props.history.push(this.props.basePath);
+          this.props.history.goBack();
         })
         .catch(error => {
           api.handleError(error.response, this.props.enqueueSnackbar);
@@ -419,7 +419,7 @@ class Curriculum extends Component {
         .createCurriculum(payload)
         .then(response => {
           api.handleSuccess(response, this.props.enqueueSnackbar);
-          this.props.history.push(this.props.basePath);
+          this.props.history.goBack();
         })
         .catch(error => {
           api.handleError(error.response, this.props.enqueueSnackbar);
@@ -433,7 +433,7 @@ class Curriculum extends Component {
   render() {
     const { classes, initialData, ...props } = this.props;
     const { days, isEdit } = this.state;
-    console.log({ state: this.state.days });
+    // console.log({ state: this.state.days });
     return (
       <div className={classes.root}>
         <div className={classes.header_wrapper}>
@@ -441,11 +441,11 @@ class Curriculum extends Component {
             <h3>{isEdit ? "Edit" : "Create"} Curriculum</h3>
           </div>
           <div>
-            <Button onClick={this.handleSave} contained="true" color="primary">
+            {/* <Button onClick={() => this.handleSave)} contained="true" color="primary">
               Save
-            </Button>
-            <Button onClick={() => this.handleSubmit(true)} color="primary">
-              Submit
+            </Button> */}
+            <Button onClick={() => this.handleSubmit(false)} color="primary">
+              Save
             </Button>
           </div>
         </div>
@@ -465,7 +465,9 @@ class Curriculum extends Component {
                 style={{ width: "400px", marginBottom: "24px" }}
                 placeholder="Curriculum Description"
                 multiline
-                onChange={({target : {value}}) => {this.setState({curriculumDescription:value})}}
+                onChange={({ target: { value } }) => {
+                  this.setState({ curriculumDescription: value });
+                }}
               />
             </div>
             {days.map((day, index) => {
