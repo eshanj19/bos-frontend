@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import MeasurementTypeIcon from "@material-ui/icons/People";
+import MeasurementTypeIcon from '@material-ui/icons/Layers';
 
 import MeasurementTypeList from "./MeasurementTypeList";
 import MeasurementTypeCreate from "./MeasurementTypeCreate";

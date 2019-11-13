@@ -26,7 +26,9 @@ import {
   Typography,
   Grid,
   Card,
-  CardContent
+  CardContent,
+  CardActions,
+  Toolbar
 } from "@material-ui/core";
 import BaselineList from "./BaselineList";
 import { ATHLETE, COACH, ADMIN } from "../constants";
@@ -309,16 +311,18 @@ class UserCreate extends Component {
               handleCheckbox={this.handleChange}
               readOnly={false}
             /> */}
-            <Button
-              variant="contained"
-              size="small"
+          </CardContent>
+          <Toolbar style={{background:'#f5f5f5'}}>
+          <Button
+              variant='raised'
+              color='primary'
               className={classes.grid_element}
               onClick={this.customAction}
             >
               <SaveIcon className={classes.icon} />
               Save
             </Button>
-          </CardContent>
+          </Toolbar>
         </Card>
       </div>
     );

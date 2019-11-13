@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import ResourceIcon from "@material-ui/icons/People";
+import ResourceIcon from "@material-ui/icons/Description";
 
 import ResourceList from "./ResourceList";
 // import ResourceCreate from "./ResourceCreate";

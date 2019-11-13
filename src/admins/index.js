@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import AdminIcon from "@material-ui/icons/People";
+import AdminIcon from '@material-ui/icons/SupervisorAccount';
 
 import AdminList from "./AdminList";
 import AdminCreate from "./AdminCreate";

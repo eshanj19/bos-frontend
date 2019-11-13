@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import AthleteIcon from "@material-ui/icons/People";
+import AthleteIcon from "@material-ui/icons/DirectionsRun";
 
 import AthleteList from "./AthleteList";
 import AthleteEdit from "./AthleteEdit";

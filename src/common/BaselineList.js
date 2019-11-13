@@ -63,6 +63,14 @@ export const styles = {
   },
   icon: {
     fontSize: 20
+  },
+  empty_label : {
+    color: "rgba(0, 0, 0, 0.87)",
+    fontSize: "0.875rem",
+    fontWeight: 400,
+    lineHeight: "1.46429em",
+    margin:'16px',
+    marginLeft: '20px'
   }
 };
 
@@ -75,8 +83,11 @@ class BaselineList extends Component {
 
   render() {
     var { baselineMeasurements, classes, readOnly } = this.props;
-    if (!baselineMeasurements) {
-      baselineMeasurements = [];
+    console.log(baselineMeasurements);
+    if (!baselineMeasurements || baselineMeasurements.length === 0) {
+      return (
+        <div className={this.props.classes.empty_label}><span>No Baseline Measurements Recorded.</span></div>
+      )
     }
 
     return (

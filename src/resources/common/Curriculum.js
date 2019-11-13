@@ -413,7 +413,7 @@ class Curriculum extends Component {
         .saveCurriculum(resourceKey, payload)
         .then(response => {
           api.handleSuccess(response, this.props.enqueueSnackbar);
-          this.props.history.push(this.props.basePath);
+          this.props.history.goBack();
         })
         .catch(error => {
           api.handleError(error.response, this.props.enqueueSnackbar);
@@ -423,7 +423,7 @@ class Curriculum extends Component {
         .createCurriculum(payload)
         .then(response => {
           api.handleSuccess(response, this.props.enqueueSnackbar);
-          this.props.history.push(this.props.basePath);
+          this.props.history.goBack();
         })
         .catch(error => {
           api.handleError(error.response, this.props.enqueueSnackbar);
