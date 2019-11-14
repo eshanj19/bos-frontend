@@ -123,7 +123,10 @@ class Curriculum extends Component {
       });
       this.setState({ sessionOptions: sanitizedOptions });
     });
-    if (initialData) this.setState({ days: initialData });
+    if (initialData) {
+      const { days, curriculumName, curriculumDescription } = initialData;
+      this.setState({ days, curriculumName, curriculumDescription });
+    }
   }
 
   /**
@@ -458,6 +461,7 @@ class Curriculum extends Component {
                 onChange={({ target: { value } }) => {
                   this.setState({ curriculumName: value });
                 }}
+                value={this.state.curriculumName || ""}
               />
             </div>
             <div>
@@ -465,6 +469,7 @@ class Curriculum extends Component {
                 style={{ width: "400px", marginBottom: "24px" }}
                 placeholder="Curriculum Description"
                 multiline
+                value={this.state.curriculumDescription || ""}
                 onChange={({ target: { value } }) => {
                   this.setState({ curriculumDescription: value });
                 }}
@@ -528,7 +533,7 @@ class Curriculum extends Component {
                   }}
                 />
               }
-              label="Make Field Mandatory"
+              label="Mandatory"
             />
           </div>
         </div>

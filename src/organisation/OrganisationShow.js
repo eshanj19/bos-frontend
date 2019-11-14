@@ -164,7 +164,7 @@ class OrganisationShow extends Component {
        */
       if (!orgHierarchy) {
         orgHierarchy = {
-          label: "Ghost Node",
+          label: "Organisation",
           key: "ghost_node",
           children: []
         };

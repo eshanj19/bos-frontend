@@ -66,7 +66,7 @@ class Session extends Component {
   componentDidMount() {
     console.log(this.props);
     const ngoKey = localStorage.getItem("ngo_key");
-    const { initialData, sessionName, sessionDescription } = this.props;
+    const { initialData } = this.props;
     api.getFileDropdownOptionsForNgo(ngoKey).then(({ data }) => {
       const sanitizedOptions = data.map(option => {
         return {
@@ -85,11 +85,16 @@ class Session extends Component {
       });
       this.setState({ measurementOptions: sanitizedOptions });
     });
-    if (initialData && sessionName) {
+    if (initialData) {
+      const {
+        sessionName,
+        sessionDescription,
+        session
+      } = this.props.initialData;
       this.setState({
         sessionName,
         sessionDescription,
-        session: initialData,
+        session,
         isEdit: true
       });
     }
@@ -355,7 +360,7 @@ class Session extends Component {
                   }}
                 />
               }
-              label="Make Field Mandatory"
+              label="Mandatory"
             />
           </div>
         </div>
