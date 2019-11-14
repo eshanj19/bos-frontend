@@ -33,6 +33,7 @@ import {
 import BaselineList from "./BaselineList";
 import { ATHLETE, COACH, ADMIN } from "../constants";
 import PermissionGroupList from "./PermissionGroupList";
+import find from 'lodash/find';
 import instance from "../axios";
 export const styles = {
   grid_element: { marginLeft: 32, marginTop: 10, marginBottom: 10 },
@@ -160,21 +161,23 @@ class UserCreate extends Component {
     this.setState(dict);
   };
 
-  handleChange = (key, event) => {
+  handleBaselineInputChange = (key, value) => {
     var { baselineMeasurements } = this.state;
-    for (let index = 0; index < baselineMeasurements.length; index++) {
-      const element = baselineMeasurements[index];
-      if (element.key === key) {
-        if (element.input_type === "boolean") {
-          console.log("Value of ", event.target);
-          element["value"] = event.target.value;
-        } else {
-          element["value"] = event.target.value;
-        }
-        console.log("Value of ", element["value"]);
-        break;
-      }
-    }
+    // for (let index = 0; index < baselineMeasurements.length; index++) {
+    //   const element = baselineMeasurements[index];
+    //   if (element.key === key) {
+    //     if (element.input_type === "boolean") {
+    //       console.log("Value of ", event.target);
+    //       element["value"] = event.target.value;
+    //     } else {
+    //       element["value"] = event.target.value;
+    //     }
+    //     console.log("Value of ", element["value"]);
+    //     break;
+    //   }
+    // }
+    const measurement = find(baselineMeasurements,{key});
+    measurement.value = value;
     this.setState({ baselineMeasurements: baselineMeasurements });
   };
 
@@ -294,11 +297,11 @@ class UserCreate extends Component {
 
             <BaselineList
               baselineMeasurements={baselineMeasurements}
-              handleCheckbox={this.handleChange}
+              onBaselineInputChange={this.handleBaselineInputChange}
               readOnly={false}
             />
 
-            <Divider variant="middle" />
+            {/* <Divider variant="middle" /> */}
 
             {/* <div className={classes.sectionHeader}>
               <Typography gutterBottom variant="headline">
