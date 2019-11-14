@@ -1,15 +1,13 @@
 import React from "react";
 import { Route } from "react-router-dom";
 import Configuration from "./configuration/Configuration";
-import OrganisationShow from "./organisation";
 import CreateSession from "./resources/create/CreateSession";
-import Curriculum from "./resources/common/Curriculum";
 import CreateCurriculum from "./resources/create/CreateCurriculum";
-import Session from "./resources/common/Session";
 import EditCurriculum from "./resources/edit/EditCurriculum";
 import EditSession from "./resources/edit/EditSession";
 import CreateFile from "./resources/create/CreateFile";
 import EditFile from "./resources/edit/EditFile";
+import OrganisationShow from "./organisation/OrganisationShow";
 
 export default [
   <Route exact path="/organisation" component={OrganisationShow} />,

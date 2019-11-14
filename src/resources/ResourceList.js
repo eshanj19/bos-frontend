@@ -43,6 +43,8 @@ import {
   Checkbox
 } from "@material-ui/core";
 import withStyles from "@material-ui/core/styles/withStyles";
+import EditIcon from "@material-ui/icons/Edit";
+import { withRouter } from "react-router-dom";
 import { RESOURCE_TYPES } from "../utils";
 import api from "../api";
 import { withDataProvider } from "ra-core";
@@ -113,6 +115,7 @@ const BulkActionButtons = props => {
             onClick={() => {
               deactivateResource(selectedIds[0]);
             }}
+            color="secondary"
           >
             Deactivate
           </Button>
@@ -164,6 +167,8 @@ const BulkActionButtons = props => {
   }
 };
 
+// const DatagridRow = withRouter(Row);
+
 const DatagridRow = ({
   record,
   resource,
@@ -181,26 +186,33 @@ const DatagridRow = ({
       )}
     </TableCell>
     {/* data columns based on children */}
-    {React.Children.map(children, field => (
-      <TableCell key={`${id}-${field.props.source}`}>
-        {React.cloneElement(field, {
-          record,
-          basePath,
-          resource
-        })}
-      </TableCell>
-    ))}
-    <TableCell>
-      <Button
-        onClick={() => {
-          props.history.push({
-            pathname: `/resources/edit/${record.type}/${record.key}`
-          });
-        }}
-      >
-        Edit
-      </Button>
-    </TableCell>
+    {React.Children.map(children, field =>
+      field.props.id === "edit_button" ? (
+        <TableCell>
+          <Button
+            color="primary"
+            onClick={() => {
+              props.history.push({
+                pathname: `/resources/edit/${record.type}/${record.key}`
+              });
+            }}
+          >
+            <span>
+              <EditIcon style={{ fontSize: "20px" }} />
+            </span>
+            <span style={{ marginLeft: "5px" }}>Edit</span>
+          </Button>
+        </TableCell>
+      ) : (
+        <TableCell key={`${id}-${field.props.source}`}>
+          {React.cloneElement(field, {
+            record,
+            basePath,
+            resource
+          })}
+        </TableCell>
+      )
+    )}
   </TableRow>
 );
 
@@ -264,10 +276,10 @@ const CreateActions = props => {
 };
 
 const BosDatagridBody = props => (
-  <DatagridBody {...props} row={<DatagridRow {...props} />} />
+  <DatagridBody {...props} row={<DatagridRow history={props.history} />} />
 );
 const BosDatagrid = props => (
-  <Datagrid {...props} body={<BosDatagridBody {...props} />} />
+  <Datagrid {...props} body={<BosDatagridBody history={props.history} />} />
 );
 
 const ResourcesList = ({ classes, ...props }) => (
@@ -293,13 +305,16 @@ const ResourcesList = ({ classes, ...props }) => (
         ></Datagrid>
       }
     /> */}
-    <BosDatagrid {...props}>
+    <BosDatagrid history={props.history}>
       <TextField source="label" type="text" />
       <ResourceTypeField source="type" type="text" />
       <BooleanField source="is_active" label="Active" />
       <DateField label="Created on" source="creation_time" showTime />
       <DateField label="Modified on" source="last_modification_time" showTime />
       <ShowButton />
+      <Button id="edit_button" color="primary">
+        Edit
+      </Button>
     </BosDatagrid>
   </List>
 );
@@ -309,8 +324,5 @@ const mapStateToProps = state => {
   };
 };
 export default withSnackbar(
-  connect(
-    mapStateToProps,
-    { crudUpdateMany }
-  )(withDataProvider(ResourcesList))
+  connect(mapStateToProps, { crudUpdateMany })(withDataProvider(ResourcesList))
 );

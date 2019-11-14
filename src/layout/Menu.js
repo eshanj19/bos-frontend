@@ -31,7 +31,10 @@ import {
 
 import SubMenu from "./SubMenu";
 import admins from "../admins";
+import coaches from "../coaches";
+import athletes from "../athletes";
 import userGroups from "../userGroups";
+import organisation from "../organisation";
 import measurements from "../measurements";
 import resources from "../resources";
 import measurementTypes from "../measurementTypes";
@@ -108,7 +111,7 @@ class Menu extends Component {
                     <MenuItemLink
                       to={`/coaches`}
                       primaryText={"Coaches"}
-                      leftIcon={<admins.icon />}
+                      leftIcon={<coaches.icon />}
                       onClick={onMenuClick}
                     />
                   )}
@@ -116,7 +119,7 @@ class Menu extends Component {
                     <MenuItemLink
                       to={`/athletes`}
                       primaryText={"Athletes"}
-                      leftIcon={<admins.icon />}
+                      leftIcon={<athletes.icon />}
                       onClick={onMenuClick}
                     />
                   )}
@@ -132,7 +135,7 @@ class Menu extends Component {
                     <MenuItemLink
                       to={`/organisation`}
                       primaryText={"Organisation"}
-                      leftIcon={<userGroups.icon />}
+                      leftIcon={<organisation.icon />}
                       onClick={onMenuClick}
                     />
                   )}

@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import MeasurementIcon from "@material-ui/icons/Edit";
+import MeasurementIcon from "@material-ui/icons/Assessment";
 import MeasurementList from "./MeasurementList";
 import MeasurementCreate from "./MeasurementCreate";
 import MeasurementEdit from "./MeasurementEdit";
