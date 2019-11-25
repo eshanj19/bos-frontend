@@ -184,7 +184,10 @@ class UserCreate extends Component {
       permissionGroups,
       first_name,
       last_name,
-      role
+      role,
+      password,
+      confirm_password,
+      username
     } = this.state;
     var createData = {};
     var baselines = [];
@@ -206,6 +209,9 @@ class UserCreate extends Component {
         this.props.history.push(this.props.basePath);
       });
     } else if (role === COACH) {
+      createData["password"] = password;
+      createData["confirm_password"] = confirm_password;
+      createData["username"] = username;
       api.createCoach(createData).then(result => {
         this.props.history.push(this.props.basePath);
       });
@@ -312,10 +318,10 @@ class UserCreate extends Component {
               readOnly={false}
             /> */}
           </CardContent>
-          <Toolbar style={{background:'#f5f5f5'}}>
-          <Button
-              variant='raised'
-              color='primary'
+          <Toolbar style={{ background: "#f5f5f5" }}>
+            <Button
+              variant="raised"
+              color="primary"
               className={classes.grid_element}
               onClick={this.customAction}
             >

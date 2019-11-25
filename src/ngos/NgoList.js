@@ -85,6 +85,7 @@ class NgoList extends Component {
         perPage={25}
         filterDefaultValues={{ is_active: true }}
         bulkActions={<this.PostBulkActions />}
+        exporter={false}
       >
         <Responsive
           medium={
@@ -93,7 +94,7 @@ class NgoList extends Component {
               <BooleanField source="is_active" type="text" />
               <DateField source="creation_time" showTime />
               <DateField source="last_modification_time" showTime />
-              {hasAccess(permissions, "ngos.show") && <ShowButton />}
+              {/* {hasAccess(permissions, "ngos.show") && <ShowButton />} */}
               {hasAccess(permissions, "ngos.edit") && <EditButton />}
             </Datagrid>
           }

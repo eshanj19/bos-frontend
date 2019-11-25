@@ -45,7 +45,7 @@ import api from "../api";
 
 class Menu extends Component {
   state = {};
-  
+
   static propTypes = {
     onMenuClick: PropTypes.func,
     logout: PropTypes.object
@@ -58,7 +58,7 @@ class Menu extends Component {
   render() {
     const { onMenuClick, open, logout, translate } = this.props;
     return (
-      <div style={{width:'290px'}}>
+      <div style={{ width: "290px" }}>
         <DashboardMenuItem onClick={onMenuClick} />
 
         <WithPermissions
@@ -150,7 +150,7 @@ class Menu extends Component {
         {/* TODO permissions */}
         <WithPermissions
           render={({ permissions }) => {
-            if (hasAccess(permissions, "users.enabled")) {
+            if (hasAccess(permissions, "resources.enabled")) {
               return (
                 <MenuItemLink
                   to={`/resources`}
@@ -248,13 +248,6 @@ const mapStateToProps = state => ({
   locale: state.i18n.locale
 });
 
-const enhance = compose(
-  withRouter,
-  connect(
-    mapStateToProps,
-    {}
-  ),
-  translate
-);
+const enhance = compose(withRouter, connect(mapStateToProps, {}), translate);
 
 export default enhance(Menu);

@@ -20,14 +20,7 @@ import { TextField, Button, Grid } from "@material-ui/core";
 import withStyles from "@material-ui/core/styles/withStyles";
 
 export const styles = {
-  name: { display: "inline-block" },
-  first_name: { display: "inline-block" },
-  last_name: { display: "inline-block" },
-  address: { display: "inline-block" },
-  username: { display: "inline-block" },
-  email: { display: "inline-block" },
-  password: { display: "inline-block" },
-  confirm_password: { display: "inline-block" }
+  grid_element: { justifyContent: "left", display: "flex" }
 };
 
 const NgoCreateForm = props => {
@@ -59,7 +52,7 @@ const NgoCreateForm = props => {
   return (
     <form onSubmit={handleSubmit}>
       <Grid container spacing={8}>
-        <Grid item xs={12} md={4}>
+        <Grid item xs={12} md={12} className={classes.grid_element}>
           <TextField
             id="name"
             name="name"
@@ -70,7 +63,7 @@ const NgoCreateForm = props => {
             onChange={change.bind(null, "name")}
           />
         </Grid>
-        <Grid item xs={12} md={4}>
+        <Grid item xs={12} md={12} className={classes.grid_element}>
           <TextField
             id="first_name"
             name="first_name"
@@ -81,7 +74,7 @@ const NgoCreateForm = props => {
             onChange={change.bind(null, "first_name")}
           />
         </Grid>
-        <Grid item xs={12} md={4}>
+        <Grid item xs={12} md={12} className={classes.grid_element}>
           <TextField
             id="last_name"
             name="last_name"
@@ -92,7 +85,7 @@ const NgoCreateForm = props => {
             onChange={change.bind(null, "last_name")}
           />
         </Grid>
-        <Grid item xs={12} md={4}>
+        <Grid item xs={12} md={12} className={classes.grid_element}>
           <TextField
             id="username"
             name="username"
@@ -103,7 +96,7 @@ const NgoCreateForm = props => {
             onChange={change.bind(null, "username")}
           />
         </Grid>
-        <Grid item xs={12} md={4}>
+        <Grid item xs={12} md={12} className={classes.grid_element}>
           <TextField
             id="email"
             name="email"
@@ -114,7 +107,7 @@ const NgoCreateForm = props => {
             onChange={change.bind(null, "email")}
           />
         </Grid>
-        <Grid item xs={12} md={4}>
+        <Grid item xs={12} md={12} className={classes.grid_element}>
           <TextField
             id="password"
             name="password"
@@ -126,7 +119,7 @@ const NgoCreateForm = props => {
             onChange={change.bind(null, "password")}
           />
         </Grid>
-        <Grid item xs={12} md={4}>
+        <Grid item xs={12} md={12} className={classes.grid_element}>
           <TextField
             id="confirm_password"
             name="confirm_password"
@@ -139,12 +132,13 @@ const NgoCreateForm = props => {
           />
         </Grid>
       </Grid>
-
+      <br></br>
+      <br></br>
       <Grid
         container
         spacing={8}
         direction="row"
-        justify="center"
+        justify="left"
         alignItems="center"
       >
         <Button

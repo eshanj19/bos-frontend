@@ -7,11 +7,11 @@ const instance = axios.create({
 
 instance.defaults.xsrfHeaderName = "X-CSRFTOKEN";
 instance.defaults.xsrfCookieName = "csrftoken";
+instance.defaults.withCredentials = true;
 instance.all = axios.all;
 instance.spread = axios.spread;
 
 instance.interceptors.request.use(config => {
-  config.withCredentials = true;
   config.headers.common["Accept-Language"] =
     localStorage.getItem("SELECTED_LANGUAGE") || AVAILABLE_LANGUAGES[0].value;
   return config;

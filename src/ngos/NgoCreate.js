@@ -28,18 +28,7 @@ import { removeNullValues, parseErrorResponse } from "../stringUtils";
 import { RESPONSE_STATUS_400 } from "../constants";
 
 export const styles = {
-  first_name: { display: "inline-block" },
-  last_name: { display: "inline-block", marginLeft: 32 },
-  email: { width: 544 },
-  card: { maxWidth: "60%" },
-  zipcode: { display: "inline-block" },
-  city: { display: "inline-block", marginLeft: 32 },
-  comment: {
-    maxWidth: "20em",
-    overflow: "hidden",
-    textOverflow: "ellipsis",
-    whiteSpace: "nowrap"
-  }
+  card: { display: "flex" }
 };
 
 class NgoCreate extends Component {

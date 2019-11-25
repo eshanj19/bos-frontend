@@ -26,6 +26,6 @@ export default {
   list: UserGroupList,
   create: UserGroupCreate,
   edit: UserGroupEdit,
-  show: UserGroupShow,
+  // show: UserGroupShow,
   icon: UserGroupIcon
 };

@@ -36,3 +36,5 @@ packages/react-devtools-shell/dist
 
 auto_start.sh
 .env
+deployment
+build.tar.gz
