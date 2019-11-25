@@ -23,7 +23,9 @@ import {
   Checkbox,
   FormControlLabel,
   Select,
-  MenuItem
+  MenuItem,
+  RadioGroup,
+  Radio
 } from "@material-ui/core";
 export const styles = {
   first_name: { marginLeft: 32, marginTop: 20 },
@@ -64,20 +66,28 @@ export const styles = {
   icon: {
     fontSize: 20
   },
-  empty_label : {
+  empty_label: {
     color: "rgba(0, 0, 0, 0.87)",
     fontSize: "0.875rem",
     fontWeight: 400,
     lineHeight: "1.46429em",
-    margin:'16px',
-    marginLeft: '20px'
+    margin: "16px",
+    marginLeft: "20px"
+  },
+  input_label : {
+    fontFamily: "Roboto, Helvetica, Arial, sans-serif"
+  },
+  grid_item : {
+    marginTop : "10px",
+    marginBottom : "10px",
+    marginLeft : "32px"
   }
 };
 
 class BaselineList extends Component {
-  handleChange = name => event => {
+  handleChange = (name, { name: targetName, value }) => {
     if (!this.props.readOnly) {
-      this.props.handleCheckbox(name, event);
+      this.props.onBaselineInputChange(name, value);
     }
   };
 
@@ -86,62 +96,68 @@ class BaselineList extends Component {
     console.log(baselineMeasurements);
     if (!baselineMeasurements || baselineMeasurements.length === 0) {
       return (
-        <div className={this.props.classes.empty_label}><span>No Baseline Measurements Recorded.</span></div>
-      )
+        <div className={this.props.classes.empty_label}>
+          <span>No Baseline Measurements Recorded.</span>
+        </div>
+      );
     }
 
     return (
-      <Grid container spacing={8}>
+      <Grid container spacing={16}>
         {baselineMeasurements.map(measurement => {
           if (measurement.input_type === "text") {
             return (
-              <Grid item xs={12} sm={12}>
-                <TextField
-                  key={measurement.key}
-                  value={measurement.value}
-                  label={measurement.label}
-                  className={classes.grid_element}
-                  onChange={this.handleChange(measurement.key)}
-                  // disabled={readOnly}
-                />
+              <Grid className={this.props.classes.grid_item} item lg={12} xs={12} sm={12} key={measurement.key}>
+                <div>{measurement.label}</div>
+                <TextField 
+                  value={measurement.value || ""} 
+                  placeholder='Enter value'
+                  style={{marginTop:'8px'}}
+                  onChange={({target}) => this.handleChange(measurement.key,target)}/>
               </Grid>
             );
           }
           if (measurement.input_type === "numeric") {
             return (
-              <Grid item xs={12} sm={12}>
-                <TextField
-                  key={measurement.key}
-                  label={measurement.label}
-                  className={classes.grid_element}
-                  value={measurement.value}
-                  onChange={this.handleChange(measurement.key)}
-                  // disabled={readOnly}
-                />
+              <Grid className={this.props.classes.grid_item} item lg={12} xs={12} sm={12} key={measurement.key}>
+                <div>{measurement.label}</div>
+                <TextField 
+                  value={measurement.value || ""} 
+                  type='numeric'
+                  style={{marginTop:'8px'}}
+                  placeholder='Enter number'
+                  onChange={({target}) => this.handleChange(measurement.key,target)}/>
               </Grid>
             );
           }
           if (measurement.input_type === "boolean") {
             return (
-              <Grid item xs={12} sm={12}>
-                <FormControlLabel
-                  control={
-                    <Select
-                      key={measurement.key}
-                      value={measurement.value}
-                      onChange={this.handleChange(measurement.key)}
-                    >
-                      <MenuItem value={true}>Yes</MenuItem>
-                      <MenuItem value={false}>No</MenuItem>
-                      <MenuItem value={null}>---</MenuItem>
-                    </Select>
+              <Grid className={this.props.classes.grid_item} item md={12} lg={12} xs={12} sm={12} key={measurement.key}>
+                <div className={this.props.classes.input_label}>
+                  {measurement.label}
+                  <span 
+                    style={{fontSize:'12px',color:'blue',cursor:'pointer',marginLeft:'8px'}}
+                    onClick={() => {this.handleChange(measurement.key, {value:null})}}>
+                    Clear
+                  </span>
+                </div>
+                {/* <Select
+                  key={measurement.key}
+                  value={measurement.value}
+                  onChange={({ target }) =>
+                    this.handleChange(measurement.key, target)
                   }
-                  onChange={this.handleChange(measurement.key)}
-                  className={classes.grid_element}
-                  label={measurement.label}
-                  labelPlacement="start"
-                  // disabled={readOnly}
-                />
+                  style={{marginLeft:'16px'}}
+                >
+                  <MenuItem value={true}>Yes</MenuItem>
+                  <MenuItem value={false}>No</MenuItem>
+                  <MenuItem value={null}>---</MenuItem>
+                </Select> */}
+                <RadioGroup value={measurement.value} 
+                  onChange={(({target}) => {this.handleChange(measurement.key, target)})}>
+                  <FormControlLabel value={"true"} control={<Radio />} label="Yes" />
+                  <FormControlLabel value={"false"} control={<Radio />} label="No" />
+                </RadioGroup>
               </Grid>
             );
           }
