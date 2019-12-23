@@ -389,7 +389,7 @@ class Curriculum extends Component {
       day.type = "day";
       day.sessions = filteredSessions;
     });
-    return filteredDays;
+    return { days: filteredDays };
   };
   handleSubmit = is_submitting => {
     const { days, curriculumName, isEdit, curriculumDescription } = this.state;
