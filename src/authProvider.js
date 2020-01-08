@@ -95,6 +95,7 @@ export default async (type, params) => {
     const user_groups = { ...init };
     const resources = { ...init };
     const sessions = { ...init };
+    const readings = { ...init };
 
     if (checkPermission(permissions, "measurements.view_measurement")) {
       measurements["show"] = true;
@@ -237,6 +238,25 @@ export default async (type, params) => {
       user_groups["enabled"] = true;
     }
     authPermissions["user_groups"] = user_groups;
+
+    if (checkPermission(permissions, "users.view_userreading")) {
+      readings["show"] = true;
+      readings["list"] = true;
+      readings["enabled"] = true;
+    }
+    if (checkPermission(permissions, "users.add_userreading")) {
+      readings["create"] = true;
+      readings["enabled"] = true;
+    }
+    if (checkPermission(permissions, "users.change_userreading")) {
+      readings["edit"] = true;
+      readings["enabled"] = true;
+    }
+    if (checkPermission(permissions, "users.delete_userreading")) {
+      readings["delete"] = true;
+      readings["enabled"] = true;
+    }
+    authPermissions["readings"] = readings;
 
     if (
       athletes["enabled"] ||

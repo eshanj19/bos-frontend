@@ -39,9 +39,9 @@ import measurements from "../measurements";
 import resources from "../resources";
 import measurementTypes from "../measurementTypes";
 import ngos from "../ngos";
+import readings from "../readings";
 import permissionGroups from "../permissionGroups";
 import { hasAccess } from "ra-auth-acl";
-import api from "../api";
 
 class Menu extends Component {
   state = {};
@@ -175,6 +175,25 @@ class Menu extends Component {
                     smart_count: 2
                   })}
                   leftIcon={<measurements.icon />}
+                  onClick={onMenuClick}
+                />
+              );
+            } else {
+              return <div></div>;
+            }
+          }}
+        />
+
+        <WithPermissions
+          render={({ permissions }) => {
+            if (hasAccess(permissions, "readings.enabled")) {
+              return (
+                <MenuItemLink
+                  to={`/readings`}
+                  primaryText={translate(`resources.readings.name`, {
+                    smart_count: 2
+                  })}
+                  leftIcon={<readings.icon />}
                   onClick={onMenuClick}
                 />
               );

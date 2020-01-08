@@ -41,6 +41,7 @@ import measurementTypes from "./measurementTypes";
 import { API_URL } from "./constants";
 import errorSagas from "./dataProvider/errorSaga";
 import api from "./api";
+import readings from "./readings";
 
 const i18nProvider = locale => {
   // if (locale === "fr") {
@@ -122,6 +123,11 @@ class App extends Component {
             name="user_groups"
             permissions={permissions}
             {...userGroups}
+          />,
+          <ResourceWithPermissions
+            name="readings"
+            permissions={permissions}
+            {...readings}
           />,
           <Resource name="ping" />
         ]}

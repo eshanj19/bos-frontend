@@ -102,6 +102,10 @@ export default {
       name: " Measurement |||| Measurements",
       fields: {}
     },
+    readings: {
+      name: " Reading |||| Readings",
+      fields: {}
+    },
     measurement_types: {
       name: " Measurement Type |||| Measurement Types",
       fields: {}
