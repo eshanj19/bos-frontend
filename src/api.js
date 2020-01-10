@@ -177,7 +177,15 @@ const saveSession = (sessionKey, data) => {
   return axios.put(`resources/${sessionKey}/`, data);
 };
 
+const saveRegistrationForm = (sessionKey, data) => {
+  return axios.put(`resources/${sessionKey}/`, data);
+};
+
 const createSession = data => {
+  return axios.post("resources/", data);
+};
+
+const createRegistrationForm = data => {
   return axios.post("resources/", data);
 };
 
@@ -228,9 +236,9 @@ const submitFile = file => {
   return axios.post(`/resources/`, file);
 };
 
-const editFile = (fileKey,file) => {
-  return axios.put(`resources/${fileKey}/`,file);
-}
+const editFile = (fileKey, file) => {
+  return axios.put(`resources/${fileKey}/`, file);
+};
 
 const saveOrgHierarchy = (data, key) => {
   return axios.post(`/ngos/${key}/save_user_hierarchy/`, data);
@@ -258,6 +266,7 @@ const api = {
   getAthleteBaseline,
   getResourcesByNgo,
   createSession,
+  createRegistrationForm,
   getCoachBaseline,
   getAthleteRegistrationResource: getAthleteRegistrationResource,
   getCoachRegistrationResource: getCoachRegistrationResource,
@@ -279,6 +288,7 @@ const api = {
   getMeasurementDropdownOptionsForNgo,
   getFileDropdownOptionsForNgo,
   saveSession,
+  saveRegistrationForm,
   getSessionsForNgo,
   createCurriculum,
   saveCurriculum,

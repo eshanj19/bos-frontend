@@ -1,8 +1,6 @@
-import React from 'react';
-import Session from '../common/Session';
+import React from "react";
+import Session from "../common/Session";
 
 export default function CreateSession(props) {
-  return(
-    <Session/>
-  )
+  return <Session isRegistrationForm={false} />;
 }

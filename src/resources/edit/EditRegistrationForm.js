@@ -3,7 +3,7 @@ import Session from "../common/Session";
 import api from "../../api";
 import uniqueId from "lodash/uniqueId";
 
-export default function EditSession(props) {
+export default function EditRegistrationForm(props) {
   const [initialData, setInitialData] = useState(null);
   const randomId = type => uniqueId(`${type}_`);
   useEffect(() => {
@@ -45,6 +45,6 @@ export default function EditSession(props) {
     });
   }, []);
   return !initialData ? null : (
-    <Session initialData={initialData} isRegistrationForm={false} />
+    <Session initialData={initialData} isRegistrationForm={true} />
   );
 }

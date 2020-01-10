@@ -15,13 +15,22 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {
+  RESOURCE_TYPE_TRAINING_SESSION,
+  RESOURCE_TYPE_CURRICULUM,
+  RESOURCE_TYPE_FILE,
+  RESOURCE_TYPE_REGISTRATION_FORM
+} from "../../constants";
+
 const ResourceTypeField = ({ record }) => {
-  if (record.type === "session") {
+  if (record.type === RESOURCE_TYPE_TRAINING_SESSION) {
     return "Training session";
-  } else if (record.type === "file") {
+  } else if (record.type === RESOURCE_TYPE_FILE) {
     return "File";
-  } else if (record.type === "curriculum") {
+  } else if (record.type === RESOURCE_TYPE_CURRICULUM) {
     return "Curriculum";
+  } else if (record.type === RESOURCE_TYPE_REGISTRATION_FORM) {
+    return "Registration form";
   }
 };
 
