@@ -22,7 +22,8 @@ import {
   ReferenceArrayInput,
   TextInput,
   SimpleForm,
-  BooleanInput
+  BooleanInput,
+  AutocompleteInput,
 } from "react-admin";
 import withStyles from "@material-ui/core/styles/withStyles";
 
@@ -47,12 +48,21 @@ export const validateMeasurementCreation = values => {
   return errors;
 };
 
+ 
+// <TextInput source="input_type" formClassName={classes.input_type} />
 const MeasurementCreate = ({ classes, ...props }) => (
   <Create {...props}>
     <SimpleForm redirect="list" validate={validateMeasurementCreation}>
       <TextInput autoFocus source="label" formClassName={classes.label} />
       <TextInput source="uom" formClassName={classes.uom} />
-      <TextInput source="input_type" formClassName={classes.input_type} />
+     <AutocompleteInput
+       source="input_type"
+       formClassName={classes.input_type}
+       choices={[
+        { id: 'text', name: 'Text' },
+        { id: 'boolean', name: 'Boolean' },
+        { id: 'numeric', name: 'Numeric' },
+    ]}/>
       <ReferenceArrayInput
         formClassName={classes.type}
         label="Measurement Type"
