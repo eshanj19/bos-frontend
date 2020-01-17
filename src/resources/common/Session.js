@@ -66,7 +66,7 @@ class Session extends Component {
   componentDidMount() {
     console.log(this.props);
     const ngoKey = localStorage.getItem("ngo_key");
-    const { initialData } = this.props;
+    const { initialData, isRegistrationForm } = this.props;
     api.getFileDropdownOptionsForNgo(ngoKey).then(({ data }) => {
       const sanitizedOptions = data.map(option => {
         return {
@@ -179,7 +179,8 @@ class Session extends Component {
     const {
       match: {
         params: { id: resourceKey }
-      }
+      },
+      isRegistrationForm
     } = this.props;
     // return;
     /**
@@ -215,38 +216,65 @@ class Session extends Component {
         return item;
       });
     console.log({ files, measurements });
+    const resourceType = isRegistrationForm ? "registration" : "session";
     const payload = {
       data: { files, measurements },
       label: sessionName,
-      type: "session",
+      type: resourceType,
       description: sessionDescription,
       is_submitting
     };
     if (isEdit) {
-      api
-        .saveSession(resourceKey, payload)
-        .then(response => {
-          api.handleSuccess(response, this.props.enqueueSnackbar);
-          this.props.history.goBack();
-        })
-        .catch(error => {
-          api.handleError(error, this.props.enqueueSnackbar);
-        });
+      // Edit api
+      if (isRegistrationForm) {
+        api
+          .saveRegistrationForm(resourceKey, payload)
+          .then(response => {
+            api.handleSuccess(response, this.props.enqueueSnackbar);
+            this.props.history.goBack();
+          })
+          .catch(error => {
+            api.handleError(error, this.props.enqueueSnackbar);
+          });
+      } else {
+        api
+          .saveSession(resourceKey, payload)
+          .then(response => {
+            api.handleSuccess(response, this.props.enqueueSnackbar);
+            this.props.history.goBack();
+          })
+          .catch(error => {
+            api.handleError(error, this.props.enqueueSnackbar);
+          });
+      }
     } else {
-      api
-        .createSession(payload)
-        .then(response => {
-          api.handleSuccess(response, this.props.enqueueSnackbar);
-          this.props.history.goBack();
-        })
-        .catch(error => {
-          api.handleError(error, this.props.enqueueSnackbar);
-        });
+      // Create api
+      if (isRegistrationForm) {
+        api
+          .createRegistrationForm(payload)
+          .then(response => {
+            api.handleSuccess(response, this.props.enqueueSnackbar);
+            this.props.history.goBack();
+          })
+          .catch(error => {
+            api.handleError(error, this.props.enqueueSnackbar);
+          });
+      } else {
+        api
+          .createSession(payload)
+          .then(response => {
+            api.handleSuccess(response, this.props.enqueueSnackbar);
+            this.props.history.goBack();
+          })
+          .catch(error => {
+            api.handleError(error, this.props.enqueueSnackbar);
+          });
+      }
     }
     // console.log(filtered);
   };
   render() {
-    const { classes, ...props } = this.props;
+    const { classes, isRegistrationForm, ...props } = this.props;
     const { session, isEdit, sessionDescription, sessionName } = this.state;
     return (
       <div className={classes.root}>
@@ -259,7 +287,13 @@ class Session extends Component {
         >
           <div>
             <h4>
-              {isEdit ? "Edit Training Session" : "Create Training Session"}
+              {isEdit
+                ? isRegistrationForm
+                  ? "Edit Registration Form"
+                  : "Edit Training Session"
+                : isRegistrationForm
+                ? "Create Registration Form"
+                : "Create Training Session"}
             </h4>
           </div>
           <div>

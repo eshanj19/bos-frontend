@@ -23,14 +23,12 @@ import {
   ShowButton,
   List,
   TextField,
-  Responsive,
   BooleanInput,
   SearchInput,
   Filter,
   DatagridBody,
   SelectInput,
-  crudUpdateMany,
-  UPDATE
+  crudUpdateMany
 } from "react-admin";
 import { connect } from "react-redux";
 import {
@@ -42,14 +40,12 @@ import {
   TableRow,
   Checkbox
 } from "@material-ui/core";
-import withStyles from "@material-ui/core/styles/withStyles";
 import EditIcon from "@material-ui/icons/Edit";
-import { withRouter } from "react-router-dom";
-import { RESOURCE_TYPES } from "../utils";
 import api from "../api";
 import { withDataProvider } from "ra-core";
 import ResourceTypeField from "./common/ResourceTypeField";
 import { withSnackbar } from "notistack";
+import { RESOURCE_TYPE_REGISTRATION_FORM } from "../constants";
 
 const styles = {
   nb_commands: { color: "purple" }
@@ -91,7 +87,7 @@ const BulkActionButtons = props => {
 
   if (
     selectedIds.length === 1 &&
-    resourceList[selectedIds[0]].type === "session"
+    resourceList[selectedIds[0]].type === RESOURCE_TYPE_REGISTRATION_FORM
   ) {
     return (
       <>
@@ -225,7 +221,8 @@ const ResourceFilter = props => (
       choices={[
         { id: "session", name: "Session" },
         { id: "curriculum", name: "Curriculum" },
-        { id: "file", name: "File" }
+        { id: "file", name: "File" },
+        { id: "registration", name: "Registration Form" }
       ]}
       alwaysOn
     />
@@ -270,6 +267,9 @@ const CreateActions = props => {
           Training Session
         </MenuItem>
         <MenuItem onClick={() => handleMenuSelect("file")}>File</MenuItem>
+        <MenuItem onClick={() => handleMenuSelect("registration")}>
+          Registration form
+        </MenuItem>
       </Menu>
     </>
   );
