@@ -17,6 +17,7 @@
 
 import React, { Component } from "react";
 import withStyles from "@material-ui/core/styles/withStyles";
+import { makeStyles } from "@material-ui/core/styles";
 import { Card, CardContent, Grid } from "@material-ui/core";
 import { validationSchema } from "../validationSchemas";
 import { Formik } from "formik";
@@ -44,10 +45,10 @@ class PermissionGroupCreate extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      allPermissions: []
+      allPermissions: [],
+      list: []
     };
     this.handleIdentityChange = this.handleIdentityChange.bind(this);
-    this.customAction = this.customAction.bind(this);
   }
 
   componentDidMount() {
@@ -122,80 +123,22 @@ class PermissionGroupCreate extends Component {
     this.setState(dict);
   };
 
-  handleChange = (key, event) => {
-    // var { baselineMeasurements: baselineMeasurements } = this.state;
-    // for (let index = 0; index < baselineMeasurements.length; index++) {
-    //   const element = baselineMeasurements[index];
-    //   if (element.key === key) {
-    //     if (element.input_type === "boolean") {
-    //       console.log("Value of ", event.target);
-    //       element["value"] = event.target.value;
-    //     } else {
-    //       element["value"] = event.target.value;
-    //     }
-    //     console.log("Value of ", element["value"]);
-    //     break;
-    //   }
-    // }
-    // this.setState({ baselineMeasurements: baselineMeasurements });
-  };
-
-  customAction() {
-    var {
-      baselineMeasurements,
-      permissionGroups,
-      first_name,
-      last_name,
-      role
-    } = this.state;
-    // var createData = {};
-    // var baselines = [];
-    // for (let index = 0; index < baselineMeasurements.length; index++) {
-    //   const element = baselineMeasurements[index];
-    //   if (element.input_type === "boolean") {
-    //     if (element.value === true || element.value == false) {
-    //       baselines.push(element);
-    //     }
-    //   } else if (element.value) {
-    //     baselines.push(element);
-    //   }
-    // }
-    // createData["baselines"] = baselines;
-    // createData["first_name"] = first_name;
-    // createData["last_name"] = last_name;
-    // if (role === ATHLETE) {
-    //   api.createAthlete(createData).then(result => {
-    //     this.props.history.push(this.props.basePath);
-    //   });
-    // } else if (role === COACH) {
-    //   api.createCoach(createData).then(result => {
-    //     this.props.history.push(this.props.basePath);
-    //   });
-    // }
-  }
-
   render() {
-    const { classes, ...props } = this.props;
     const { allPermissions } = this.state;
+    const { classes, ...props } = this.props;
     return (
-      <div className={classes.root}>
-        <Grid container direction="row" justify="center" alignItems="center">
-          <Card className={classes.card}>
-            <CardContent>
-              <Formik
-                render={props => (
-                  <PermissionGroupCreateForm
-                    {...props}
-                    allPermissions={allPermissions}
-                  />
-                )}
-                validationSchema={validationSchema.AddPermissionGroup}
-                onSubmit={this.onFormSubmit}
-              />
-            </CardContent>
-          </Card>
-        </Grid>
-      </div>
+      <Grid container direction="row" justify="center" alignItems="center">
+        <Formik
+          render={props => (
+            <PermissionGroupCreateForm
+              {...props}
+              allPermissions={allPermissions}
+            />
+          )}
+          validationSchema={validationSchema.AddPermissionGroup}
+          onSubmit={this.onFormSubmit}
+        />
+      </Grid>
     );
   }
 }

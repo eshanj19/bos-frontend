@@ -20,10 +20,12 @@ import PermissionGroupIcon from "@material-ui/icons/People";
 import PermissionGroupList from "./PermissionGroupList";
 import PermissionGroupCreate from "./PermissionGroupCreate";
 import PermissionGroupEdit from "./PermissionGroupEdit";
+import PermissionGroupShow from "./PermissionGroupShow"
 
 export default {
   list: PermissionGroupList,
   create: PermissionGroupCreate,
   edit: PermissionGroupEdit,
-  icon: PermissionGroupIcon
+  icon: PermissionGroupIcon,
+  show: PermissionGroupShow
 };

@@ -17,7 +17,7 @@
 
 import React, { Component } from "react";
 import withStyles from "@material-ui/core/styles/withStyles";
-import { Grid } from "@material-ui/core";
+
 import { styles } from "./PermissionGroupCreate";
 import { Paper, Button } from "@material-ui/core";
 import PermissionList from "./PermissionList";
@@ -25,12 +25,12 @@ import api from "../api";
 import instance from "../axios";
 import { getGroupName } from "../utils";
 
-class PermissionGroupEdit extends Component {
+class PermissionGroupShow extends Component {
   constructor(props) {
     super(props);
     this.state = {
       currentGroupPermissions: [],
-      flag: true
+      flag: false
     };
   }
 
@@ -117,34 +117,18 @@ class PermissionGroupEdit extends Component {
     const props = this.props;
     return (
       <div>
-        <h3 style={{ marginLeft: 10 }}> Permissions for group: {groupName} </h3>
-        <PermissionList
-          currentGroupPermissions={currentGroupPermissions}
-          flag={flag}
-          handleCheckbox={this.handleCheckbox}
-          handleSaveButton={this.handleSaveButton}
-          {...props}
-        />
-        <Grid
-          container
-          spacing={8}
-          direction="row"
-          justify="center"
-          alignItems="center"
-        >
-          <Button
-            type="submit"
-            variant="raised"
-            color="primary"
-            style={{ marginTop: 10, marginBottom: 5 }}
-            onClick={this.handleSaveButton}
-          >
-            Save
-          </Button>
-        </Grid>
+        <h3> Permissions for group : {groupName} </h3>
+        {
+          <PermissionList
+            currentGroupPermissions={currentGroupPermissions}
+            flag={flag}
+            handleCheckbox={this.handleCheckbox}
+            {...props}
+          />
+        }
       </div>
     );
   }
 }
 
-export default withStyles(styles)(PermissionGroupEdit);
+export default withStyles(styles)(PermissionGroupShow);

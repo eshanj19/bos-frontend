@@ -17,11 +17,24 @@
 
 import withStyles from "@material-ui/core/styles/withStyles";
 import { styles } from "./PermissionGroupCreate";
-import { Checkbox, FormControlLabel, Grid } from "@material-ui/core";
+import { sizing, flexbox, spacing, width } from "@material-ui/system";
+import {
+  Checkbox,
+  FormControlLabel,
+  Grid,
+  Card,
+  CardContent,
+  Paper
+} from "@material-ui/core";
 
 import React, { Component } from "react";
 import { USER } from "../authSchema";
-import find from 'lodash/find';
+import find from "lodash/find";
+import { cardStyle } from "./PermissionGroupCreateForm";
+
+export var cardS = {
+  display: "block"
+};
 
 class PermissionList extends Component {
   constructor(props) {
@@ -32,33 +45,99 @@ class PermissionList extends Component {
     this.props.handleCheckbox(name, event.target.checked);
   };
 
+  getCheckedPermission = () => {
+    const { currentGroupPermissions, classes, flag } = this.props;
+    const clubpermissions = [
+      { key: "_group", name: "Group" },
+      { key: "_curriculum", name: "Curriculum" },
+      { key: "_ngoregistrationresource", name: "Ngo Registration" },
+      { key: "_userhierarchy", name: "User Hierarchy" },
+      { key: "_usergroup", name: "User Group" },
+      { key: "_athlete", name: "Athlete" },
+      { key: "_ngo", name: "Ngo" },
+      { key: "_resource", name: "Resources" },
+      { key: "_trainingsession", name: "Training session" },
+      { key: "_userresource", name: "User Resources" },
+      { key: "_coach", name: "Coach" },
+      { key: "_userreading", name: "User Reading" },
+      { key: "_user", name: "User" },
+      { key: "_file", name: "File" },
+      { key: "_admin", name: "Admin" },
+      { key: "_measurement", name: "Measurements" }
+    ];
+
+    let currentGroupPermissionscpy = [...currentGroupPermissions];
+    const mapped = clubpermissions.map(permission => {
+      const list = currentGroupPermissionscpy.filter(function(abc) {
+        return abc.codename.includes(permission.key);
+      });
+
+      for (let j = 0; j < list.length; j++) {
+        for (let i = 0; i < currentGroupPermissionscpy.length; i++) {
+          if (list[j].codename === currentGroupPermissionscpy[i].codename) {
+            currentGroupPermissionscpy.splice(i, 1);
+            break;
+          }
+        }
+      }
+
+      return (
+        <Grid item display="block" sm={4} xs={12} md={4}>
+          {flag ? (
+            <Grid>
+              <Card style={{ marginTop: 10, marginLeft: 8, padding: 50 }}>
+                <CardContent>
+                  <h2>{permission.name}</h2>
+                  {list.map(permission => (
+                    <FormControlLabel
+                      key={permission.id}
+                      control={<Checkbox color="primary" />}
+                      label={permission.name}
+                      checked={permission.checked}
+                      onChange={this.handleChange(permission.id)}
+                    />
+                  ))}
+                </CardContent>
+              </Card>
+            </Grid>
+          ) : (
+            <Grid>
+              <Card style={{ marginTop: 10, marginLeft: 8, padding: 50 }}>
+                <CardContent>
+                  <h2>{permission.name}</h2>
+                  {list.map(permission => (
+                    <FormControlLabel
+                      key={permission.id}
+                      control={<Checkbox color="primary" />}
+                      label={permission.name}
+                      checked={permission.checked}
+                    />
+                  ))}
+                </CardContent>
+              </Card>
+            </Grid>
+          )}
+        </Grid>
+      );
+    });
+
+    return mapped;
+  };
+
   render() {
     const { currentGroupPermissions, classes } = this.props;
-    const userPermissions = currentGroupPermissions.filter((permission) => {
+    const userPermissions = currentGroupPermissions.filter(permission => {
       return USER.indexOf(permission.codename) > -1;
-    })
-    console.log(userPermissions);
+    });
+
     if (!currentGroupPermissions) {
       currentGroupPermissions = [];
     }
 
     return (
-      <Grid container spacing={8}>
-        {currentGroupPermissions.map(permission => {
-          return (
-            <Grid item xs={4} key={permission.id}>
-              <FormControlLabel
-                className={classes.checkbox}
-                key={permission.id}
-                control={<Checkbox color="primary" />}
-                label={permission.name}
-                checked={permission.checked}
-                onChange={this.handleChange(permission.id)}
-              />
-            </Grid>
-          );
-        })}
-      </Grid>
+      <div>
+        <Grid container>{this.getCheckedPermission()}</Grid>
+      </div>
     );
   }
 }

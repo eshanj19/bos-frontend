@@ -22,7 +22,6 @@ import { getGroupName } from "../utils";
 const PermissionGroupNameField = ({ record }) => (
   <TextField
     value={getGroupName(record.name)}
-    // disabled={true}
     InputProps={{ disableUnderline: true }}
   />
 );
