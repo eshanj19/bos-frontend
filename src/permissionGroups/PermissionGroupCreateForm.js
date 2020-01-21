@@ -16,7 +16,14 @@
  */
 
 import React from "react";
-import { TextField, Button, Grid } from "@material-ui/core";
+import {
+  TextField,
+  Button,
+  Grid,
+  Card,
+  CardContent,
+  GridList
+} from "@material-ui/core";
 import withStyles from "@material-ui/core/styles/withStyles";
 import PermissionGroupList from "../common/PermissionGroupList";
 import { FieldArray, Field } from "formik";
@@ -51,11 +58,77 @@ const PermissionGroupCreateForm = props => {
     setFieldTouched(name, true, false);
   };
 
+  const getPermission = () => {
+    const clubpermissions = [
+      { key: "_group", name: "Group" },
+      { key: "_curriculum", name: "Curriculum" },
+      { key: "_ngoregistrationresource", name: "Ngo Registration" },
+      { key: "_userhierarchy", name: "User Hierarchy" },
+      { key: "_usergroup", name: "User Group" },
+      { key: "_athlete", name: "Athlete" },
+      { key: "_ngo", name: "Ngo" },
+      { key: "_resource", name: "Resources" },
+      { key: "_trainingsession", name: "Training session" },
+      { key: "_userresource", name: "User Resources" },
+      { key: "_coach", name: "Coach" },
+      { key: "_userreading", name: "User Reading" },
+      { key: "_user", name: "User" },
+      { key: "_file", name: "File" },
+      { key: "_admin", name: "Admin" },
+      { key: "_measurement", name: "Measurements" }
+    ];
+
+    let allPermissionsCopy = [...allPermissions];
+
+    const mapped = clubpermissions.map(clubpermission => {
+      const list = allPermissionsCopy.filter(function(xyz) {
+        return xyz.codename.includes(clubpermission.key);
+      });
+      for (let j = 0; j < list.length; j++) {
+        for (let i = 0; i < allPermissionsCopy.length; i++) {
+          if (list[j].codename === allPermissionsCopy[i].codename) {
+            allPermissionsCopy.splice(i, 1);
+            break;
+          }
+        }
+      }
+      return (
+        <FieldArray
+          name="permissions"
+          render={arrayhelpers => (
+            <Grid item display="block" sm={4} xs={12} md={4}>
+              <Card style={{ marginTop: 10, marginLeft: 8, paddingTop: 10 }}>
+                <CardContent>
+                  <h3>{clubpermission.name}</h3>
+                  {list.map(permission => (
+                    <div key={permission.id}>
+                      <label>
+                        <Field
+                          name={permission.id}
+                          component="input"
+                          type="checkbox"
+                        />
+                        {permission.name}
+                      </label>
+                    </div>
+                  ))}
+                </CardContent>
+              </Card>
+            </Grid>
+          )}
+        />
+      );
+    });
+
+    return mapped;
+  };
+
   return (
     <form onSubmit={handleSubmit}>
       <Grid container spacing={8}>
-        <Grid item xs={12} md={4}>
+        <Grid item sm={6} xs={12} md={5}>
           <TextField
+            style={{ marginLeft: 10 }}
             id="name"
             name="name"
             helperText={touched.name ? errors.name : ""}
@@ -67,26 +140,9 @@ const PermissionGroupCreateForm = props => {
         </Grid>
       </Grid>
 
-      <FieldArray
-        name="permissions"
-        render={arrayhelpers => (
-          <div>
-            {allPermissions.map(permission => (
-              <div key={permission.id}>
-                <label>
-                  <Field
-                    name={permission.id}
-                    component="input"
-                    type="checkbox"
-                    // checked={props.values.allPermissions}
-                  />
-                  {permission.name}
-                </label>
-              </div>
-            ))}
-          </div>
-        )}
-      />
+      <div>
+        <Grid container>{getPermission()}</Grid>
+      </div>
 
       <Grid
         container
