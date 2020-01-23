@@ -30,6 +30,8 @@ import api from "../api";
 import ResetPasswordDialog from "../common/ResetPasswordDialog";
 
 import { validateAdminCreation } from "./AdminCreate";
+import { withRouter } from "react-router-dom";
+import { withSnackbar } from "notistack";
 
 const styles = {
   inlineBlock: { display: "inline-flex", marginRight: "1rem" }
@@ -39,6 +41,7 @@ const AdminEditActions = ({ basePath, data, resource, onToggleDialog }) => {
   return (
     <CardActions style={{ justifyContent: "flex-end" }}>
       <ShowButton basePath={basePath} record={data} />
+
       <Button color="primary" onClick={() => onToggleDialog(data.key)}>
         Reset Password
       </Button>
@@ -49,12 +52,15 @@ const AdminEditActions = ({ basePath, data, resource, onToggleDialog }) => {
 const AdminEdit = ({ classes, ...props }) => {
   const [showDialog, toggleDialog] = useState(false);
   const [password, handleChangePassword] = useState("");
+  const [currentpassword, handlecurrentpassword] = useState("");
   const [confirmPassword, handleChangeConfirmPassword] = useState("");
   const [permissionGroupChoices, setPermissionGroupChoices] = useState([]);
   const [userKey, setUserKey] = useState(null);
+  const { enqueueSnackbar } = props;
   useEffect(() => {
     handleChangePassword("");
     handleChangeConfirmPassword("");
+    handlecurrentpassword("");
   }, [showDialog]);
   useEffect(() => {
     //fetch possible resource choices.
@@ -70,11 +76,22 @@ const AdminEdit = ({ classes, ...props }) => {
   }, []);
   const resetPassword = () => {
     if (!password || password.length === 0) return;
-    if (password === confirmPassword) {
-      api.resetPassword(userKey, password).then(() => {
+    let passworddata = {
+      password: password,
+      confirmPassword: confirmPassword,
+      currentpassword: currentpassword
+    };
+    api
+      .resetPassword(userKey, passworddata)
+      .then(response => {
         toggleDialog(!showDialog);
+        api.handleSuccess(response, enqueueSnackbar);
+      })
+      .catch(response => {
+        console.log(response);
+        console.log("w");
+        api.handleError(response, enqueueSnackbar);
       });
-    }
   };
   const handlePermissionGroupChoiceChange = data => {
     const arr = Object.values(data);
@@ -134,9 +151,11 @@ const AdminEdit = ({ classes, ...props }) => {
       <ResetPasswordDialog
         showDialog={showDialog}
         password={password}
+        currentpassword={currentpassword}
         confirmPassword={confirmPassword}
         onChangePassword={handleChangePassword}
         onChangeConfirmPassword={handleChangeConfirmPassword}
+        onChangCurrentPassword={handlecurrentpassword}
         toggleDialog={() => {
           toggleDialog(!showDialog);
         }}
@@ -146,4 +165,4 @@ const AdminEdit = ({ classes, ...props }) => {
   );
 };
 
-export default withStyles(styles)(AdminEdit);
+export default withRouter(withSnackbar(withStyles(styles)(AdminEdit)));
