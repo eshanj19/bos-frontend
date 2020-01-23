@@ -156,6 +156,7 @@ const AdminEdit = ({ classes, ...props }) => {
         onChangePassword={handleChangePassword}
         onChangeConfirmPassword={handleChangeConfirmPassword}
         onChangCurrentPassword={handlecurrentpassword}
+        validateAdminCreation={validateAdminCreation}
         toggleDialog={() => {
           toggleDialog(!showDialog);
         }}
