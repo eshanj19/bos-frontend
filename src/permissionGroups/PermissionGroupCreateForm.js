@@ -107,6 +107,7 @@ const PermissionGroupCreateForm = props => {
                           name={permission.id}
                           component="input"
                           type="checkbox"
+                          color="primary"
                         />
                         {permission.name}
                       </label>
