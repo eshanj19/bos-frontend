@@ -47,7 +47,7 @@ const MeasurementList = ({ classes, permissions, ...props }) => (
       medium={
         <Datagrid>
           <TextField source="label" type="text" />
-          {/* <TextField source="uom" type="text" /> */}
+
           <ReferenceArrayField
             label="Types"
             source="types"
@@ -63,7 +63,7 @@ const MeasurementList = ({ classes, permissions, ...props }) => (
           <BooleanField source="is_active" label="Active" />
           <DateField source="creation_time" showTime />
           <DateField source="last_modification_time" showTime />
-          {/* {hasAccess(permissions, "measurements.show") && <ShowButton />} */}
+          {hasAccess(permissions, "measurements.show") && <ShowButton />}
           {hasAccess(permissions, "measurements.edit") && <EditButton />}
         </Datagrid>
       }

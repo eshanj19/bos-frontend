@@ -32,6 +32,7 @@ import {
 import SubMenu from "./SubMenu";
 import admins from "../admins";
 import coaches from "../coaches";
+import requests from "../requests";
 import athletes from "../athletes";
 import userGroups from "../userGroups";
 import organisation from "../organisation";
