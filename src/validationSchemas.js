@@ -13,6 +13,15 @@ const AddNgoSchema = Yup.object().shape({
   confirm_password: Yup.string().required("Required")
 });
 
+const AddUser = Yup.object().shape({
+  first_name: Yup.string().required("Required"),
+  last_name: Yup.string().required("Required"),
+  gender: Yup.string().required("Required"),
+  username: Yup.string().required("Required"),
+  password: Yup.string().required("Required"),
+  confirm_password: Yup.string().required("Required")
+});
+
 const AddPermissionGroup = Yup.object().shape({
   name: Yup.string().required("Required")
 });
@@ -62,6 +71,7 @@ const ForgotPasswordTokenSchema = Yup.object().shape({
 export const validationSchema = {
   AddNgo: AddNgoSchema,
   AddPermissionGroup: AddPermissionGroup,
+  AddUser: AddUser,
   ResetPasswordSchema: ResetPasswordSchema,
   ForgotPasswordSchema: ForgotPasswordSchema,
   ForgotPasswordTokenSchema

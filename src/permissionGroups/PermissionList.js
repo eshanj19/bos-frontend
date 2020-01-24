@@ -17,20 +17,16 @@
 
 import withStyles from "@material-ui/core/styles/withStyles";
 import { styles } from "./PermissionGroupCreate";
-import { sizing, flexbox, spacing, width } from "@material-ui/system";
 import {
   Checkbox,
   FormControlLabel,
   Grid,
   Card,
-  CardContent,
-  Paper
+  CardContent
 } from "@material-ui/core";
 
 import React, { Component } from "react";
 import { USER } from "../authSchema";
-import find from "lodash/find";
-import { cardStyle } from "./PermissionGroupCreateForm";
 
 export var cardS = {
   display: "block"

@@ -19,13 +19,13 @@ import CoachIcon from "@material-ui/icons/People";
 // import CoachIcon from "@material-ui/icons/People";
 
 import CoachList from "./CoachList";
-import UserCreate from "../common/UserCreate";
+import CoachCreate from "./CoachCreate";
 import CoachEdit from "./CoachEdit";
 import CoachShow from "./CoachShow";
 
 export default {
   list: CoachList,
-  create: UserCreate,
+  create: CoachCreate,
   edit: CoachEdit,
   show: CoachShow,
   icon: CoachIcon

@@ -16,7 +16,7 @@ import {
 } from "react-admin";
 import withStyles from "@material-ui/core/styles/withStyles";
 import { hasAccess } from "ra-auth-acl";
-import FullNameField from "../athletes/AthleteFullNameField";
+import FullNameField from "../common/FullNameField";
 
 const ReadingFilter = props => (
   <Filter {...props}>
@@ -29,7 +29,7 @@ const ReadingFilter = props => (
     >
       <SelectInput optionText="label" />
     </ReferenceInput>
-    <BooleanInput alwaysOn source="is_active" />
+    <BooleanInput alwaysOn source="is_active" label="Active" />
   </Filter>
 );
 

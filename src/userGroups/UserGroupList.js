@@ -40,7 +40,7 @@ const styles = {
 const UserGroupFilter = props => (
   <Filter {...props}>
     <SearchInput label="Name" source="label" alwaysOn />
-    <BooleanInput source="is_active" alwaysOn />
+    <BooleanInput source="is_active" label="Active" alwaysOn />
   </Filter>
 );
 

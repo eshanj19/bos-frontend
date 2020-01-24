@@ -15,15 +15,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import AdminIcon from '@material-ui/icons/SupervisorAccount';
+import AdminIcon from "@material-ui/icons/SupervisorAccount";
 
 import AdminList from "./AdminList";
 import AdminCreate from "./AdminCreate";
+import AdminShow from "./AdminShow";
 import AdminEdit from "./AdminEdit";
 
 export default {
   list: AdminList,
   create: AdminCreate,
   edit: AdminEdit,
+  show: AdminShow,
   icon: AdminIcon
 };

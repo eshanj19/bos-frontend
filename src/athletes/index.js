@@ -20,11 +20,11 @@ import AthleteIcon from "@material-ui/icons/DirectionsRun";
 import AthleteList from "./AthleteList";
 import AthleteEdit from "./AthleteEdit";
 import AthleteShow from "./AthleteShow";
-import UserCreate from "../common/UserCreate";
+import AthleteCreate from "./AthleteCreate";
 
 export default {
   list: AthleteList,
-  create: UserCreate,
+  create: AthleteCreate,
   edit: AthleteEdit,
   show: AthleteShow,
   icon: AthleteIcon

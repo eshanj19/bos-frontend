@@ -22,12 +22,14 @@ import {
   ShowButton,
   SimpleForm,
   BooleanInput,
-  AutocompleteArrayInput
+  AutocompleteArrayInput,
+  SelectInput
 } from "react-admin";
 import withStyles from "@material-ui/core/styles/withStyles";
 import { Button, CardActions } from "@material-ui/core";
 import api from "../api";
 import ResetPasswordDialog from "../common/ResetPasswordDialog";
+import { GENDER_CHOICES } from "../constants";
 
 const styles = {
   flex: { display: "flex", marginRight: "1rem" }
@@ -51,6 +53,7 @@ const CoachEdit = ({ classes, ...props }) => {
   const [confirmPassword, handleChangeConfirmPassword] = useState("");
   const [userKey, setUserKey] = useState(null);
   const [resourceChoices, setResourceChoices] = useState([]);
+  const [permissionGroupChoices, setPermissionGroupChoices] = useState([]);
 
   useEffect(() => {
     //fetch possible resource choices.
@@ -65,6 +68,29 @@ const CoachEdit = ({ classes, ...props }) => {
     handleChangePassword("");
     handleChangeConfirmPassword("");
   }, [showDialog]);
+
+  useEffect(() => {
+    //fetch possible resource choices.
+    const ngoKey = localStorage.getItem("ngo_key");
+    api.getPermissionGroups(ngoKey).then(({ data }) => {
+      const choices = data.map(d => ({
+        id: d.id,
+        name: d.name.replace(ngoKey + "_", "")
+      }));
+      setPermissionGroupChoices(choices);
+    });
+  }, []);
+
+  const handlePermissionGroupChoiceChange = data => {
+    const arr = Object.values(data);
+    if (arr.length > 2) {
+      arr.pop();
+      const value = arr.pop();
+      if (value && arr.includes(value)) {
+        data.preventDefault();
+      }
+    }
+  };
 
   const resetPassword = () => {
     if (!password || password.length === 0) return;
@@ -88,6 +114,7 @@ const CoachEdit = ({ classes, ...props }) => {
   return (
     <div>
       <Edit
+        undoable={false}
         title="Coach Edit"
         actions={
           <CoachEditActions
@@ -106,17 +133,26 @@ const CoachEdit = ({ classes, ...props }) => {
             source="first_name"
             formClassName={classes.flex}
           />
-          <TextInput
-            autoFocus
-            source="last_name"
-            formClassName={classes.flex}
+          <TextInput source="middle_name" formClassName={classes.flex} />
+          <TextInput source="last_name" formClassName={classes.flex} />
+          <SelectInput source="gender" choices={GENDER_CHOICES} />
+
+          <AutocompleteArrayInput
+            label="Permission group"
+            source="permission_groups"
+            choices={permissionGroupChoices}
+            onChange={handlePermissionGroupChoiceChange}
           />
           <AutocompleteArrayInput
             source="resources"
             choices={resourceChoices}
             onChange={handleResourceChoiceChange}
           />
-          <BooleanInput source="is_active" formClassName={classes.flex} />
+          <BooleanInput
+            source="is_active"
+            label="Active"
+            formClassName={classes.flex}
+          />
         </SimpleForm>
       </Edit>
       <ResetPasswordDialog

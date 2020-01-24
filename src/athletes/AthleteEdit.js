@@ -22,12 +22,11 @@ import {
   ShowButton,
   SimpleForm,
   BooleanInput,
-  AutocompleteArrayInput
+  AutocompleteArrayInput,
+  SelectInput
 } from "react-admin";
 import withStyles from "@material-ui/core/styles/withStyles";
 import {
-  Card,
-  CardContent,
   Dialog,
   DialogTitle,
   DialogContent,
@@ -36,6 +35,7 @@ import {
   Input
 } from "@material-ui/core";
 import api from "../api";
+import { GENDER_CHOICES } from "../constants";
 
 const styles = {
   flex: { display: "flex", marginRight: "1rem" }
@@ -91,6 +91,7 @@ const AthleteEdit = ({ classes, ...props }) => {
     <div>
       <Edit
         title="Athlete Edit"
+        undoable={false}
         actions={
           <AthleteEditActions
             onToggleDialog={userKey => {
@@ -108,11 +109,10 @@ const AthleteEdit = ({ classes, ...props }) => {
             source="first_name"
             formClassName={classes.flex}
           />
-          <TextInput
-            autoFocus
-            source="last_name"
-            formClassName={classes.flex}
-          />
+          <TextInput source="middle_name" formClassName={classes.flex} />
+          <TextInput source="last_name" formClassName={classes.flex} />
+          <SelectInput source="gender" choices={GENDER_CHOICES} />
+
           <AutocompleteArrayInput
             source="resources"
             choices={resourceChoices}
@@ -120,6 +120,7 @@ const AthleteEdit = ({ classes, ...props }) => {
           />
           <BooleanInput
             source="is_active"
+            label="Active"
             formClassName={[classes.is_active]}
           />
         </SimpleForm>

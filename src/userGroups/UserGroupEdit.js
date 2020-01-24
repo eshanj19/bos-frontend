@@ -36,16 +36,19 @@ const UserGroupEdit = ({ classes, permissions, ...props }) => {
   useEffect(() => {
     //fetch possible resource choices.
     const ngoKey = localStorage.getItem("ngo_key");
-    api.getResourcesByNgo(ngoKey).then(({data}) => {
+    api.getResourcesByNgo(ngoKey).then(({ data }) => {
       console.log(data);
-      const choices = data.map((d) => ({id : d.key, name:d.label}));
+      const choices = data.map(d => ({ id: d.key, name: d.label }));
       setResourceChoices(choices);
-    })
-    api.getAllUsersByNgo(ngoKey).then(({data}) => {
-      const choices = data.map((d) => ({id : d.key, name:`${d.first_name + d.last_name}`}));
+    });
+    api.getAllUsersByNgo(ngoKey).then(({ data }) => {
+      const choices = data.map(d => ({
+        id: d.key,
+        name: `${d.first_name + d.last_name}`
+      }));
       setUserChoices(choices);
-    })
-  },[]);
+    });
+  }, []);
   const handleChoiceChange = data => {
     const arr = Object.values(data);
     if (arr.length > 2) {
@@ -58,17 +61,12 @@ const UserGroupEdit = ({ classes, permissions, ...props }) => {
   };
   return (
     <Edit {...props}>
-      <SimpleForm redirect="list" validate={validateUserGroupCreation}>
+      <SimpleForm
+        undoable={false}
+        redirect="list"
+        validate={validateUserGroupCreation}
+      >
         <TextInput autoFocus source="label" formClassName={classes.label} />
-        {/* <ReferenceArrayInput
-          formClassName={classes.type}
-          label="Users"
-          source="users"
-          filter={{ is_active: true }}
-          reference="coaches"
-        >
-          <SelectArrayInput optionText="first_name" />
-        </ReferenceArrayInput> */}
         <AutocompleteArrayInput
           source="users"
           choices={userChoices}
@@ -81,6 +79,7 @@ const UserGroupEdit = ({ classes, permissions, ...props }) => {
         />
         <BooleanInput
           source="is_active"
+          label="Active"
           formClassName={classes.is_active}
           defaultValue={true}
         />

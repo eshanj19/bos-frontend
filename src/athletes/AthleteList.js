@@ -26,17 +26,22 @@ import {
   List,
   BooleanInput,
   Responsive,
-  SearchInput
+  SearchInput,
+  SelectField
 } from "react-admin";
 import withStyles from "@material-ui/core/styles/withStyles";
-import FullNameField from "./AthleteFullNameField";
+import FullNameField from "../common/FullNameField";
 import { hasAccess } from "ra-auth-acl";
-import { PERMISSION_ATHLETE_EDIT } from "../constants";
+import {
+  PERMISSION_ATHLETE_EDIT,
+  GENDER_CHOICES,
+  PERMISSION_ATHLETE_SHOW
+} from "../constants";
 
 const AthleteFilter = props => (
   <Filter {...props}>
     <SearchInput label="Name" source="name" alwaysOn />
-    <BooleanInput source="is_active" alwaysOn />
+    <BooleanInput source="is_active" label="Active" alwaysOn />
   </Filter>
 );
 
@@ -57,11 +62,11 @@ const AthleteList = ({ classes, permissions, ...props }) => (
       medium={
         <Datagrid>
           <FullNameField label="Full name" sortBy="first_name" />
-          {/* <TextField source="username" type="text" /> */}
-          <BooleanField source="is_active" type="text" />
+          <SelectField source="gender" choices={GENDER_CHOICES} />
+          <BooleanField source="is_active" label="Active" type="text" />
           <DateField source="creation_time" showTime />
           <DateField source="last_modification_time" showTime />
-          {/* {hasAccess(permissions, "athletes.show") && <ShowButton />} */}
+          {hasAccess(permissions, PERMISSION_ATHLETE_SHOW) && <ShowButton />}
           {hasAccess(permissions, PERMISSION_ATHLETE_EDIT) && <EditButton />}
         </Datagrid>
       }

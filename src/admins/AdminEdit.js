@@ -22,7 +22,8 @@ import {
   ShowButton,
   SimpleForm,
   BooleanInput,
-  AutocompleteArrayInput
+  AutocompleteArrayInput,
+  SelectInput
 } from "react-admin";
 import withStyles from "@material-ui/core/styles/withStyles";
 import { Button, CardActions } from "@material-ui/core";
@@ -30,6 +31,7 @@ import api from "../api";
 import ResetPasswordDialog from "../common/ResetPasswordDialog";
 
 import { validateAdminCreation } from "./AdminCreate";
+import { GENDER_CHOICES } from "../constants";
 import { withRouter } from "react-router-dom";
 import { withSnackbar } from "notistack";
 
@@ -104,6 +106,7 @@ const AdminEdit = ({ classes, ...props }) => {
   return (
     <div>
       <Edit
+        undoable={false}
         actions={
           <AdminEditActions
             onToggleDialog={userKey => {
@@ -121,7 +124,9 @@ const AdminEdit = ({ classes, ...props }) => {
             source="first_name"
             formClassName={classes.first_name}
           />
+          <TextInput source="middle_name" formClassName={classes.middle_name} />
           <TextInput source="last_name" formClassName={classes.last_name} />
+          <SelectInput source="gender" choices={GENDER_CHOICES} />
           <TextInput
             type="username"
             source="username"

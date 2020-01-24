@@ -35,7 +35,7 @@ import { hasAccess } from "ra-auth-acl";
 const MeasurementTypeFilter = props => (
   <Filter {...props}>
     <SearchInput label="Label" source="label" alwaysOn />
-    <BooleanInput source="is_active" alwaysOn />
+    <BooleanInput source="is_active" label="Active" alwaysOn />
   </Filter>
 );
 
@@ -56,7 +56,7 @@ const MeasurementTypeList = ({ classes, permissions, ...props }) => (
       medium={
         <Datagrid>
           <TextField source="label" type="text" />
-          <BooleanField source="is_active" type="text" />
+          <BooleanField source="is_active" label="Active" type="text" />
           <DateField source="creation_time" showTime />
           <DateField source="last_modification_time" showTime />
           {hasAccess(permissions, "measurement_types.show") && <ShowButton />}

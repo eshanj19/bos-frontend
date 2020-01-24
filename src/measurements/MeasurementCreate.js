@@ -49,7 +49,7 @@ export const validateMeasurementCreation = values => {
 };
 
 const MeasurementCreate = ({ classes, ...props }) => (
-  <Create {...props}>
+  <Create undoable={false} {...props}>
     <SimpleForm redirect="list" validate={validateMeasurementCreation}>
       <TextInput autoFocus source="label" formClassName={classes.label} />
       <TextInput source="uom" formClassName={classes.uom} />
@@ -73,6 +73,7 @@ const MeasurementCreate = ({ classes, ...props }) => (
       </ReferenceArrayInput>
       <BooleanInput
         source="is_active"
+        label="Active"
         formClassName={classes.is_active}
         defaultValue={true}
       />

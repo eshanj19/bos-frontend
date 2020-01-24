@@ -13,18 +13,19 @@ import withStyles from "@material-ui/core/styles/withStyles";
 import { styles, validateMeasurementCreation } from "./MeasurementCreate";
 
 const MeasurementEdit = ({ classes, ...props }) => (
-  <Edit title="Edit Measurement" {...props}>
+  <Edit undoable={false} title="Edit Measurement" {...props}>
     <SimpleForm validate={validateMeasurementCreation}>
       <TextInput autoFocus source="label" formClassName={classes.label} />
       <TextInput source="uom" formClassName={classes.uom} />
       <AutocompleteInput
-       source="input_type"
-       formClassName={classes.input_type}
-       choices={[
-        { id: 'text', name: 'Text' },
-        { id: 'boolean', name: 'Boolean' },
-        { id: 'numeric', name: 'Numeric' },
-        ]}/>
+        source="input_type"
+        formClassName={classes.input_type}
+        choices={[
+          { id: "text", name: "Text" },
+          { id: "boolean", name: "Boolean" },
+          { id: "numeric", name: "Numeric" }
+        ]}
+      />
       <ReferenceArrayInput
         formClassName={classes.type}
         label="Measurement Type"
@@ -36,6 +37,7 @@ const MeasurementEdit = ({ classes, ...props }) => (
       </ReferenceArrayInput>
       <BooleanInput
         source="is_active"
+        label="Active"
         formClassName={classes.is_active}
         defaultValue={true}
       />

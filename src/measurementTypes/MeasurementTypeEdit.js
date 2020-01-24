@@ -6,7 +6,7 @@ import { styles } from "./MeasurementTypeCreate";
 import { required } from "ra-core";
 
 const MeasurementTypeEdit = ({ classes, ...props }) => (
-  <Edit title="Measurement Type Edit" {...props}>
+  <Edit undoable={false} title="Measurement Type Edit" {...props}>
     <SimpleForm>
       <TextInput
         autoFocus

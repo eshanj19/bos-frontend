@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import React, { Component,useState,useEffect } from "react";
+import React, { Component, useState, useEffect } from "react";
 import withStyles from "@material-ui/core/styles/withStyles";
 import {
   Create,
@@ -88,28 +88,9 @@ const UserGroupCreate = ({ classes, ...props }) => {
     }
   };
   return (
-    <Create {...props}>
+    <Create undoable={false} {...props}>
       <SimpleForm redirect="list" validate={validateUserGroupCreation}>
         <TextInput autoFocus source="label" formClassName={classes.label} />
-        {/* <ReferenceArrayInput
-        formClassName={classes.type}
-        label="Users"
-        source="users"
-        filter={{ is_active: true }}
-        reference="coaches"
-      >
-        <SelectArrayInput optionText={optionRenderer} />
-      </ReferenceArrayInput>
-
-      <ReferenceArrayInput
-        formClassName={classes.type}
-        label="Resources"
-        source="resources"
-        filter={{ is_active: true, type: "session" }}
-        reference="resources"
-      >
-        <SelectArrayInput optionText="label" />
-      </ReferenceArrayInput> */}
         <AutocompleteArrayInput
           source="users"
           choices={userChoices}
@@ -122,6 +103,7 @@ const UserGroupCreate = ({ classes, ...props }) => {
         />
         <BooleanInput
           source="is_active"
+          label="Active"
           formClassName={classes.is_active}
           defaultValue={true}
         />

@@ -61,6 +61,7 @@ const UserGroupShow = ({ classes, permissions, ...props }) => {
         </ArrayField>
         <BooleanField
           source="is_active"
+          label="Active"
           formClassName={classes.is_active}
           defaultValue={true}
         />

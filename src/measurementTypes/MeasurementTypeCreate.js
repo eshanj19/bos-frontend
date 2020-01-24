@@ -38,6 +38,7 @@ const MeasurementTypeCreate = ({ classes, ...props }) => (
       />
       <BooleanInput
         source="is_active"
+        label="Active"
         formClassName={classes.is_active}
         defaultValue={true}
       />
