@@ -16,65 +16,32 @@
  */
 
 import React, { Component } from "react";
-import { Show, SimpleShowLayout, BooleanField, TextField,Title } from "react-admin";
+import {
+  Show,
+  SimpleShowLayout,
+  BooleanField,
+  TextField,
+  SelectField
+} from "react-admin";
 import withStyles from "@material-ui/core/styles/withStyles";
 
 import { styles } from "../admins/AdminCreate";
-import api from "../api";
-import BaselineList from "./BaselineList";
-import { Divider, Typography } from "@material-ui/core";
+import { GENDER_CHOICES } from "../constants";
 
 class AthleteShow extends Component {
-  state = { athleteBaselineMeasurements: [] };
-
-  componentDidMount() {
-    const { basePath, id } = this.props;
-    console.log(this.props);
-    api.getAthleteBaseline(basePath, id).then(result => {
-      var athleteBaselineMeasurements = [];
-      for (let index = 0; index < result.data.length; index++) {
-        const element = result.data[index];
-        var athleteBaselineMeasurement = element.measurement;
-        if (athleteBaselineMeasurement.input_type == "boolean") {
-          if (element.value == "True") {
-            athleteBaselineMeasurement["value"] = true;
-          } else {
-            athleteBaselineMeasurement["value"] = false;
-          }
-        } else {
-          athleteBaselineMeasurement["value"] = element.value;
-        }
-        athleteBaselineMeasurements.push(athleteBaselineMeasurement);
-      }
-      this.setState({
-        athleteBaselineMeasurements: athleteBaselineMeasurements
-      });
-    });
-  }
-
   render() {
     const { classes, ...props } = this.props;
-    const { athleteBaselineMeasurements } = this.state;
     return (
-      <Show title="Athlete Show" {...props}>
+      <Show title="Athlete information" {...props}>
         <SimpleShowLayout>
-          <Typography gutterBottom variant="headline">
-            Identity
-          </Typography>
-          <Divider variant="middle" />
-
-          <TextField source="username" formClassName={classes.first_name} />
           <TextField source="first_name" formClassName={classes.first_name} />
+          <TextField source="middle_name" formClassName={classes.last_name} />
           <TextField source="last_name" formClassName={classes.last_name} />
-          <BooleanField source="is_active" formClassName={classes.is_active} />
-          <Typography gutterBottom variant="headline">
-            Baseline
-          </Typography>
-          <Divider variant="middle" />
-          <BaselineList
-            athleteBaselineMeasurements={athleteBaselineMeasurements}
-            handleCheckbox={null}
-            readOnly={true}
+          <SelectField source="gender" choices={GENDER_CHOICES} />
+          <BooleanField
+            source="is_active"
+            label="Active"
+            formClassName={classes.is_active}
           />
         </SimpleShowLayout>
       </Show>

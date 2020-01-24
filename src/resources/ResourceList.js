@@ -226,7 +226,7 @@ const ResourceFilter = props => (
       ]}
       alwaysOn
     />
-    <BooleanInput source="is_active" alwaysOn />
+    <BooleanInput source="is_active" label="Active" alwaysOn />
   </Filter>
 );
 

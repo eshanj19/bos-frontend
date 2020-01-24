@@ -11,10 +11,20 @@ export function* crudCreateFailure(action) {
 
   console.log("in crudCreateFailure");
   console.log(json);
+  var destructured = {};
+  if (Array.isArray(json)) {
+    for (let index = 0; index < json.length; index++) {
+      const element = json[index];
+      Object.keys(element).forEach(key => {
+        destructured[key] = element[key];
+      });
+    }
+  } else {
+    destructured = json;
+  }
   // json structure looks like this:
   // {
   //     username: "This username is already taken",
-  //     age: "Your age must be above 18 years old"
-  // }
-  yield put(stopSubmit("record-form", json));
+  // age: "Your age must be above 18 years old"}
+  yield put(stopSubmit("record-form", destructured));
 }

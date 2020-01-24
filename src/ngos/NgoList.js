@@ -54,7 +54,7 @@ class NgoList extends Component {
   NgoFilter = props => (
     <Filter {...props}>
       <SearchInput label="Name" source="name" alwaysOn />
-      <BooleanInput source="is_active" alwaysOn />
+      <BooleanInput source="is_active" label="Active" alwaysOn />
     </Filter>
   );
 

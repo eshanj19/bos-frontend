@@ -25,20 +25,19 @@ import {
 } from "react-admin";
 import withStyles from "@material-ui/core/styles/withStyles";
 
-import { styles } from "../common/UserCreate";
+import { styles } from "../admins/AdminCreate";
 import { GENDER_CHOICES } from "../constants";
 
-class CoachShow extends Component {
+class AdminShow extends Component {
   render() {
     const { classes, ...props } = this.props;
     return (
-      <Show title="Coach Show" {...props}>
+      <Show title="Admin information" {...props}>
         <SimpleShowLayout>
           <TextField source="first_name" formClassName={classes.first_name} />
           <TextField source="middle_name" formClassName={classes.last_name} />
           <TextField source="last_name" formClassName={classes.last_name} />
           <SelectField source="gender" choices={GENDER_CHOICES} />
-          <TextField source="username" formClassName={classes.first_name} />
           <BooleanField
             source="is_active"
             label="Active"
@@ -50,4 +49,4 @@ class CoachShow extends Component {
   }
 }
 
-export default withStyles(styles)(CoachShow);
+export default withStyles(styles)(AdminShow);

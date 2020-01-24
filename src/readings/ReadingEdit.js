@@ -31,7 +31,7 @@ export const validateReadingCreation = values => {
 };
 
 const ReadingEdit = ({ classes, ...props }) => (
-  <Edit title="Reading Edit" {...props}>
+  <Edit undoable={false} title="Reading Edit" {...props}>
     <SimpleForm validate={validateReadingCreation}>
       <TextInput autoFocus source="label" formClassName={classes.label} />
       <TextInput source="uom" formClassName={classes.uom} />
@@ -47,6 +47,7 @@ const ReadingEdit = ({ classes, ...props }) => (
       </ReferenceArrayInput>
       <BooleanInput
         source="is_active"
+        label="Active"
         formClassName={classes.is_active}
         defaultValue={true}
       />

@@ -27,12 +27,17 @@ import {
   Filter,
   SearchInput,
   BooleanInput,
-  ShowButton
+  ShowButton,
+  SelectField
 } from "react-admin";
 import withStyles from "@material-ui/core/styles/withStyles";
-import FullNameField from "../athletes/AthleteFullNameField";
+import FullNameField from "../common/FullNameField";
 import { hasAccess } from "ra-auth-acl";
-import { PERMISSION_ADMIN_SHOW, PERMISSION_ADMIN_EDIT } from "../constants";
+import {
+  PERMISSION_ADMIN_SHOW,
+  PERMISSION_ADMIN_EDIT,
+  GENDER_CHOICES
+} from "../constants";
 
 const styles = {
   nb_commands: { color: "purple" }
@@ -41,7 +46,7 @@ const styles = {
 const AdminFilter = props => (
   <Filter {...props}>
     <SearchInput label="Name" source="name" alwaysOn />
-    <BooleanInput source="is_active" alwaysOn />
+    <BooleanInput label="Active" source="is_active" alwaysOn />
   </Filter>
 );
 
@@ -58,10 +63,16 @@ const AdminList = ({ classes, permissions, ...props }) => (
       medium={
         <Datagrid>
           <FullNameField label="Full name" sortBy="first_name" />
+          <SelectField source="gender" choices={GENDER_CHOICES} />
           <TextField source="email" type="text" />
+          <BooleanField source="is_active" label="Active" />
           <DateField label="Created on" source="creation_time" showTime />
-          <BooleanField source="is_active" label="Active?" />
-          {/* {hasAccess(permissions, PERMISSION_ADMIN_SHOW) && <ShowButton />} */}
+          <DateField
+            label="Last modified on"
+            source="last_modification_time"
+            showTime
+          />
+          {hasAccess(permissions, PERMISSION_ADMIN_SHOW) && <ShowButton />}
           {hasAccess(permissions, PERMISSION_ADMIN_EDIT) && <EditButton />}
         </Datagrid>
       }

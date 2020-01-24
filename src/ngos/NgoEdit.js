@@ -22,11 +22,15 @@ import withStyles from "@material-ui/core/styles/withStyles";
 import { styles } from "./NgoCreate";
 
 const NgoEdit = ({ classes, ...props }) => (
-  <Edit title="Ngo Edit" {...props}>
+  <Edit undoable={false} title="Ngo Edit" {...props}>
     <SimpleForm>
       <TextInput autoFocus source="label" formClassName={classes.label} />
       <TextInput source="uom" formClassName={classes.uom} />
-      <BooleanInput source="is_active" formClassName={classes.is_active} />
+      <BooleanInput
+        source="is_active"
+        label="Active"
+        formClassName={classes.is_active}
+      />
     </SimpleForm>
   </Edit>
 );

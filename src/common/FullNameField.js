@@ -1,3 +1,5 @@
+import { isValid } from "../stringUtils";
+
 /*
  *  Copyright (c) 2019 Maverick Labs
  *
@@ -15,7 +17,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-const FullNameField = ({ record }) =>
-  record.first_name + " " + record.last_name;
+const FullNameField = ({ record }) => {
+  if (isValid(record.middle_name)) {
+    return (
+      record.first_name + " " + record.middle_name + " " + record.last_name
+    );
+  } else {
+    return record.first_name + " " + record.last_name;
+  }
+};
 
 export default FullNameField;

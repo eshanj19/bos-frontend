@@ -57,3 +57,8 @@ export const RESOURCE_TYPE_FILE = "file";
 export const RESOURCE_TYPE_TRAINING_SESSION = "session";
 export const RESOURCE_TYPE_REGISTRATION_FORM = "registration";
 export const RESOURCE_TYPE_CURRICULUM = "curriculum";
+
+export const GENDER_CHOICES = [
+  { id: "male", name: "Male" },
+  { id: "female", name: "Female" }
+];
