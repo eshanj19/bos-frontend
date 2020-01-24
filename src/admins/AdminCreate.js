@@ -58,6 +58,7 @@ const AdminCreate = ({ classes, ...props }) => {
     //fetch possible resource choices.
     const ngoKey = localStorage.getItem("ngo_key");
     api.getPermissionGroups(ngoKey).then(({ data }) => {
+      console.log(data);
       const choices = data.map(d => ({
         id: d.id,
         name: d.name.replace(ngoKey + "_", "")
