@@ -66,7 +66,7 @@ const getCoachRegistrationResource = key => {
 };
 
 const resetPassword = (key, body) => {
-  return axios.post(`/users/${key}/reset_password/`, body);
+  return axios.post(`/users/${key}/reset_password/`, toFormData(body));
 };
 
 const put = (url, body) => {

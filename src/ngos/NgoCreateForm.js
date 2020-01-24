@@ -56,6 +56,7 @@ const NgoCreateForm = props => {
           <TextField
             id="name"
             name="name"
+            style={{ width: 220 }}
             helperText={touched.name ? errors.name : ""}
             error={touched.name && Boolean(errors.name)}
             label="Name of NGO"
@@ -67,6 +68,7 @@ const NgoCreateForm = props => {
           <TextField
             id="first_name"
             name="first_name"
+            style={{ width: 220 }}
             helperText={touched.first_name ? errors.first_name : ""}
             error={touched.first_name && Boolean(errors.first_name)}
             label="First name of NGO Admin"
@@ -78,6 +80,7 @@ const NgoCreateForm = props => {
           <TextField
             id="last_name"
             name="last_name"
+            style={{ width: 220 }}
             helperText={touched.last_name ? errors.last_name : ""}
             error={touched.last_name && Boolean(errors.last_name)}
             label="Last name of NGO Admin"
@@ -89,6 +92,7 @@ const NgoCreateForm = props => {
           <TextField
             id="username"
             name="username"
+            style={{ width: 220 }}
             helperText={touched.username ? errors.username : ""}
             error={touched.username && Boolean(errors.username)}
             label="Username of NGO Admin"
@@ -100,6 +104,7 @@ const NgoCreateForm = props => {
           <TextField
             id="email"
             name="email"
+            style={{ width: 220 }}
             helperText={touched.email ? errors.email : ""}
             error={touched.email && Boolean(errors.email)}
             label="Email address of NGO admin"
@@ -111,6 +116,7 @@ const NgoCreateForm = props => {
           <TextField
             id="password"
             name="password"
+            style={{ width: 220 }}
             helperText={touched.password ? errors.password : ""}
             error={touched.password && Boolean(errors.password)}
             label="Password"
@@ -123,6 +129,7 @@ const NgoCreateForm = props => {
           <TextField
             id="confirm_password"
             name="confirm_password"
+            style={{ width: 220 }}
             helperText={touched.confirm_password ? errors.confirm_password : ""}
             error={touched.confirm_password && Boolean(errors.confirm_password)}
             label="Confirm Password"

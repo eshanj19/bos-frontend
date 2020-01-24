@@ -48,7 +48,6 @@ export const validateMeasurementCreation = values => {
   return errors;
 };
 
-// <TextInput source="input_type" formClassName={classes.input_type} />
 const MeasurementCreate = ({ classes, ...props }) => (
   <Create undoable={false} {...props}>
     <SimpleForm redirect="list" validate={validateMeasurementCreation}>
