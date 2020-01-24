@@ -81,6 +81,15 @@ export default async (type, params) => {
       edit: false,
       delete: false
     };
+
+    const obj = {
+      enabled: true,
+      show: true,
+      list: true,
+      create: true,
+      edit: true,
+      delete: false
+    };
     // measurements
     const users = { ...init };
     const admins = { ...init };
@@ -96,6 +105,9 @@ export default async (type, params) => {
     const resources = { ...init };
     const sessions = { ...init };
     const readings = { ...init };
+    const requests = { ...obj };
+
+    authPermissions["requests"] = requests;
 
     if (checkPermission(permissions, "measurements.view_measurement")) {
       measurements["show"] = true;
