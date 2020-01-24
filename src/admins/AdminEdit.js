@@ -66,7 +66,6 @@ const AdminEdit = ({ classes, ...props }) => {
     //fetch possible resource choices.
     const ngoKey = localStorage.getItem("ngo_key");
     api.getPermissionGroups(ngoKey).then(({ data }) => {
-      console.log(data);
       const choices = data.map(d => ({
         id: d.id,
         name: d.name.replace(ngoKey + "_", "")
@@ -88,8 +87,6 @@ const AdminEdit = ({ classes, ...props }) => {
         api.handleSuccess(response, enqueueSnackbar);
       })
       .catch(response => {
-        console.log(response);
-        console.log("w");
         api.handleError(response, enqueueSnackbar);
       });
   };
