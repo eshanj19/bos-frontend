@@ -50,6 +50,7 @@ const CoachEditActions = ({ basePath, data, resource, onToggleDialog }) => {
 const CoachEdit = ({ classes, ...props }) => {
   const [showDialog, toggleDialog] = useState(false);
   const [password, handleChangePassword] = useState("");
+  const [currentpassword, handlecurrentpassword] = useState("");
   const [confirmPassword, handleChangeConfirmPassword] = useState("");
   const [userKey, setUserKey] = useState(null);
   const [resourceChoices, setResourceChoices] = useState([]);
@@ -67,6 +68,7 @@ const CoachEdit = ({ classes, ...props }) => {
   useEffect(() => {
     handleChangePassword("");
     handleChangeConfirmPassword("");
+    handlecurrentpassword("");
   }, [showDialog]);
 
   useEffect(() => {
@@ -94,11 +96,14 @@ const CoachEdit = ({ classes, ...props }) => {
 
   const resetPassword = () => {
     if (!password || password.length === 0) return;
-    if (password === confirmPassword) {
-      api.resetPassword(userKey, password).then(() => {
-        toggleDialog(!showDialog);
-      });
-    }
+    let passworddata = {
+      password: password,
+      currentpassword: currentpassword,
+      confirmPassword: confirmPassword
+    };
+    api.resetPassword(userKey, passworddata).then(() => {
+      toggleDialog(!showDialog);
+    });
   };
 
   const handleResourceChoiceChange = data => {
@@ -161,6 +166,7 @@ const CoachEdit = ({ classes, ...props }) => {
         confirmPassword={confirmPassword}
         onChangePassword={handleChangePassword}
         onChangeConfirmPassword={handleChangeConfirmPassword}
+        onChangCurrentPassword={handlecurrentpassword}
         toggleDialog={() => {
           toggleDialog(!showDialog);
         }}

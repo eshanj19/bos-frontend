@@ -69,6 +69,10 @@ const resetPassword = (key, body) => {
   return axios.post(`/users/${key}/reset_password/`, toFormData(body));
 };
 
+const resetStatus = (key, body) => {
+  return axios.post(`/requests/${key}/resetStatus/`, toFormData(body));
+};
+
 const put = (url, body) => {
   return axios.put(`${url}/`, body);
 };
@@ -274,6 +278,7 @@ const api = {
   getAllPermissions,
   isAuthenticated,
   resetPassword,
+  resetStatus,
   getForgotPasswordToken,
   isForgotPasswordTokenValid,
   forgotPassword,

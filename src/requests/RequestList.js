@@ -14,40 +14,104 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import React from "react";
-
+import React, { Fragment, Component } from "react";
 import {
   Datagrid,
-  EditButton,
   List,
   Responsive,
-  ShowButton,
-  TextField
+  TextField,
+  DateField,
+  ChipField
 } from "react-admin";
 import withStyles from "@material-ui/core/styles/withStyles";
+import { Route } from "react-router-dom";
+import { Drawer } from "@material-ui/core";
 import { hasAccess } from "ra-auth-acl";
+import RequestShow from "./RequestShow";
 
 const styles = {
   nb_commands: { color: "purple" }
 };
 
-const RequestList = ({ classes, permissions, ...props }) => (
-  <List {...props}>
-    <Datagrid>
-      <TextField source="id" />
-      <TextField source="title" />
-      <TextField source="body" />
-    </Datagrid>
-  </List>
-);
-export default withStyles(styles)(RequestList);
+class RequestList extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      flag: false
+    };
+  }
 
-// <Responsive
-// medium={
-//   <Datagrid>
-//     <PermissionGroupNameField source="name" />
-//     {hasAccess(permissions, "permission_groups.show") && <ShowButton />}
-//     {hasAccess(permissions, "permission_groups.edit") && <EditButton />}
-//   </Datagrid>
-// }
-// />
+  customAction = () => {
+    const { classes, permissions, ...props } = this.props;
+    console.log("inside");
+    this.setState(
+      {
+        flag: true
+      },
+      () => {}
+    );
+  };
+
+  handleclose = () => {
+    this.props.history.push("/requests");
+  };
+
+  render() {
+    const { classes, permissions, ...props } = this.props;
+    console.log("inside");
+    console.log(props);
+
+    return (
+      <div>
+        <Route path="/requests/:id">
+          {({ match }) => {
+            const isMatch = !!(
+              match &&
+              match.params &&
+              match.params.id !== "create"
+            );
+
+            return (
+              <Fragment>
+                <List
+                  {...props}
+                  sort={{ field: "creation_time", order: "ASC" }}
+                  perPage={25}
+                  filterDefaultValues={{ is_active: true }}
+                  exporter={false}
+                >
+                  <Responsive
+                    medium={
+                      <Datagrid rowClick="edit">
+                        <DateField label="Date" source="creation_time" />
+                        <TextField source="first_name" />
+                        <TextField source="last_name" />
+                        <ChipField source="status" />
+                      </Datagrid>
+                    }
+                  />
+                </List>
+
+                <Drawer
+                  variant="persistent"
+                  open={isMatch}
+                  anchor="right"
+                  style={{ zindex: 100 }}
+                >
+                  {isMatch ? (
+                    <RequestShow
+                      id={match.params.id}
+                      {...props}
+                      onCancel={this.handleclose}
+                    />
+                  ) : null}
+                </Drawer>
+              </Fragment>
+            );
+          }}
+        </Route>
+      </div>
+    );
+  }
+}
+export default withStyles(styles)(RequestList);

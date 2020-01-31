@@ -144,7 +144,7 @@ class Menu extends Component {
                     <MenuItemLink
                       to={`/requests`}
                       primaryText={"Requests"}
-                      leftIcon={<organisation.icon />}
+                      leftIcon={<resources.icon />}
                       onClick={onMenuClick}
                     />
                   )}

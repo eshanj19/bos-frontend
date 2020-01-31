@@ -10,6 +10,7 @@ import CreateRegistrationForm from "./resources/create/CreateRegistrationForm";
 import EditFile from "./resources/edit/EditFile";
 import EditRegistrationForm from "./resources/edit/EditRegistrationForm";
 import OrganisationShow from "./organisation/OrganisationShow";
+import RequestShow from "./requests/RequestShow";
 
 export default [
   <Route exact path="/organisation" component={OrganisationShow} />,

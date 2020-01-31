@@ -18,9 +18,10 @@
 import ReadingIcon from "@material-ui/icons/Assessment";
 import RequestList from "./RequestList";
 import RequestCreate from "./RequestCreate";
+import RequestShow from "./RequestShow";
 
 export default {
   create: RequestCreate,
-  list: RequestList,
-  Icon: ReadingIcon
+  list: RequestList
+  //show: RequestList
 };
