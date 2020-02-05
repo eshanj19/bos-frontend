@@ -26,7 +26,6 @@ import {
 import withStyles from "@material-ui/core/styles/withStyles";
 import { Route } from "react-router-dom";
 import { Drawer } from "@material-ui/core";
-import { hasAccess } from "ra-auth-acl";
 import RequestShow from "./RequestShow";
 
 const styles = {
@@ -36,21 +35,8 @@ const styles = {
 class RequestList extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      flag: false
-    };
+    this.state = {};
   }
-
-  customAction = () => {
-    const { classes, permissions, ...props } = this.props;
-    console.log("inside");
-    this.setState(
-      {
-        flag: true
-      },
-      () => {}
-    );
-  };
 
   handleclose = () => {
     this.props.history.push("/requests");
@@ -58,8 +44,6 @@ class RequestList extends Component {
 
   render() {
     const { classes, permissions, ...props } = this.props;
-    console.log("inside");
-    console.log(props);
 
     return (
       <div>

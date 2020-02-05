@@ -17,40 +17,50 @@
 
 import React, { Component, Fragment } from "react";
 import {
-  Show,
   SimpleShowLayout,
-  BooleanField,
-  TextField,
-  SelectField,
-  List,
-  Responsive,
-  Filter,
-  Datagrid,
   DateField,
-  RichTextField,
   ShowController,
   ShowView
 } from "react-admin";
 import IconButton from "@material-ui/core/IconButton";
 import CloseIcon from "@material-ui/icons/Close";
 import api from "../api";
-import { Grid } from "@material-ui/core";
+
 import Button from "@material-ui/core/Button";
 import ThumbDown from "@material-ui/icons/ThumbDown";
 import ThumbUp from "@material-ui/icons/ThumbUp";
 import withStyles from "@material-ui/core/styles/withStyles";
-import { Drawer } from "@material-ui/core";
-import PropTypes from "prop-types";
+
+import Table from "@material-ui/core/Table";
+import TableBody from "@material-ui/core/TableBody";
+import TableCell from "@material-ui/core/TableCell";
+
+import TableHead from "@material-ui/core/TableHead";
+import TableRow from "@material-ui/core/TableRow";
 
 import { styles } from "../common/UserCreate";
-import { GENDER_CHOICES } from "../constants";
-import spacing from "@material-ui/core/styles/spacing";
+
+import RequestData from "./RequestData";
+import Paper from "@material-ui/core/Paper";
+import RequestModal from "./RequestModal";
+
+import DataField from "../common/DataField";
 
 class RequestShow extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      measurements: [],
+      data: [],
+      showFlag: false,
+      username: "",
+      password: "",
+      confirmpassword: ""
+    };
+  }
   resetStatus = val => {
     const { onCancel, classes, permissions, ...props } = this.props;
     let userKey = this.props.id;
-
     let statusData = {
       status: val
     };
@@ -65,13 +75,39 @@ class RequestShow extends Component {
       });
   };
 
+  submitRequestData = (username, key, confirmpassword, password) => {
+    let submitdata = {
+      username: username,
+      confirmpassword: confirmpassword,
+      password: password
+    };
+    api
+      .resetStatus(key, submitdata)
+      .then(response => {
+        this.props.onCancel();
+      })
+      .catch(error => {});
+  };
+
+  componentDidMount() {
+    var localkey = localStorage.getItem("ngo_key");
+
+    api
+      .getMeasurementDropdownOptionsForNgo(localkey)
+      .then(({ data }) => {
+        this.setState({ measurements: data });
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  }
+
   render() {
     const { onCancel, classes, permissions, ...props } = this.props;
     var valone = "Rejected";
-    var valtwo = "Accepted";
 
     return (
-      <div style={{ marginTop: 50 }}>
+      <div style={{ marginTop: 60 }}>
         <div
           style={{
             display: "flex",
@@ -85,79 +121,101 @@ class RequestShow extends Component {
             <CloseIcon />
           </IconButton>
         </div>
-        <ShowController {...props}>
-          {controllerProps => (
-            <ShowView
-              title="requests"
-              {...props}
-              {...controllerProps}
-              style={{ width: 400, height: 660 }}
-            >
-              <SimpleShowLayout>
-                <DateField label="Date" label="Date" source="creation_time" />
+        <div
+          style={{
+            borderLeftColor: "white",
+            borderLeftStyle: "solid"
+          }}
+        >
+          <ShowController {...props}>
+            {controllerProps => (
+              <ShowView
+                title="requests"
+                {...props}
+                {...controllerProps}
+                style={{ width: 400, height: 700 }}
+              >
+                <SimpleShowLayout>
+                  <DateField label="Date" label="Date" source="creation_time" />
+                  <DataField source="first_name" />
+                  <DataField source="middle_name" />
+                  <DataField source="last_name" />
+                  <DataField source="status" />
+                  <DataField source="role" />
+                  <DataField source="gender" />
 
-                <TextField
-                  source="first_name"
-                  label="First Name"
-                  formclassName={classes.first_name}
-                />
-                <TextField
-                  source="middle_name"
-                  label="Middle Name"
-                  formclassName={classes.middle_name}
-                />
-
-                <TextField
-                  source="last_name"
-                  label="Last Name"
-                  formclassName={classes.last_name}
-                />
-
-                <TextField
-                  source="role"
-                  label="Role"
-                  formclassName={classes.role}
-                />
-                <TextField
-                  source="status"
-                  label="Status"
-                  formclassName={classes.status}
-                />
-                <TextField source="gender" label="Gender" />
-                {controllerProps.record &&
-                  controllerProps.record.status == "pending" && (
-                    <div style={{ marginTop: 10, marginLeft: 50 }}>
-                      <Button
-                        variant="outlined"
-                        color="primary"
-                        size="small"
-                        onClick={() => this.resetStatus(valtwo)}
-                      >
-                        <ThumbUp
+                  {controllerProps.record &&
+                    controllerProps.record.data.measurements != null && (
+                      <Paper>
+                        <Table label="Measurements">
+                          <TableHead
+                            style={{
+                              background: "#E8EAF6	",
+                              justifyContent: "center"
+                            }}
+                          >
+                            <TableRow>
+                              <TableCell style={{ fontSize: "18px" }}>
+                                Measurements
+                              </TableCell>
+                              <TableCell style={{ fontSize: "18px" }}>
+                                Values
+                              </TableCell>
+                            </TableRow>
+                          </TableHead>
+                          <TableBody>
+                            {
+                              <RequestData
+                                controllerProps={controllerProps}
+                                measurements={this.state.measurements}
+                                {...props}
+                              />
+                            }
+                          </TableBody>
+                        </Table>
+                      </Paper>
+                    )}
+                  {controllerProps.record &&
+                    controllerProps.record.status == "pending" && (
+                      <div style={{ marginTop: 20, marginLeft: 50 }}>
+                        <Button
                           color="primary"
-                          style={{ paddingRight: "0.5em", color: "green" }}
-                        />
-                        Accept
-                      </Button>
-                      <Button
-                        variant="outlined"
-                        color="primary"
-                        size="small"
-                        style={{ marginLeft: 50 }}
-                        onClick={() => this.resetStatus(valone)}
-                      >
-                        <ThumbDown
+                          variant="raised"
+                          size="small"
+                          onClick={() => this.setState({ showFlag: true })}
+                        >
+                          <ThumbUp
+                            color="primary"
+                            style={{ paddingRight: "0.5em", color: "white" }}
+                          />
+                          Accept
+                        </Button>
+                        <Button
                           color="primary"
-                          style={{ paddingRight: "0.5em", color: "red" }}
-                        />
-                        Reject
-                      </Button>
-                    </div>
-                  )}
-              </SimpleShowLayout>
-            </ShowView>
-          )}
-        </ShowController>
+                          variant="raised"
+                          size="small"
+                          style={{ marginLeft: 50 }}
+                          onClick={() => this.resetStatus(valone)}
+                        >
+                          <ThumbDown
+                            color="primary"
+                            style={{ paddingRight: "0.5em", color: "white" }}
+                          />
+                          Reject
+                        </Button>
+                      </div>
+                    )}
+                  <RequestModal
+                    showFlag={this.state.showFlag}
+                    controllerProps={controllerProps}
+                    submitRequestData={this.submitRequestData}
+                    onCancel={this.props.onCancel}
+                  />
+                </SimpleShowLayout>
+              </ShowView>
+            )}
+          </ShowController>
+        </div>
       </div>
     );
   }

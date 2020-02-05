@@ -23,5 +23,4 @@ import RequestShow from "./RequestShow";
 export default {
   create: RequestCreate,
   list: RequestList
-  //show: RequestList
 };
