@@ -86,6 +86,7 @@ const AdminEdit = ({ classes, ...props }) => {
       .resetPassword(userKey, passworddata)
       .then(response => {
         toggleDialog(!showDialog);
+        console.log(response);
         api.handleSuccess(response, enqueueSnackbar);
       })
       .catch(response => {

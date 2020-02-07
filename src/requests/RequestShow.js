@@ -45,6 +45,7 @@ import Paper from "@material-ui/core/Paper";
 import RequestModal from "./RequestModal";
 
 import DataField from "../common/DataField";
+import { withSnackbar } from "notistack";
 
 class RequestShow extends Component {
   constructor(props) {
@@ -58,16 +59,17 @@ class RequestShow extends Component {
       confirmpassword: ""
     };
   }
-  resetStatus = val => {
+
+  resetStatus = () => {
     const { onCancel, classes, permissions, ...props } = this.props;
+    const { enqueueSnackbar } = props;
     let userKey = this.props.id;
-    let statusData = {
-      status: val
-    };
+
     api
-      .resetStatus(userKey, statusData)
+      .request_reject(userKey)
       .then(response => {
         console.log(response);
+        api.handleSuccess(response, enqueueSnackbar);
         this.props.onCancel();
       })
       .catch(error => {
@@ -76,17 +78,25 @@ class RequestShow extends Component {
   };
 
   submitRequestData = (username, key, confirmpassword, password) => {
+    const { onCancel, classes, permissions, ...props } = this.props;
+
+    const { enqueueSnackbar } = props;
     let submitdata = {
       username: username,
       confirmpassword: confirmpassword,
-      password: password
+      password: password,
+      status: "Accepted"
     };
     api
-      .resetStatus(key, submitdata)
+      .request_accept(key, submitdata)
       .then(response => {
+        console.log(response);
+        api.handleSuccess(response, enqueueSnackbar);
         this.props.onCancel();
       })
-      .catch(error => {});
+      .catch(error => {
+        api.handleError(error, enqueueSnackbar);
+      });
   };
 
   componentDidMount() {
@@ -104,7 +114,6 @@ class RequestShow extends Component {
 
   render() {
     const { onCancel, classes, permissions, ...props } = this.props;
-    var valone = "Rejected";
 
     return (
       <div style={{ marginTop: 60 }}>
@@ -195,7 +204,7 @@ class RequestShow extends Component {
                           variant="raised"
                           size="small"
                           style={{ marginLeft: 50 }}
-                          onClick={() => this.resetStatus(valone)}
+                          onClick={this.resetStatus}
                         >
                           <ThumbDown
                             color="primary"
@@ -221,4 +230,4 @@ class RequestShow extends Component {
   }
 }
 
-export default withStyles(styles)(RequestShow);
+export default withSnackbar(withStyles(styles)(RequestShow));

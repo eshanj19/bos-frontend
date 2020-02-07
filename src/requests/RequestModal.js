@@ -17,20 +17,26 @@ class RequestModal extends Component {
       confirmpassword: "",
       password: "",
       flag: true,
-      key: ""
+      key: "",
+      first_name: "",
+      last_name: "",
+      middle_name: "",
+      gender: "",
+      status: ""
     };
   }
 
   createUsername = () => {
     const {
       controllerProps: {
-        record: { first_name, last_name, key }
+        record: { first_name, last_name, key, status, gender, middle_name }
       }
     } = this.props;
 
     const uname = first_name.concat("__" + last_name);
     this.setState({ username: uname });
     this.setState({ key: key });
+
     this.setState({ flag: false });
   };
 
