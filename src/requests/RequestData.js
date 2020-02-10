@@ -25,7 +25,8 @@ import {
 } from "react-admin";
 import withStyles from "@material-ui/core/styles/withStyles";
 import { hasAccess } from "ra-auth-acl";
-
+import Paper from "@material-ui/core/Paper";
+import DataField from "../common/DataField";
 import {
   Grid,
   List,
@@ -76,6 +77,7 @@ class RequestData extends Component {
       return (
         <TableRow>
           <TableCell>{list.measurement}</TableCell>
+
           <TableCell>{list.value}</TableCell>
         </TableRow>
       );

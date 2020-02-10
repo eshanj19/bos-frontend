@@ -20,11 +20,14 @@ import {
   SimpleShowLayout,
   DateField,
   ShowController,
-  ShowView
+  ShowView,
+  TextField
 } from "react-admin";
 import IconButton from "@material-ui/core/IconButton";
 import CloseIcon from "@material-ui/icons/Close";
 import api from "../api";
+
+import { Typography, Grid } from "@material-ui/core";
 
 import Button from "@material-ui/core/Button";
 import ThumbDown from "@material-ui/icons/ThumbDown";
@@ -125,7 +128,9 @@ class RequestShow extends Component {
             margin: "1em"
           }}
         >
-          <h3>Applicant's Details</h3>
+          <Typography variant="h1" component="h2">
+            Applicant's Details
+          </Typography>
           <IconButton onClick={onCancel}>
             <CloseIcon />
           </IconButton>
@@ -155,34 +160,46 @@ class RequestShow extends Component {
 
                   {controllerProps.record &&
                     controllerProps.record.data.measurements != null && (
-                      <Paper>
-                        <Table label="Measurements">
-                          <TableHead
+                      <Grid>
+                        <Typography variant="caption" display="block">
+                          Measurements
+                        </Typography>
+                        <Paper style={{ marginTop: 10 }}>
+                          <Table label="Measurements">
+                            {/* <TableHead
                             style={{
                               background: "#E8EAF6	",
                               justifyContent: "center"
                             }}
                           >
                             <TableRow>
-                              <TableCell style={{ fontSize: "18px" }}>
+                              <TableCell
+                                style={{ fontSize: "18px", fontColor: "black" }}
+                              >
                                 Measurements
                               </TableCell>
                               <TableCell style={{ fontSize: "18px" }}>
                                 Values
                               </TableCell>
                             </TableRow>
-                          </TableHead>
-                          <TableBody>
-                            {
-                              <RequestData
-                                controllerProps={controllerProps}
-                                measurements={this.state.measurements}
-                                {...props}
-                              />
-                            }
-                          </TableBody>
-                        </Table>
-                      </Paper>
+                          </TableHead> */}
+                            <TableBody
+                              style={{
+                                background: "#E8EAF6	",
+                                justifyContent: "center"
+                              }}
+                            >
+                              {
+                                <RequestData
+                                  controllerProps={controllerProps}
+                                  measurements={this.state.measurements}
+                                  {...props}
+                                />
+                              }
+                            </TableBody>
+                          </Table>
+                        </Paper>
+                      </Grid>
                     )}
                   {controllerProps.record &&
                     controllerProps.record.status == "pending" && (
@@ -210,7 +227,7 @@ class RequestShow extends Component {
                             color="primary"
                             style={{ paddingRight: "0.5em", color: "white" }}
                           />
-                          Reject
+                          Decline
                         </Button>
                       </div>
                     )}

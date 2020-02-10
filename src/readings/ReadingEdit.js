@@ -5,9 +5,12 @@ import {
   ReferenceArrayInput,
   TextInput,
   SimpleForm,
-  BooleanInput
+  BooleanInput,
+  TextField,
+  ReferenceField
 } from "react-admin";
 import withStyles from "@material-ui/core/styles/withStyles";
+import FullNameField from "../common/FullNameField";
 
 export const styles = {
   label: { display: "block" },
@@ -33,18 +36,26 @@ export const validateReadingCreation = values => {
 const ReadingEdit = ({ classes, ...props }) => (
   <Edit undoable={false} title="Reading Edit" {...props}>
     <SimpleForm validate={validateReadingCreation}>
-      <TextInput autoFocus source="label" formClassName={classes.label} />
-      <TextInput source="uom" formClassName={classes.uom} />
-      <TextInput source="input_type" formClassName={classes.input_type} />
-      <ReferenceArrayInput
-        formClassName={classes.type}
-        label="Reading Type"
-        source="types"
-        filter={{ is_active: true }}
-        reference="Reading_types"
+      <ReferenceField
+        label="Athlete"
+        source="user"
+        reference="athletes"
+        target="key"
+        linkType={false}
       >
-        <SelectArrayInput optionText="label" />
-      </ReferenceArrayInput>
+        <FullNameField label="Full name" />
+      </ReferenceField>
+      <ReferenceField
+        label="Measurement"
+        source="measurement"
+        reference="measurements"
+        target="key"
+        linkType={false}
+      >
+        <TextField source="label" />
+      </ReferenceField>
+
+      <TextInput source="value" formClassName={classes.input_type} />
       <BooleanInput
         source="is_active"
         label="Active"
