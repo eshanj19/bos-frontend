@@ -59,7 +59,7 @@ const MeasurementTypeList = ({ classes, permissions, ...props }) => (
           <BooleanField source="is_active" label="Active" type="text" />
           <DateField source="creation_time" showTime />
           <DateField source="last_modification_time" showTime />
-          {hasAccess(permissions, "measurement_types.show") && <ShowButton />}
+          {/* {hasAccess(permissions, "measurement_types.show") && <ShowButton />} */}
           {hasAccess(permissions, "measurement_types.edit") && <EditButton />}
         </Datagrid>
       }
