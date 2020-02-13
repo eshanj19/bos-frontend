@@ -154,11 +154,21 @@ export default async (type, params) => {
     }
     authPermissions["ngos"] = ngos;
 
-    if (checkPermission(permissions, "users.bos_admin")) {
+    if (checkPermission(permissions, "users.view_permissiongroup")) {
       permission_groups["show"] = true;
       permission_groups["list"] = true;
+      permission_groups["enabled"] = true;
+    }
+    if (checkPermission(permissions, "users.add_permissiongroup")) {
       permission_groups["create"] = true;
+      permission_groups["enabled"] = true;
+    }
+    if (checkPermission(permissions, "users.change_permissiongroup")) {
       permission_groups["edit"] = true;
+      permission_groups["enabled"] = true;
+    }
+    if (checkPermission(permissions, "users.delete_permissiongroup")) {
+      permission_groups["delete"] = true;
       permission_groups["enabled"] = true;
     }
     authPermissions["permission_groups"] = permission_groups;

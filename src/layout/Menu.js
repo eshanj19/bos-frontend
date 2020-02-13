@@ -63,7 +63,7 @@ class Menu extends Component {
 
         <WithPermissions
           render={({ permissions }) => {
-            if (hasAccess(permissions, "permission_groups.enabled")) {
+            if (hasAccess(permissions, "ngos.enabled")) {
               return (
                 <SubMenu
                   handleToggle={() => this.handleToggle("bosCatalog")}
