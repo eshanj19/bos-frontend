@@ -25,8 +25,10 @@ import themeReducer from "./themeReducer";
 import { Login, Layout } from "./layout";
 import { Dashboard } from "./dashboard";
 import customRoutes from "./routes";
-import englishMessages from "./i18n/en";
+import hindiMessages from "./locales/locale_hi_IN.json";
 import drfProvider from "./dataProvider";
+//import englishMessages from "./i18n/en";
+import englishMessages from "./locales/locale_en_IN.json";
 
 import resources from "./resources";
 import coaches from "./coaches";
@@ -44,9 +46,11 @@ import api from "./api";
 import readings from "./readings";
 
 const i18nProvider = locale => {
-  // if (locale === "fr") {
-  //   return import("./i18n/fr").then(messages => messages.default);
-  // }
+  if (locale === "fr") {
+    return import("./locales/locale_hi_IN.json").then(
+      messages => messages.default
+    );
+  }
 
   // Always fallback on english
   return englishMessages;

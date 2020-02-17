@@ -27,20 +27,37 @@ import withStyles from "@material-ui/core/styles/withStyles";
 
 import { styles } from "../admins/AdminCreate";
 import { GENDER_CHOICES } from "../constants";
+import { withTranslate } from "react-admin";
 
 class AthleteShow extends Component {
   render() {
-    const { classes, ...props } = this.props;
+    const { classes, translate, ...props } = this.props;
     return (
       <Show title="Athlete information" {...props}>
         <SimpleShowLayout>
-          <TextField source="first_name" formClassName={classes.first_name} />
-          <TextField source="middle_name" formClassName={classes.last_name} />
-          <TextField source="last_name" formClassName={classes.last_name} />
-          <SelectField source="gender" choices={GENDER_CHOICES} />
+          <TextField
+            label={translate("ra.title.first_name")}
+            source="first_name"
+            formClassName={classes.first_name}
+          />
+          <TextField
+            label={translate("ra.title.middle_name")}
+            source="middle_name"
+            formClassName={classes.last_name}
+          />
+          <TextField
+            label={translate("ra.title.last_name")}
+            source="last_name"
+            formClassName={classes.last_name}
+          />
+          <SelectField
+            label={translate("ra.title.gender")}
+            source="gender"
+            choices={GENDER_CHOICES}
+          />
           <BooleanField
             source="is_active"
-            label="Active"
+            label={translate("ra.action.active")}
             formClassName={classes.is_active}
           />
         </SimpleShowLayout>
@@ -49,4 +66,4 @@ class AthleteShow extends Component {
   }
 }
 
-export default withStyles(styles)(AthleteShow);
+export default withTranslate(withStyles(styles)(AthleteShow));

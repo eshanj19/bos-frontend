@@ -38,19 +38,24 @@ import {
   GENDER_CHOICES,
   PERMISSION_COACH_SHOW
 } from "../constants";
+import { translate } from "react-admin";
 
 const styles = {
   nb_commands: { color: "purple" }
 };
 
-const CoachFilter = props => (
+const CoachFilter = translate(({ translate, ...props }) => (
   <Filter {...props}>
-    <SearchInput label="Name" source="name" alwaysOn />
-    <BooleanInput source="is_active" label="Active" alwaysOn />
+    <SearchInput label={translate("ra.title.name")} source="name" alwaysOn />
+    <BooleanInput
+      source="is_active"
+      label={translate("ra.action.active")}
+      alwaysOn
+    />
   </Filter>
-);
+));
 
-const CoachList = ({ classes, permissions, ...props }) => (
+const CoachList = translate(({ classes, permissions, translate, ...props }) => (
   <List
     {...props}
     filters={<CoachFilter />}
@@ -62,16 +67,26 @@ const CoachList = ({ classes, permissions, ...props }) => (
     <Responsive
       medium={
         <Datagrid>
-          <FullNameField label="Full name" sortBy="first_name" />
+          <FullNameField
+            label={translate("ra.title.full_name")}
+            sortBy="first_name"
+          />
           <SelectField
-            label="Gender"
+            label={translate("ra.title.gender")}
             source="gender"
             choices={GENDER_CHOICES}
           />
-          <BooleanField source="is_active" label="Active?" />
-          <DateField label="Created on" source="creation_time" showTime />
+          <BooleanField
+            source="is_active"
+            label={translate("ra.action.active")}
+          />
           <DateField
-            label="Last modified on"
+            label={translate("ra.title.created_on")}
+            source="creation_time"
+            showTime
+          />
+          <DateField
+            label={translate("ra.title.last_mod")}
             source="last_modification_time"
             showTime
           />
@@ -81,6 +96,6 @@ const CoachList = ({ classes, permissions, ...props }) => (
       }
     />
   </List>
-);
+));
 
 export default withStyles(styles)(CoachList);

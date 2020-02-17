@@ -18,12 +18,13 @@
 import React from "react";
 import { TextField, Button, Grid } from "@material-ui/core";
 import withStyles from "@material-ui/core/styles/withStyles";
+import { translate } from "react-admin";
 
 export const styles = {
   grid_element: { justifyContent: "left", display: "flex" }
 };
 
-const NgoCreateForm = props => {
+const NgoCreateForm = translate(({ translate, ...props }) => {
   const {
     values: {
       name,
@@ -59,7 +60,8 @@ const NgoCreateForm = props => {
             style={{ width: 220 }}
             helperText={touched.name ? errors.name : ""}
             error={touched.name && Boolean(errors.name)}
-            label="Name of NGO"
+            label={translate("ra.title.name_of_ngo")}
+            //label="ra.title.measurement"
             value={name}
             onChange={change.bind(null, "name")}
           />
@@ -71,7 +73,7 @@ const NgoCreateForm = props => {
             style={{ width: 220 }}
             helperText={touched.first_name ? errors.first_name : ""}
             error={touched.first_name && Boolean(errors.first_name)}
-            label="First name of NGO Admin"
+            label={translate("ra.title.first_name_ngo_admin")}
             value={first_name}
             onChange={change.bind(null, "first_name")}
           />
@@ -83,7 +85,7 @@ const NgoCreateForm = props => {
             style={{ width: 220 }}
             helperText={touched.last_name ? errors.last_name : ""}
             error={touched.last_name && Boolean(errors.last_name)}
-            label="Last name of NGO Admin"
+            label={translate("ra.title.last_name_ngo_admin")}
             value={last_name}
             onChange={change.bind(null, "last_name")}
           />
@@ -95,7 +97,7 @@ const NgoCreateForm = props => {
             style={{ width: 220 }}
             helperText={touched.username ? errors.username : ""}
             error={touched.username && Boolean(errors.username)}
-            label="Username of NGO Admin"
+            label={translate("ra.title.username_ngo_admin")}
             value={username}
             onChange={change.bind(null, "username")}
           />
@@ -107,7 +109,7 @@ const NgoCreateForm = props => {
             style={{ width: 220 }}
             helperText={touched.email ? errors.email : ""}
             error={touched.email && Boolean(errors.email)}
-            label="Email address of NGO admin"
+            label={translate("ra.title.emailaddress_ngo_admin")}
             value={email}
             onChange={change.bind(null, "email")}
           />
@@ -119,7 +121,7 @@ const NgoCreateForm = props => {
             style={{ width: 220 }}
             helperText={touched.password ? errors.password : ""}
             error={touched.password && Boolean(errors.password)}
-            label="Password"
+            label={translate("ra.title.password")}
             type="password"
             value={password}
             onChange={change.bind(null, "password")}
@@ -132,7 +134,7 @@ const NgoCreateForm = props => {
             style={{ width: 220 }}
             helperText={touched.confirm_password ? errors.confirm_password : ""}
             error={touched.confirm_password && Boolean(errors.confirm_password)}
-            label="Confirm Password"
+            label={translate("ra.title.confirm_password")}
             type="password"
             value={confirm_password}
             onChange={change.bind(null, "confirm_password")}
@@ -154,11 +156,11 @@ const NgoCreateForm = props => {
           color="primary"
           disabled={!isValid}
         >
-          Submit
+          {translate("ra.action.submit")}
         </Button>
       </Grid>
     </form>
   );
-};
+});
 
 export default withStyles(styles)(NgoCreateForm);
