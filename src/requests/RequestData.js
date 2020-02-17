@@ -16,24 +16,7 @@
  */
 
 import React, { Component } from "react";
-import {
-  Datagrid,
-  EditButton,
-  Responsive,
-  ShowButton,
-  ArrayField
-} from "react-admin";
-import withStyles from "@material-ui/core/styles/withStyles";
-import { hasAccess } from "ra-auth-acl";
-
-import {
-  Grid,
-  List,
-  ListItem,
-  ListItemText,
-  TableRow,
-  TableCell
-} from "@material-ui/core";
+import { TableRow, TableCell } from "@material-ui/core";
 
 class RequestData extends Component {
   constructor(props) {
@@ -42,7 +25,6 @@ class RequestData extends Component {
   }
 
   getData = () => {
-    const { ...props } = this.props;
     const {
       controllerProps: { record },
       measurements
