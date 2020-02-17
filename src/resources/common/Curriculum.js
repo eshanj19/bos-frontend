@@ -105,6 +105,7 @@ class Curriculum extends Component {
       });
       this.setState({ fileOptions: sanitizedOptions });
     });
+
     api.getMeasurementDropdownOptionsForNgo(ngoKey).then(({ data }) => {
       const sanitizedOptions = data.map(option => {
         return {
@@ -351,14 +352,18 @@ class Curriculum extends Component {
    */
   processPostData = () => {
     const { days, curriculumName } = this.state;
+    console.log(days);
     const filteredDays = days.filter(day => {
       return day.id !== PLACEHOLDER_ID;
     });
+    console.log(filteredDays);
     filteredDays.forEach(day => {
       const { sessions } = day;
+      console.log(sessions);
       const filteredSessions = sessions.filter(session => {
         return session.id !== PLACEHOLDER_ID;
       });
+      console.log(filteredSessions);
       filteredSessions.forEach(session => {
         const { measurements, files } = session;
         const filteredMeasurements = measurements.filter(item => {
@@ -371,6 +376,7 @@ class Curriculum extends Component {
           }
           return false;
         });
+        console.log(filteredMeasurements);
         const filteredFiles = files.filter(item => {
           if (item.id !== PLACEHOLDER_ID_FILE) {
             item.key = item.label;
@@ -380,6 +386,7 @@ class Curriculum extends Component {
           }
           return false;
         });
+        console.log(filteredFiles);
         delete session.id;
         session.type = "session";
         session.measurements = filteredMeasurements;

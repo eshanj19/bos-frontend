@@ -32,6 +32,7 @@ import {
 import SubMenu from "./SubMenu";
 import admins from "../admins";
 import coaches from "../coaches";
+import requests from "../requests";
 import athletes from "../athletes";
 import userGroups from "../userGroups";
 import organisation from "../organisation";
@@ -136,6 +137,14 @@ class Menu extends Component {
                       to={`/organisation`}
                       primaryText={"Organisation"}
                       leftIcon={<organisation.icon />}
+                      onClick={onMenuClick}
+                    />
+                  )}
+                  {hasAccess(permissions, "users.enabled") && (
+                    <MenuItemLink
+                      to={`/requests`}
+                      primaryText={"Requests"}
+                      leftIcon={<resources.icon />}
                       onClick={onMenuClick}
                     />
                   )}

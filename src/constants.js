@@ -58,6 +58,9 @@ export const RESOURCE_TYPE_TRAINING_SESSION = "session";
 export const RESOURCE_TYPE_REGISTRATION_FORM = "registration";
 export const RESOURCE_TYPE_CURRICULUM = "curriculum";
 
+export const PERMISSION_REQUESTS_SHOW = "requests.show";
+export const PERMISSION_REQUESTS_LIST = "requests.list";
+
 export const GENDER_CHOICES = [
   { id: "male", name: "Male" },
   { id: "female", name: "Female" }

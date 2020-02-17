@@ -15,18 +15,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import React, { Component, Fragment } from "react";
+import React, { Component } from "react";
 import {
   SimpleShowLayout,
   DateField,
   ShowController,
-  ShowView,
-  TextField
+  ShowView
 } from "react-admin";
 import IconButton from "@material-ui/core/IconButton";
 import CloseIcon from "@material-ui/icons/Close";
 import api from "../api";
-
 import { Typography, Grid } from "@material-ui/core";
 
 import Button from "@material-ui/core/Button";
@@ -36,10 +34,6 @@ import withStyles from "@material-ui/core/styles/withStyles";
 
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
-import TableCell from "@material-ui/core/TableCell";
-
-import TableHead from "@material-ui/core/TableHead";
-import TableRow from "@material-ui/core/TableRow";
 
 import { styles } from "../common/UserCreate";
 
