@@ -44,6 +44,7 @@ import { API_URL } from "./constants";
 import errorSagas from "./dataProvider/errorSaga";
 import api from "./api";
 import readings from "./readings";
+import requests from "./requests";
 
 const i18nProvider = locale => {
   if (locale === "fr") {
@@ -87,6 +88,11 @@ class App extends Component {
             name="admins"
             permissions={permissions}
             {...admins}
+          />,
+          <ResourceWithPermissions
+            name="requests"
+            permissions={permissions}
+            {...requests}
           />,
           <ResourceWithPermissions
             name="permission_groups"

@@ -81,6 +81,15 @@ export default async (type, params) => {
       edit: false,
       delete: false
     };
+
+    const obj = {
+      enabled: true,
+      show: true,
+      list: true,
+      create: true,
+      edit: true,
+      delete: false
+    };
     // measurements
     const users = { ...init };
     const admins = { ...init };
@@ -96,6 +105,9 @@ export default async (type, params) => {
     const resources = { ...init };
     const sessions = { ...init };
     const readings = { ...init };
+    const requests = { ...obj };
+
+    authPermissions["requests"] = requests;
 
     if (checkPermission(permissions, "measurements.view_measurement")) {
       measurements["show"] = true;
@@ -154,11 +166,21 @@ export default async (type, params) => {
     }
     authPermissions["ngos"] = ngos;
 
-    if (checkPermission(permissions, "users.bos_admin")) {
+    if (checkPermission(permissions, "users.view_permissiongroup")) {
       permission_groups["show"] = true;
       permission_groups["list"] = true;
+      permission_groups["enabled"] = true;
+    }
+    if (checkPermission(permissions, "users.add_permissiongroup")) {
       permission_groups["create"] = true;
+      permission_groups["enabled"] = true;
+    }
+    if (checkPermission(permissions, "users.change_permissiongroup")) {
       permission_groups["edit"] = true;
+      permission_groups["enabled"] = true;
+    }
+    if (checkPermission(permissions, "users.delete_permissiongroup")) {
+      permission_groups["delete"] = true;
       permission_groups["enabled"] = true;
     }
     authPermissions["permission_groups"] = permission_groups;

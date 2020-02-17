@@ -72,8 +72,9 @@ const ReadingList = ({ classes, permissions, ...props }) => (
           <TextField source="value" type="text" />
 
           <BooleanField source="is_active" label="Active" />
+          <DateField source="recorded_at" showTime />
           <DateField source="creation_time" showTime />
-          <DateField source="last_modification_time" showTime />
+          {/* <DateField source="last_modification_time" showTime /> */}
           {/* {hasAccess(permissions, "readings.show") && <ShowButton />} */}
           {hasAccess(permissions, "readings.edit") && <EditButton />}
         </Datagrid>

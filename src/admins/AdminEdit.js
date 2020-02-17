@@ -89,6 +89,7 @@ const AdminEdit = translate(({ classes, translate, ...props }) => {
       .resetPassword(userKey, passworddata)
       .then(response => {
         toggleDialog(!showDialog);
+        console.log(response);
         api.handleSuccess(response, enqueueSnackbar);
       })
       .catch(response => {
