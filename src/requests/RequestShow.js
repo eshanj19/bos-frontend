@@ -43,6 +43,7 @@ import RequestModal from "./RequestModal";
 
 import DataField from "../common/DataField";
 import { withSnackbar } from "notistack";
+import { withTranslate } from "react-admin";
 
 class RequestShow extends Component {
   constructor(props) {
@@ -110,7 +111,7 @@ class RequestShow extends Component {
   }
 
   render() {
-    const { onCancel, classes, permissions, ...props } = this.props;
+    const { onCancel, classes, permissions, translate, ...props } = this.props;
 
     return (
       <div style={{ marginTop: 60 }}>
@@ -123,7 +124,7 @@ class RequestShow extends Component {
           }}
         >
           <Typography variant="h1" component="h2">
-            Applicant's Details
+            {translate("ra.applicant's details")}
           </Typography>
           <IconButton onClick={onCancel}>
             <CloseIcon />
@@ -138,45 +139,45 @@ class RequestShow extends Component {
           <ShowController {...props}>
             {controllerProps => (
               <ShowView
-                title="requests"
                 {...props}
                 {...controllerProps}
                 style={{ width: 400, height: 700 }}
               >
                 <SimpleShowLayout>
-                  <DateField label="Date" label="Date" source="creation_time" />
-                  <DataField source="first_name" />
-                  <DataField source="middle_name" />
-                  <DataField source="last_name" />
-                  <DataField source="status" />
-                  <DataField source="role" />
-                  <DataField source="gender" />
+                  <DateField
+                    label={translate("ra.title.date")}
+                    source="creation_time"
+                  />
+                  <DataField
+                    label={translate("ra.title.first_name")}
+                    source="first_name"
+                  />
+                  <DataField
+                    label={translate("ra.title.middle_name")}
+                    source="middle_name"
+                  />
+                  <DataField
+                    label={translate("ra.title.last_name")}
+                    source="last_name"
+                  />
+                  <DataField
+                    label={translate("ra.title.status")}
+                    source="status"
+                  />
+                  <DataField label={translate("ra.title.role")} source="role" />
+                  <DataField
+                    label={translate("ra.title.gender")}
+                    source="gender"
+                  />
 
                   {controllerProps.record &&
                     controllerProps.record.data.measurements != null && (
                       <Grid>
                         <Typography variant="caption" display="block">
-                          Measurements
+                          {translate("ra.title.measurements")}
                         </Typography>
                         <Paper style={{ marginTop: 10 }}>
                           <Table label="Measurements">
-                            {/* <TableHead
-                            style={{
-                              background: "#E8EAF6	",
-                              justifyContent: "center"
-                            }}
-                          >
-                            <TableRow>
-                              <TableCell
-                                style={{ fontSize: "18px", fontColor: "black" }}
-                              >
-                                Measurements
-                              </TableCell>
-                              <TableCell style={{ fontSize: "18px" }}>
-                                Values
-                              </TableCell>
-                            </TableRow>
-                          </TableHead> */}
                             <TableBody
                               style={{
                                 background: "#E8EAF6	",
@@ -208,7 +209,7 @@ class RequestShow extends Component {
                             color="primary"
                             style={{ paddingRight: "0.5em", color: "white" }}
                           />
-                          Accept
+                          {translate("ra.action.accept")}
                         </Button>
                         <Button
                           color="primary"
@@ -221,7 +222,7 @@ class RequestShow extends Component {
                             color="primary"
                             style={{ paddingRight: "0.5em", color: "white" }}
                           />
-                          Decline
+                          {translate("ra.action.decline")}
                         </Button>
                       </div>
                     )}
@@ -241,4 +242,4 @@ class RequestShow extends Component {
   }
 }
 
-export default withSnackbar(withStyles(styles)(RequestShow));
+export default withTranslate(withStyles(styles)(RequestShow));

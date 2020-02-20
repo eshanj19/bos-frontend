@@ -75,7 +75,7 @@ class Menu extends Component {
                 >
                   <MenuItemLink
                     to={`/ngos`}
-                    primaryText={translate(`resources.ngos.name`, {
+                    primaryText={translate(`ra.menu.ngos`, {
                       smart_count: 2
                     })}
                     leftIcon={<ngos.icon />}
@@ -180,7 +180,7 @@ class Menu extends Component {
               return (
                 <MenuItemLink
                   to={`/measurements`}
-                  primaryText={translate(`resources.measurements.name`, {
+                  primaryText={translate(`ra.title.measurements`, {
                     smart_count: 2
                   })}
                   leftIcon={<measurements.icon />}
@@ -199,7 +199,7 @@ class Menu extends Component {
               return (
                 <MenuItemLink
                   to={`/readings`}
-                  primaryText={translate(`resources.readings.name`, {
+                  primaryText={translate(`ra.menu.reading`, {
                     smart_count: 2
                   })}
                   leftIcon={<readings.icon />}
@@ -218,7 +218,7 @@ class Menu extends Component {
               return (
                 <MenuItemLink
                   to={`/measurement_types`}
-                  primaryText={translate(`resources.measurement_types.name`, {
+                  primaryText={translate("ra.menu.measurement_type", {
                     smart_count: 2
                   })}
                   leftIcon={<measurementTypes.icon />}
@@ -237,7 +237,7 @@ class Menu extends Component {
               return (
                 <MenuItemLink
                   to={`/permission_groups`}
-                  primaryText={translate(`resources.permission_groups.name`, {
+                  primaryText={translate(`ra.title.permission_group`, {
                     smart_count: 2
                   })}
                   leftIcon={<permissionGroups.icon />}

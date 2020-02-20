@@ -17,6 +17,7 @@ import { RESOURCE_ITEMS, RESOURCE_TYPES, INPUT_TYPE } from "../../utils";
 import api from "../../api";
 import DeleteIcon from "@material-ui/icons/Clear";
 import { withSnackbar } from "notistack";
+import { withTranslate } from "react-admin";
 
 export const styles = {
   first_name: { display: "inline-block" },
@@ -274,7 +275,7 @@ class Session extends Component {
     // console.log(filtered);
   };
   render() {
-    const { classes, isRegistrationForm, ...props } = this.props;
+    const { classes, isRegistrationForm, translate, ...props } = this.props;
     const { session, isEdit, sessionDescription, sessionName } = this.state;
     return (
       <div className={classes.root}>
@@ -289,16 +290,16 @@ class Session extends Component {
             <h4>
               {isEdit
                 ? isRegistrationForm
-                  ? "Edit Registration Form"
-                  : "Edit Training Session"
+                  ? translate("ra.Edit registration form")
+                  : translate("ra.Edit training session")
                 : isRegistrationForm
-                ? "Create Registration Form"
-                : "Create Training Session"}
+                ? translate("ra.Create Registration Form")
+                : translate("ra.Create Training Session")}
             </h4>
           </div>
           <div>
             <Button onClick={this.handleSave} contained="true" color="primary">
-              Save
+              {translate("ra.action.save")}
             </Button>
             {/* <Button onClick={() => this.handleSubmit(true)} color="primary">
               Submit
@@ -310,7 +311,7 @@ class Session extends Component {
             <div>
               <Input
                 style={{ width: "200px", marginBottom: "24px" }}
-                placeholder="Name"
+                placeholder={translate("ra.title.name")}
                 value={sessionName || ""}
                 onChange={({ target: { value } }) => {
                   this.setState({ sessionName: value });
@@ -320,7 +321,7 @@ class Session extends Component {
             <div>
               <Input
                 style={{ width: "500px", marginBottom: "24px" }}
-                placeholder="Description"
+                placeholder={translate("ra.title.description")}
                 multiline
                 value={sessionDescription || ""}
                 onChange={({ target: { value } }) => {
@@ -337,6 +338,7 @@ class Session extends Component {
 
   renderSessionItems = (items, sessionId) => {
     const { measurementOptions, fileOptions } = this.state;
+    const { translate } = this.props;
     return items.map((item, index) => {
       return item.id === PLACEHOLDER_ID ? (
         <div key={uniqueId()}>
@@ -345,7 +347,7 @@ class Session extends Component {
             onInputChange={selected =>
               this.handleAddMeasurementInputChange(sessionId, selected)
             }
-            title="+ Add Measurement"
+            title={<span> + {translate("ra.action.add_measurement")}</span>}
             inputPlaceholderText="Enter Item Title"
             style={{
               marginTop: "10px",
@@ -358,7 +360,7 @@ class Session extends Component {
             onInputChange={selected =>
               this.handleAddFileInputChange(sessionId, selected)
             }
-            title="+ Add File"
+            title={<span> + {translate("ra.action.add_file")}</span>}
             inputPlaceholderText="Enter Item Title"
             style={{
               marginTop: "10px",
@@ -394,7 +396,7 @@ class Session extends Component {
                   }}
                 />
               }
-              label="Mandatory"
+              label={translate("ra.action.mandatory")}
             />
           </div>
         </div>
@@ -412,4 +414,6 @@ class Session extends Component {
   };
 }
 
-export default withRouter(withSnackbar(withStyles(styles)(Session)));
+export default withTranslate(
+  withRouter(withSnackbar(withStyles(styles)(Session)))
+);

@@ -34,6 +34,9 @@ import {
 import withStyles from "@material-ui/core/styles/withStyles";
 import { hasAccess } from "ra-auth-acl";
 import DeactivateAction from "../common/DeactivateAction";
+import { translate } from "react-admin";
+import { withTranslate } from "react-admin";
+import { race } from "redux-saga/effects";
 
 const styles = {
   nb_commands: { color: "purple" }
@@ -51,35 +54,40 @@ class NgoList extends Component {
     this.onSuccess = this.onSuccess.bind(this);
   }
 
-  NgoFilter = props => (
+  NgoFilter = translate(({ translate, ...props }) => (
     <Filter {...props}>
-      <SearchInput label="Name" source="name" alwaysOn />
-      <BooleanInput source="is_active" label="Active" alwaysOn />
+      <SearchInput label={translate("ra.title.name")} source="name" alwaysOn />
+      <BooleanInput
+        label={translate("ra.title.is_active")}
+        source="is_active"
+        alwaysOn
+      />
     </Filter>
-  );
+  ));
 
-  PostBulkActions = props => (
+  PostBulkActions = translate(({ translate, ...props }) => (
     <BulkActions {...props}>
       <DeactivateAction
         {...props}
-        label="Deactivate"
+        label={translate("ra.action.dectivate")}
         customPath="deactivate"
         onSuccess={this.onSuccess}
       />
       <BulkDeleteAction />
     </BulkActions>
-  );
+  ));
 
   onSuccess = () => {
     this.props.history.goBack();
   };
 
   render() {
-    const { classes, permissions, ...props } = this.props;
+    const { classes, permissions, translate, ...props } = this.props;
 
     return (
       <List
         {...props}
+        title={translate("ra.menu.ngos")}
         filters={<this.NgoFilter />}
         sort={{ field: "name", order: "ASC" }}
         perPage={25}
@@ -90,10 +98,27 @@ class NgoList extends Component {
         <Responsive
           medium={
             <Datagrid>
-              <TextField source="name" type="text" />
-              <BooleanField source="is_active" type="text" />
-              <DateField source="creation_time" showTime />
-              <DateField source="last_modification_time" showTime />
+              <TextField
+                label={translate("ra.title.name")}
+                source="name"
+                type="text"
+              />
+              <BooleanField
+                label={translate("ra.title.is_active")}
+                source="is_active"
+                type="text"
+              />
+              <DateField
+                label={translate("ra.title.created_on")}
+                source="creation_time"
+                showTime
+              />
+
+              <DateField
+                label={translate("ra.title.last_mod")}
+                source="last_modification_time"
+                showTime
+              />
               {/* {hasAccess(permissions, "ngos.show") && <ShowButton />} */}
               {hasAccess(permissions, "ngos.edit") && <EditButton />}
             </Datagrid>
@@ -103,4 +128,4 @@ class NgoList extends Component {
     );
   }
 }
-export default withStyles(styles)(NgoList);
+export default withTranslate(withStyles(styles)(NgoList));

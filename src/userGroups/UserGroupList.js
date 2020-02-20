@@ -32,41 +32,59 @@ import {
 } from "react-admin";
 import withStyles from "@material-ui/core/styles/withStyles";
 import { hasAccess } from "ra-auth-acl";
+import { translate } from "react-admin";
 
 const styles = {
   nb_commands: { color: "purple" }
 };
 
-const UserGroupFilter = props => (
+const UserGroupFilter = translate(({ translate, ...props }) => (
   <Filter {...props}>
-    <SearchInput label="Name" source="label" alwaysOn />
-    <BooleanInput source="is_active" label="Active" alwaysOn />
-  </Filter>
-);
-
-const UserGroupList = ({ classes, permissions, ...props }) => (
-  <List
-    {...props}
-    sort={{ field: "label", order: "ASC" }}
-    title={"List of user groups"}
-    perPage={25}
-    exporter={false}
-    filters={<UserGroupFilter />}
-    filterDefaultValues={{ is_active: true }}
-  >
-    <Responsive
-      medium={
-        <Datagrid>
-          <TextField label="Name" source="label" />
-          <BooleanField source="is_active" label="Active" />
-          <DateField source="creation_time" showTime />
-          <DateField source="last_modification_time" showTime />
-          {/* {hasAccess(permissions, "users.show") || true && <ShowButton />} */}
-          {hasAccess(permissions, "users.edit") || (true && <EditButton />)}
-        </Datagrid>
-      }
+    <SearchInput label={translate("ra.title.name")} source="label" alwaysOn />
+    <BooleanInput
+      label={translate("ra.action.active")}
+      source="is_active"
+      alwaysOn
     />
-  </List>
+  </Filter>
+));
+
+const UserGroupList = translate(
+  ({ classes, permissions, translate, ...props }) => (
+    <List
+      {...props}
+      sort={{ field: "label", order: "ASC" }}
+      title={translate("ra.List of user groups")}
+      perPage={25}
+      exporter={false}
+      filters={<UserGroupFilter />}
+      filterDefaultValues={{ is_active: true }}
+    >
+      <Responsive
+        medium={
+          <Datagrid>
+            <TextField label={translate("ra.title.name")} source="label" />
+            <BooleanField
+              label={translate("ra.action.active")}
+              source="is_active"
+            />
+            <DateField
+              label={translate("ra.title.created_on")}
+              source="creation_time"
+              showTime
+            />
+            <DateField
+              label={translate("ra.title.last_mod")}
+              source="last_modification_time"
+              showTime
+            />
+            {/* {hasAccess(permissions, "users.show") || true && <ShowButton />} */}
+            {hasAccess(permissions, "users.edit") || (true && <EditButton />)}
+          </Datagrid>
+        }
+      />
+    </List>
+  )
 );
 
 export default withStyles(styles)(UserGroupList);

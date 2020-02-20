@@ -11,6 +11,7 @@ import {
 } from "react-admin";
 import withStyles from "@material-ui/core/styles/withStyles";
 import FullNameField from "../common/FullNameField";
+import { translate } from "react-admin";
 
 export const styles = {
   label: { display: "block" },
@@ -33,11 +34,11 @@ export const validateReadingCreation = values => {
   return errors;
 };
 
-const ReadingEdit = ({ classes, ...props }) => (
+const ReadingEdit = translate(({ classes, translate, ...props }) => (
   <Edit undoable={false} title="Reading Edit" {...props}>
     <SimpleForm validate={validateReadingCreation}>
       <ReferenceField
-        label="Athlete"
+        label={translate("ra.title.athlete")}
         source="user"
         reference="athletes"
         target="key"
@@ -46,7 +47,7 @@ const ReadingEdit = ({ classes, ...props }) => (
         <FullNameField label="Full name" />
       </ReferenceField>
       <ReferenceField
-        label="Measurement"
+        label={translate("ra.title.measurements")}
         source="measurement"
         reference="measurements"
         target="key"
@@ -55,15 +56,19 @@ const ReadingEdit = ({ classes, ...props }) => (
         <TextField source="label" />
       </ReferenceField>
 
-      <TextInput source="value" formClassName={classes.input_type} />
+      <TextInput
+        label={translate("ra.title.value")}
+        source="value"
+        formClassName={classes.input_type}
+      />
       <BooleanInput
         source="is_active"
-        label="Active"
+        label={translate("ra.action.active")}
         formClassName={classes.is_active}
         defaultValue={true}
       />
     </SimpleForm>
   </Edit>
-);
+));
 
 export default withStyles(styles)(ReadingEdit);

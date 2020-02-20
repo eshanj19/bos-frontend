@@ -27,6 +27,7 @@ import {
 
 import React, { Component } from "react";
 import { USER } from "../authSchema";
+import { List } from "react-admin";
 
 export var cardS = {
   display: "block"
@@ -46,15 +47,17 @@ class PermissionList extends Component {
     const clubpermissions = [
       { key: "_group", name: "Group" },
       { key: "_curriculum", name: "Curriculum" },
+      { key: "_athlete", name: "Athlete" },
+      { key: "_coach", name: "Coach" },
+      { key: "_resource", name: "Resources" },
+      { key: "_usergroup", name: "User Group" },
       { key: "_ngoregistrationresource", name: "Ngo Registration" },
       { key: "_userhierarchy", name: "User Hierarchy" },
-      { key: "_usergroup", name: "User Group" },
-      { key: "_athlete", name: "Athlete" },
+
       { key: "_ngo", name: "Ngo" },
-      { key: "_resource", name: "Resources" },
       { key: "_trainingsession", name: "Training session" },
       { key: "_userresource", name: "User Resources" },
-      { key: "_coach", name: "Coach" },
+
       { key: "_userreading", name: "User Reading" },
       { key: "_user", name: "User" },
       { key: "_file", name: "File" },
@@ -78,10 +81,17 @@ class PermissionList extends Component {
       }
 
       return (
-        <Grid item display="block" sm={4} xs={12} md={4}>
+        <Grid item display="block" sm={12} xs={12} md={4} lg={3} xl={3}>
           {flag ? (
             <Grid>
-              <Card style={{ marginTop: 10, marginLeft: 8, padding: 50 }}>
+              <Card
+                style={{
+                  marginTop: 10,
+                  marginLeft: 8,
+                  paddingTop: 5,
+                  paddingLeft: 40
+                }}
+              >
                 <CardContent>
                   <h2>{permission.name}</h2>
                   {list.map(permission => (
@@ -98,7 +108,14 @@ class PermissionList extends Component {
             </Grid>
           ) : (
             <Grid>
-              <Card style={{ marginTop: 10, marginLeft: 8, padding: 50 }}>
+              <Card
+                style={{
+                  marginTop: 10,
+                  marginLeft: 8,
+                  paddingTop: 5,
+                  paddingLeft: 40
+                }}
+              >
                 <CardContent>
                   <h2>{permission.name}</h2>
                   {list.map(permission => (

@@ -34,24 +34,27 @@ import { validateAdminCreation } from "./AdminCreate";
 import { GENDER_CHOICES } from "../constants";
 import { withRouter } from "react-router-dom";
 import { withSnackbar } from "notistack";
+import { translate } from "react-admin";
 
 const styles = {
   inlineBlock: { display: "inline-flex", marginRight: "1rem" }
 };
 
-const AdminEditActions = ({ basePath, data, resource, onToggleDialog }) => {
-  return (
-    <CardActions style={{ justifyContent: "flex-end" }}>
-      <ShowButton basePath={basePath} record={data} />
+const AdminEditActions = translate(
+  ({ basePath, data, translate, resource, onToggleDialog }) => {
+    return (
+      <CardActions style={{ justifyContent: "flex-end" }}>
+        <ShowButton basePath={basePath} record={data} />
 
-      <Button color="primary" onClick={() => onToggleDialog(data.key)}>
-        Reset Password
-      </Button>
-    </CardActions>
-  );
-};
+        <Button color="primary" onClick={() => onToggleDialog(data.key)}>
+          {translate("ra.action.reset_password")}
+        </Button>
+      </CardActions>
+    );
+  }
+);
 
-const AdminEdit = ({ classes, ...props }) => {
+const AdminEdit = translate(({ classes, translate, ...props }) => {
   const [showDialog, toggleDialog] = useState(false);
   const [password, handleChangePassword] = useState("");
   const [currentpassword, handlecurrentpassword] = useState("");
@@ -108,6 +111,7 @@ const AdminEdit = ({ classes, ...props }) => {
     <div>
       <Edit
         undoable={false}
+        title={translate("ra.edit admin")}
         actions={
           <AdminEditActions
             onToggleDialog={userKey => {
@@ -123,30 +127,47 @@ const AdminEdit = ({ classes, ...props }) => {
           <TextInput
             autoFocus
             source="first_name"
+            label={translate("ra.title.first_name")}
             formClassName={classes.first_name}
           />
-          <TextInput source="middle_name" formClassName={classes.middle_name} />
-          <TextInput source="last_name" formClassName={classes.last_name} />
-          <SelectInput source="gender" choices={GENDER_CHOICES} />
+          <TextInput
+            source="middle_name"
+            label={translate("ra.title.middle_name")}
+            formClassName={classes.middle_name}
+          />
+          <TextInput
+            source="last_name"
+            label={translate("ra.title.last_name")}
+            formClassName={classes.last_name}
+          />
+          <SelectInput
+            source="gender"
+            label={translate("ra.title.gender")}
+            choices={GENDER_CHOICES}
+          />
           <TextInput
             type="username"
             source="username"
+            label={translate("ra.title.username")}
             formClassName={classes.username}
           />
           <TextInput
             type="email"
             source="email"
+            label={translate("ra.title.email")}
             formClassName={classes.email}
           />
           <AutocompleteArrayInput
             label="Permission group"
             source="permission_groups"
+            label={translate("ra.title.permission_group")}
             choices={permissionGroupChoices}
             onChange={handlePermissionGroupChoiceChange}
           />
           <BooleanInput
             label="Active"
             source="is_active"
+            label={translate("ra.action.active")}
             formClassName={classes.email}
           />
         </SimpleForm>
@@ -167,6 +188,6 @@ const AdminEdit = ({ classes, ...props }) => {
       />
     </div>
   );
-};
+});
 
 export default withRouter(withSnackbar(withStyles(styles)(AdminEdit)));

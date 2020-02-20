@@ -24,6 +24,7 @@ import { translate, changeLocale, Title } from "react-admin";
 import withStyles from "@material-ui/core/styles/withStyles";
 import compose from "recompose/compose";
 import { changeTheme } from "./actions";
+import { locale_en, locale_hi } from "../constants";
 
 const styles = {
   label: { width: "10em", display: "inline-block" },
@@ -39,16 +40,16 @@ const Configuration = ({
   translate
 }) => (
   <Card>
-    <Title title={translate("pos.configuration")} />
+    <Title title={translate("ra.configuration")} />
     <CardContent>
-      <div className={classes.label}>{translate("pos.theme.name")}</div>
+      <div className={classes.label}>{translate("ra.title.theme")}</div>
       <Button
         variant="raised"
         className={classes.button}
         color={theme === "light" ? "primary" : "default"}
         onClick={() => changeTheme("light")}
       >
-        {translate("pos.theme.light")}
+        {translate("ra.theme.light")}
       </Button>
       <Button
         variant="raised"
@@ -56,26 +57,26 @@ const Configuration = ({
         color={theme === "dark" ? "primary" : "default"}
         onClick={() => changeTheme("dark")}
       >
-        {translate("pos.theme.dark")}
+        {translate("ra.theme.dark")}
       </Button>
     </CardContent>
     <CardContent>
-      <div className={classes.label}>{translate("pos.language")}</div>
+      <div className={classes.label}>{translate("ra.title.language")}</div>
       <Button
         variant="raised"
         className={classes.button}
-        color={locale === "en" ? "primary" : "default"}
-        onClick={() => changeLocale("en")}
+        color={locale === locale_en ? "primary" : "default"}
+        onClick={() => changeLocale(locale_en)}
       >
-        en
+        {translate("ra.language.en")}
       </Button>
       <Button
         variant="raised"
         className={classes.button}
-        color={locale === "fr" ? "primary" : "default"}
-        onClick={() => changeLocale("fr")}
+        color={locale === locale_hi ? "primary" : "default"}
+        onClick={() => changeLocale(locale_hi)}
       >
-        fr
+        {translate("ra.language.hi")}
       </Button>
     </CardContent>
   </Card>
@@ -87,13 +88,10 @@ const mapStateToProps = state => ({
 });
 
 const enhance = compose(
-  connect(
-    mapStateToProps,
-    {
-      changeLocale,
-      changeTheme
-    }
-  ),
+  connect(mapStateToProps, {
+    changeLocale,
+    changeTheme
+  }),
   translate,
   withStyles(styles)
 );

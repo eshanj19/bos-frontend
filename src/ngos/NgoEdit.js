@@ -18,21 +18,32 @@
 import React from "react";
 import { Edit, TextInput, SimpleForm, BooleanInput } from "react-admin";
 import withStyles from "@material-ui/core/styles/withStyles";
+import { translate } from "react-admin";
 
 import { styles } from "./NgoCreate";
 
-const NgoEdit = ({ classes, ...props }) => (
-  <Edit undoable={false} title="Ngo Edit" {...props}>
+const NgoEdit = translate(({ classes, translate, ...props }) => (
+  <Edit undoable={false} title={translate("ra.edit ngo")} {...props}>
     <SimpleForm>
-      <TextInput autoFocus source="label" formClassName={classes.label} />
-      <TextInput source="uom" formClassName={classes.uom} />
+      <TextInput
+        autoFocus
+        label={translate("ra.title.label")}
+        source="label"
+        formClassName={classes.label}
+      />
+      <TextInput
+        label={translate("ra.title.uom")}
+        source="uom"
+        formClassName={classes.uom}
+      />
       <BooleanInput
         source="is_active"
-        label="Active"
+        //label="Active"
+        label={translate("ra.action.active")}
         formClassName={classes.is_active}
       />
     </SimpleForm>
   </Edit>
-);
+));
 
 export default withStyles(styles)(NgoEdit);

@@ -8,6 +8,7 @@ import {
 } from "@material-ui/core";
 import IconButton from "@material-ui/core/IconButton";
 import CloseIcon from "@material-ui/icons/Close";
+import { withTranslate } from "react-admin";
 
 class RequestModal extends Component {
   constructor(props) {
@@ -61,7 +62,7 @@ class RequestModal extends Component {
     );
   };
   render() {
-    const { ...props } = this.props;
+    const { translate, ...props } = this.props;
 
     return (
       <div>
@@ -75,7 +76,9 @@ class RequestModal extends Component {
               margin: "1em"
             }}
           >
-            <DialogTitle>Choose username and password</DialogTitle>
+            <DialogTitle>
+              {translate("ra.Choose username and password")}
+            </DialogTitle>
             <IconButton onClick={this.props.onCancel}>
               <CloseIcon />
             </IconButton>
@@ -92,7 +95,7 @@ class RequestModal extends Component {
             <div style={{ marginTop: "20px" }}>
               <Input
                 style={{ width: "250px" }}
-                placeholder="enter password"
+                placeholder={translate("ra.title.enter_password")}
                 value={this.state.password}
                 onChange={this.onSetPassword}
               ></Input>
@@ -100,7 +103,7 @@ class RequestModal extends Component {
             <div style={{ marginTop: "20px" }}>
               <Input
                 style={{ width: "250px" }}
-                placeholder="confirm password"
+                placeholder={translate("ra.title.confirm_password")}
                 value={this.state.confirmpassword}
                 onChange={this.onSetConfirmpwd}
               ></Input>
@@ -108,7 +111,7 @@ class RequestModal extends Component {
           </DialogContent>
           <div style={{ marginLeft: "40px", marginBottom: "10px" }}>
             <Button color="primary" variant="raised" onClick={this.handleClick}>
-              set
+              {translate("ra.action.set")}
             </Button>
           </div>
         </Dialog>
@@ -117,4 +120,4 @@ class RequestModal extends Component {
   }
 }
 
-export default RequestModal;
+export default withTranslate(RequestModal);

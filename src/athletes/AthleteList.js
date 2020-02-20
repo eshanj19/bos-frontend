@@ -37,41 +37,69 @@ import {
   GENDER_CHOICES,
   PERMISSION_ATHLETE_SHOW
 } from "../constants";
+import { translate } from "react-admin";
 
-const AthleteFilter = props => (
+const AthleteFilter = translate(({ translate, ...props }) => (
   <Filter {...props}>
-    <SearchInput label="Name" source="name" alwaysOn />
-    <BooleanInput source="is_active" label="Active" alwaysOn />
+    <SearchInput label={translate("ra.title.name")} source="name" alwaysOn />
+    <BooleanInput
+      label={translate("ra.action.active")}
+      source="is_active"
+      label="Active"
+      alwaysOn
+    />
   </Filter>
-);
+));
 
 const styles = {
   nb_commands: { color: "purple" }
 };
 
-const AthleteList = ({ classes, permissions, ...props }) => (
-  <List
-    {...props}
-    filters={<AthleteFilter />}
-    sort={{ field: "first_name", order: "ASC" }}
-    perPage={25}
-    filterDefaultValues={{ is_active: true }}
-    exporter={false}
-  >
-    <Responsive
-      medium={
-        <Datagrid>
-          <FullNameField label="Full name" sortBy="first_name" />
-          <SelectField source="gender" choices={GENDER_CHOICES} />
-          <BooleanField source="is_active" label="Active" type="text" />
-          <DateField source="creation_time" showTime />
-          <DateField source="last_modification_time" showTime />
-          {hasAccess(permissions, PERMISSION_ATHLETE_SHOW) && <ShowButton />}
-          {hasAccess(permissions, PERMISSION_ATHLETE_EDIT) && <EditButton />}
-        </Datagrid>
-      }
-    />
-  </List>
+const AthleteList = translate(
+  ({ classes, permissions, translate, ...props }) => (
+    <List
+      {...props}
+      filters={<AthleteFilter />}
+      title={translate("ra.title.athlete")}
+      sort={{ field: "first_name", order: "ASC" }}
+      perPage={25}
+      filterDefaultValues={{ is_active: true }}
+      exporter={false}
+    >
+      <Responsive
+        medium={
+          <Datagrid>
+            <FullNameField
+              label={translate("ra.title.full_name")}
+              sortBy="first_name"
+            />
+            <SelectField
+              label={translate("ra.title.gender")}
+              source="gender"
+              choices={GENDER_CHOICES}
+            />
+            <BooleanField
+              source="is_active"
+              label={translate("ra.action.active")}
+              type="text"
+            />
+            <DateField
+              label={translate("ra.title.created_on")}
+              source="creation_time"
+              showTime
+            />
+            <DateField
+              label={translate("ra.title.last_mod")}
+              source="last_modification_time"
+              showTime
+            />
+            {hasAccess(permissions, PERMISSION_ATHLETE_SHOW) && <ShowButton />}
+            {hasAccess(permissions, PERMISSION_ATHLETE_EDIT) && <EditButton />}
+          </Datagrid>
+        }
+      />
+    </List>
+  )
 );
 
 export default withStyles(styles)(AthleteList);

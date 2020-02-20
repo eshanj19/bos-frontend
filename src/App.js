@@ -25,8 +25,10 @@ import themeReducer from "./themeReducer";
 import { Login, Layout } from "./layout";
 import { Dashboard } from "./dashboard";
 import customRoutes from "./routes";
-import englishMessages from "./i18n/en";
+import hindiMessages from "./locales/locale_hi_IN.json";
 import drfProvider from "./dataProvider";
+//import englishMessages from "./i18n/en";
+import englishMessages from "./locales/locale_en_IN.json";
 
 import resources from "./resources";
 import coaches from "./coaches";
@@ -38,16 +40,19 @@ import athletes from "./athletes";
 import ngos from "./ngos";
 import { ResourceWithPermissions } from "ra-auth-acl";
 import measurementTypes from "./measurementTypes";
-import { API_URL } from "./constants";
+import { API_URL, locale_hi } from "./constants";
 import errorSagas from "./dataProvider/errorSaga";
 import api from "./api";
 import readings from "./readings";
 import requests from "./requests";
+import { locale_hi_IN } from "./constants";
 
 const i18nProvider = locale => {
-  // if (locale === "fr") {
-  //   return import("./i18n/fr").then(messages => messages.default);
-  // }
+  if (locale === locale_hi) {
+    return import("./locales/locale_hi_IN.json").then(
+      messages => messages.default
+    );
+  }
 
   // Always fallback on english
   return englishMessages;

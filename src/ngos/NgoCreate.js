@@ -26,6 +26,7 @@ import { Formik } from "formik";
 import NgoCreateForm from "./NgoCreateForm";
 import { removeNullValues, parseErrorResponse } from "../stringUtils";
 import { RESPONSE_STATUS_400 } from "../constants";
+import { withTranslate } from "react-admin";
 
 export const styles = {
   card: { display: "flex" }
@@ -91,4 +92,4 @@ class NgoCreate extends Component {
   }
 }
 
-export default withSnackbar(withStyles(styles)(NgoCreate));
+export default withTranslate(withSnackbar(withStyles(styles)(NgoCreate)));
