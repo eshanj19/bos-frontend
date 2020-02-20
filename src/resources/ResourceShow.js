@@ -5,7 +5,7 @@ import api from "../api";
 import uniqueId from "lodash/uniqueId";
 import find from "lodash/find";
 import withStyles from "@material-ui/core/styles/withStyles";
-import { translate } from "react-admin";
+import { withTranslate } from "react-admin";
 
 const styles = {
   required_star: { marginLeft: "5px", color: "red" },
@@ -53,7 +53,8 @@ function ResourceShow(props) {
     return <div className={props.classes.ml20}>{view}</div>;
   };
 
-  const _renderMeasurements = translate(({ translate, measurements }) => {
+  const _renderMeasurements = measurements => {
+    const { translate } = props;
     if (
       !measurements ||
       measurements.length === 0 ||
@@ -76,7 +77,7 @@ function ResourceShow(props) {
     });
     view.push(measurementView);
     return <div className={props.classes.ml20}>{view}</div>;
-  });
+  };
   const _renderSession = data => {
     const { files, measurements } = data;
     const view = [];
@@ -90,8 +91,10 @@ function ResourceShow(props) {
     return _renderSession(data);
   };
   const renderCurriculum = () => {
-    const { data: days, label = "" } = resourceData;
-    console.log(days);
+    const {
+      data: { days },
+      label = ""
+    } = resourceData;
     const view = [];
     view.push(<h3>{label}</h3>);
     const daysView = days.map(day => {
@@ -120,4 +123,4 @@ function ResourceShow(props) {
   );
 }
 
-export default withRouter(withStyles(styles)(ResourceShow));
+export default withTranslate(withRouter(withStyles(styles)(ResourceShow)));
