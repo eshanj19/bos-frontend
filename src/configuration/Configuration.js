@@ -24,6 +24,7 @@ import { translate, changeLocale, Title } from "react-admin";
 import withStyles from "@material-ui/core/styles/withStyles";
 import compose from "recompose/compose";
 import { changeTheme } from "./actions";
+import { locale_en, locale_hi } from "../constants";
 
 const styles = {
   label: { width: "10em", display: "inline-block" },
@@ -64,18 +65,18 @@ const Configuration = ({
       <Button
         variant="raised"
         className={classes.button}
-        color={locale === "en" ? "primary" : "default"}
-        onClick={() => changeLocale("en")}
+        color={locale === locale_en ? "primary" : "default"}
+        onClick={() => changeLocale(locale_en)}
       >
-        en
+        {translate("ra.language.en")}
       </Button>
       <Button
         variant="raised"
         className={classes.button}
-        color={locale === "fr" ? "primary" : "default"}
-        onClick={() => changeLocale("fr")}
+        color={locale === locale_hi ? "primary" : "default"}
+        onClick={() => changeLocale(locale_hi)}
       >
-        fr
+        {translate("ra.language.hi")}
       </Button>
     </CardContent>
   </Card>

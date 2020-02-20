@@ -40,14 +40,15 @@ import athletes from "./athletes";
 import ngos from "./ngos";
 import { ResourceWithPermissions } from "ra-auth-acl";
 import measurementTypes from "./measurementTypes";
-import { API_URL } from "./constants";
+import { API_URL, locale_hi } from "./constants";
 import errorSagas from "./dataProvider/errorSaga";
 import api from "./api";
 import readings from "./readings";
 import requests from "./requests";
+import { locale_hi_IN } from "./constants";
 
 const i18nProvider = locale => {
-  if (locale === "fr") {
+  if (locale === locale_hi) {
     return import("./locales/locale_hi_IN.json").then(
       messages => messages.default
     );

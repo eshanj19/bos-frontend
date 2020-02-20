@@ -61,6 +61,9 @@ export const RESOURCE_TYPE_CURRICULUM = "curriculum";
 export const PERMISSION_REQUESTS_SHOW = "requests.show";
 export const PERMISSION_REQUESTS_LIST = "requests.list";
 
+export const locale_en = "en_IN";
+export const locale_hi = "hi_IN";
+
 export const GENDER_CHOICES = [
   { id: "male", name: "Male" },
   { id: "female", name: "Female" }
