@@ -33,16 +33,13 @@ const Welcome = ({ classes, translate }) => (
   <Card>
     <CardContent>
       <Typography variant="headline" component="h2">
-        Welcome to Bridges of Sports platform
+        {translate("ra.Welcome to Bridges of Sports platform")}
       </Typography>
       {/* <Typography component="p">This page is under development</Typography> */}
     </CardContent>
   </Card>
 );
 
-const enhance = compose(
-  withStyles(styles),
-  translate
-);
+const enhance = compose(withStyles(styles), translate);
 
 export default enhance(Welcome);

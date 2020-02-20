@@ -32,7 +32,7 @@ class CoachShow extends Component {
   render() {
     const { classes, translate, ...props } = this.props;
     return (
-      <Show title="Coach Show" {...props}>
+      <Show title={translate("ra.coach_information")} {...props}>
         <SimpleShowLayout>
           <TextField
             label={translate("ra.title.first_name")}

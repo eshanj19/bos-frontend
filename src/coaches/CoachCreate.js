@@ -101,7 +101,7 @@ const CoachCreate = translate(({ classes, translate, ...props }) => {
     }
   };
   return (
-    <Create undoable={false} {...props}>
+    <Create undoable={false} {...props} title={translate("ra.create coach")}>
       <SimpleForm redirect="list" validate={validateCoachCreation}>
         <TextInput
           autoFocus

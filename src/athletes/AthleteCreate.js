@@ -63,7 +63,7 @@ const validateAthleteCreation = values => {
 
 const AthleteCreate = translate(({ classes, translate, ...props }) => {
   return (
-    <Create undoable={false} {...props}>
+    <Create undoable={false} {...props} title={translate("ra.create athlete")}>
       <SimpleForm redirect="show" validate={validateAthleteCreation}>
         <TextInput
           autoFocus

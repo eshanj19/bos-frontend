@@ -59,6 +59,7 @@ const CoachList = translate(({ classes, permissions, translate, ...props }) => (
   <List
     {...props}
     filters={<CoachFilter />}
+    title={translate("ra.menu.coaches")}
     sort={{ field: "first_name", order: "ASC" }}
     perPage={25}
     filterDefaultValues={{ is_active: true }}

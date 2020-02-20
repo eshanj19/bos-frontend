@@ -31,40 +31,64 @@ import {
 } from "react-admin";
 import withStyles from "@material-ui/core/styles/withStyles";
 import { hasAccess } from "ra-auth-acl";
+import { translate } from "react-admin";
 
-const MeasurementTypeFilter = props => (
+const MeasurementTypeFilter = translate(({ translate, ...props }) => (
   <Filter {...props}>
-    <SearchInput label="Label" source="label" alwaysOn />
-    <BooleanInput source="is_active" label="Active" alwaysOn />
+    <SearchInput label={translate("ra.title.label")} source="label" alwaysOn />
+    <BooleanInput
+      source="is_active"
+      label={translate("ra.action.active")}
+      alwaysOn
+    />
   </Filter>
-);
+));
 
 const styles = {
   nb_commands: { color: "purple" }
 };
 
-const MeasurementTypeList = ({ classes, permissions, ...props }) => (
-  <List
-    {...props}
-    filters={<MeasurementTypeFilter />}
-    sort={{ field: "label", order: "ASC" }}
-    perPage={25}
-    filterDefaultValues={{ is_active: true }}
-    exporter={false}
-  >
-    <Responsive
-      medium={
-        <Datagrid>
-          <TextField source="label" type="text" />
-          <BooleanField source="is_active" label="Active" type="text" />
-          <DateField source="creation_time" showTime />
-          <DateField source="last_modification_time" showTime />
-          {/* {hasAccess(permissions, "measurement_types.show") && <ShowButton />} */}
-          {hasAccess(permissions, "measurement_types.edit") && <EditButton />}
-        </Datagrid>
-      }
-    />
-  </List>
+const MeasurementTypeList = translate(
+  ({ classes, permissions, translate, ...props }) => (
+    <List
+      {...props}
+      title={translate("ra.menu.measurement_type")}
+      filters={<MeasurementTypeFilter />}
+      sort={{ field: "label", order: "ASC" }}
+      perPage={25}
+      filterDefaultValues={{ is_active: true }}
+      exporter={false}
+    >
+      <Responsive
+        medium={
+          <Datagrid>
+            <TextField
+              label={translate("ra.title.label")}
+              source="label"
+              type="text"
+            />
+            <BooleanField
+              source="is_active"
+              label={translate("ra.action.active")}
+              type="text"
+            />
+            <DateField
+              label={translate("ra.title.created_on")}
+              source="creation_time"
+              showTime
+            />
+            <DateField
+              label={translate("ra.title.last_mod")}
+              source="last_modification_time"
+              showTime
+            />
+            {/* {hasAccess(permissions, "measurement_types.show") && <ShowButton />} */}
+            {hasAccess(permissions, "measurement_types.edit") && <EditButton />}
+          </Datagrid>
+        }
+      />
+    </List>
+  )
 );
 
 export default withStyles(styles)(MeasurementTypeList);

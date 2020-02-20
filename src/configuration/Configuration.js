@@ -39,16 +39,16 @@ const Configuration = ({
   translate
 }) => (
   <Card>
-    <Title title={translate("pos.configuration")} />
+    <Title title={translate("ra.configuration")} />
     <CardContent>
-      <div className={classes.label}>{translate("pos.theme.name")}</div>
+      <div className={classes.label}>{translate("ra.title.theme")}</div>
       <Button
         variant="raised"
         className={classes.button}
         color={theme === "light" ? "primary" : "default"}
         onClick={() => changeTheme("light")}
       >
-        {translate("pos.theme.light")}
+        {translate("ra.theme.light")}
       </Button>
       <Button
         variant="raised"
@@ -56,11 +56,11 @@ const Configuration = ({
         color={theme === "dark" ? "primary" : "default"}
         onClick={() => changeTheme("dark")}
       >
-        {translate("pos.theme.dark")}
+        {translate("ra.theme.dark")}
       </Button>
     </CardContent>
     <CardContent>
-      <div className={classes.label}>{translate("pos.language")}</div>
+      <div className={classes.label}>{translate("ra.title.language")}</div>
       <Button
         variant="raised"
         className={classes.button}
@@ -87,13 +87,10 @@ const mapStateToProps = state => ({
 });
 
 const enhance = compose(
-  connect(
-    mapStateToProps,
-    {
-      changeLocale,
-      changeTheme
-    }
-  ),
+  connect(mapStateToProps, {
+    changeLocale,
+    changeTheme
+  }),
   translate,
   withStyles(styles)
 );

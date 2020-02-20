@@ -46,6 +46,7 @@ import { withDataProvider } from "ra-core";
 import ResourceTypeField from "./common/ResourceTypeField";
 import { withSnackbar } from "notistack";
 import { RESOURCE_TYPE_REGISTRATION_FORM } from "../constants";
+import { translate } from "react-admin";
 
 const styles = {
   nb_commands: { color: "purple" }
@@ -96,14 +97,16 @@ const BulkActionButtons = props => {
             setAsCoachRegistration(selectedIds[0]);
           }}
         >
-          Set As Coach Registration
+          {/* Set As Coach Registration */}
+          {translate("ra.Set As Coach Registration")}
         </Button>
         <Button
           onClick={() => {
             setAsAthleteRegistration(selectedIds[0]);
           }}
         >
-          Set As Athlete Registration
+          {/* Set As Athlete Registration */}
+          {translate("ra.Set As Athlete Registration")}
         </Button>
 
         {resourceList[selectedIds[0]].is_active === true ? (
@@ -113,7 +116,7 @@ const BulkActionButtons = props => {
             }}
             color="secondary"
           >
-            Deactivate
+            {translate("ra.action.deactivate")}
           </Button>
         ) : (
           <Button
@@ -121,7 +124,7 @@ const BulkActionButtons = props => {
               activateResource(selectedIds[0]);
             }}
           >
-            Activate
+            {translate("ra.action.activate")}
           </Button>
         )}
       </>
@@ -144,7 +147,7 @@ const BulkActionButtons = props => {
             deactivateResource(selectedIds[0]);
           }}
         >
-          Deactivate
+          {translate("ra.action.deactivate")}
         </Button>
       );
     } else if (areAllActive === false && areAllInactive === true) {
@@ -154,7 +157,7 @@ const BulkActionButtons = props => {
             activateResource(selectedIds[0]);
           }}
         >
-          Activate
+          {translate("ra.action.activate")}
         </Button>
       );
     } else {
@@ -212,11 +215,11 @@ const DatagridRow = ({
   </TableRow>
 );
 
-const ResourceFilter = props => (
+const ResourceFilter = translate(({ translate, ...props }) => (
   <Filter {...props}>
-    <SearchInput label="Name" source="label" alwaysOn />
+    <SearchInput label={translate("ra.title.name")} source="label" alwaysOn />
     <SelectInput
-      label="Type"
+      label={translate("ra.title.type")}
       source="type"
       choices={[
         { id: "session", name: "Session" },
@@ -226,11 +229,15 @@ const ResourceFilter = props => (
       ]}
       alwaysOn
     />
-    <BooleanInput source="is_active" label="Active" alwaysOn />
+    <BooleanInput
+      label={translate("ra.action.active")}
+      source="is_active"
+      alwaysOn
+    />
   </Filter>
-);
+));
 
-const CreateActions = props => {
+const CreateActions = translate(({ translate, ...props }) => {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
   const handleClick = event => {
@@ -250,7 +257,7 @@ const CreateActions = props => {
         aria-haspopup="true"
         onClick={handleClick}
       >
-        Create
+        {translate("ra.action.create")}
       </Button>
       <Menu
         id="fade-menu"
@@ -261,19 +268,21 @@ const CreateActions = props => {
         TransitionComponent={Fade}
       >
         <MenuItem onClick={() => handleMenuSelect("curriculum")}>
-          Curriculum
+          {translate("ra.option.curriculum")}
         </MenuItem>
         <MenuItem onClick={() => handleMenuSelect("session")}>
-          Training Session
+          {translate("ra.option.training_session")}
         </MenuItem>
-        <MenuItem onClick={() => handleMenuSelect("file")}>File</MenuItem>
+        <MenuItem onClick={() => handleMenuSelect("file")}>
+          {translate("ra.option.file")}
+        </MenuItem>
         <MenuItem onClick={() => handleMenuSelect("registration")}>
-          Registration form
+          {translate("ra.option.registration_form")}
         </MenuItem>
       </Menu>
     </>
   );
-};
+});
 
 const BosDatagridBody = props => (
   <DatagridBody {...props} row={<DatagridRow history={props.history} />} />
@@ -282,7 +291,7 @@ const BosDatagrid = props => (
   <Datagrid {...props} body={<BosDatagridBody history={props.history} />} />
 );
 
-const ResourcesList = ({ classes, ...props }) => (
+const ResourcesList = translate(({ classes, translate, ...props }) => (
   <List
     {...props}
     sort={{ field: "label", order: "ASC" }}
@@ -306,18 +315,34 @@ const ResourcesList = ({ classes, ...props }) => (
       }
     /> */}
     <BosDatagrid history={props.history}>
-      <TextField source="label" type="text" />
-      <ResourceTypeField source="type" type="text" />
-      <BooleanField source="is_active" label="Active" />
-      <DateField label="Created on" source="creation_time" showTime />
-      <DateField label="Modified on" source="last_modification_time" showTime />
+      <TextField
+        label={translate("ra.title.label")}
+        source="label"
+        type="text"
+      />
+      <ResourceTypeField
+        label={translate("ra.title.type")}
+        source="type"
+        type="text"
+      />
+      <BooleanField label={translate("ra.action.active")} source="is_active" />
+      <DateField
+        label={translate("ra.title.created_on")}
+        source="creation_time"
+        showTime
+      />
+      <DateField
+        label={translate("ra.title.last_mod")}
+        source="last_modification_time"
+        showTime
+      />
       <ShowButton />
       <Button id="edit_button" color="primary">
-        Edit
+        {translate("ra.action.edit")}
       </Button>
     </BosDatagrid>
   </List>
-);
+));
 const mapStateToProps = state => {
   return {
     resourceList: state.admin.resources.resources.data

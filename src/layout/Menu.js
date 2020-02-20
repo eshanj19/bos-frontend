@@ -75,7 +75,7 @@ class Menu extends Component {
                 >
                   <MenuItemLink
                     to={`/ngos`}
-                    primaryText={translate(`ra.menu.ngo`, {
+                    primaryText={translate(`ra.menu.ngos`, {
                       smart_count: 2
                     })}
                     leftIcon={<ngos.icon />}
@@ -180,7 +180,7 @@ class Menu extends Component {
               return (
                 <MenuItemLink
                   to={`/measurements`}
-                  primaryText={translate(`ra.title.measurement`, {
+                  primaryText={translate(`ra.title.measurements`, {
                     smart_count: 2
                   })}
                   leftIcon={<measurements.icon />}

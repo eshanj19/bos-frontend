@@ -47,7 +47,7 @@ const AdminEditActions = translate(
         <ShowButton basePath={basePath} record={data} />
 
         <Button color="primary" onClick={() => onToggleDialog(data.key)}>
-          Reset Password
+          {translate("ra.action.reset_password")}
         </Button>
       </CardActions>
     );
@@ -111,6 +111,7 @@ const AdminEdit = translate(({ classes, translate, ...props }) => {
     <div>
       <Edit
         undoable={false}
+        title={translate("ra.edit admin")}
         actions={
           <AdminEditActions
             onToggleDialog={userKey => {

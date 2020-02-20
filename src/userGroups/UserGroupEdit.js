@@ -17,6 +17,7 @@
 
 import React, { useState, useEffect } from "react";
 import withStyles from "@material-ui/core/styles/withStyles";
+import { translate } from "react-admin";
 
 import { styles, validateUserGroupCreation } from "./UserGroupCreate";
 import {
@@ -30,62 +31,71 @@ import {
 } from "react-admin";
 import api from "../api";
 
-const UserGroupEdit = ({ classes, permissions, ...props }) => {
-  const [resourceChoices, setResourceChoices] = useState([]);
-  const [userChoices, setUserChoices] = useState([]);
-  useEffect(() => {
-    //fetch possible resource choices.
-    const ngoKey = localStorage.getItem("ngo_key");
-    api.getResourcesByNgo(ngoKey).then(({ data }) => {
-      console.log(data);
-      const choices = data.map(d => ({ id: d.key, name: d.label }));
-      setResourceChoices(choices);
-    });
-    api.getAllUsersByNgo(ngoKey).then(({ data }) => {
-      const choices = data.map(d => ({
-        id: d.key,
-        name: `${d.first_name + d.last_name}`
-      }));
-      setUserChoices(choices);
-    });
-  }, []);
-  const handleChoiceChange = data => {
-    const arr = Object.values(data);
-    if (arr.length > 2) {
-      arr.pop();
-      const value = arr.pop();
-      if (value && arr.includes(value)) {
-        data.preventDefault();
+const UserGroupEdit = translate(
+  ({ classes, permissions, translate, ...props }) => {
+    const [resourceChoices, setResourceChoices] = useState([]);
+    const [userChoices, setUserChoices] = useState([]);
+    useEffect(() => {
+      //fetch possible resource choices.
+      const ngoKey = localStorage.getItem("ngo_key");
+      api.getResourcesByNgo(ngoKey).then(({ data }) => {
+        console.log(data);
+        const choices = data.map(d => ({ id: d.key, name: d.label }));
+        setResourceChoices(choices);
+      });
+      api.getAllUsersByNgo(ngoKey).then(({ data }) => {
+        const choices = data.map(d => ({
+          id: d.key,
+          name: `${d.first_name + d.last_name}`
+        }));
+        setUserChoices(choices);
+      });
+    }, []);
+    const handleChoiceChange = data => {
+      const arr = Object.values(data);
+      if (arr.length > 2) {
+        arr.pop();
+        const value = arr.pop();
+        if (value && arr.includes(value)) {
+          data.preventDefault();
+        }
       }
-    }
-  };
-  return (
-    <Edit {...props}>
-      <SimpleForm
-        undoable={false}
-        redirect="list"
-        validate={validateUserGroupCreation}
-      >
-        <TextInput autoFocus source="label" formClassName={classes.label} />
-        <AutocompleteArrayInput
-          source="users"
-          choices={userChoices}
-          onChange={handleChoiceChange}
-        />
-        <AutocompleteArrayInput
-          source="resources"
-          choices={resourceChoices}
-          onChange={handleChoiceChange}
-        />
-        <BooleanInput
-          source="is_active"
-          label="Active"
-          formClassName={classes.is_active}
-          defaultValue={true}
-        />
-      </SimpleForm>
-    </Edit>
-  );
-};
+    };
+    return (
+      <Edit {...props} title={translate("ra.edit user group")}>
+        <SimpleForm
+          undoable={false}
+          redirect="list"
+          validate={validateUserGroupCreation}
+        >
+          <TextInput
+            autoFocus
+            label={translate("ra.title.label")}
+            source="label"
+            formClassName={classes.label}
+          />
+          <AutocompleteArrayInput
+            source="users"
+            label={translate("ra.title.users")}
+            choices={userChoices}
+            onChange={handleChoiceChange}
+          />
+          <AutocompleteArrayInput
+            source="resources"
+            label={translate("ra.title.resources")}
+            choices={resourceChoices}
+            onChange={handleChoiceChange}
+          />
+          <BooleanInput
+            source="is_active"
+            label={translate("ra.action.active")}
+            formClassName={classes.is_active}
+            defaultValue={true}
+          />
+        </SimpleForm>
+      </Edit>
+    );
+  }
+);
 
 export default withStyles(styles)(UserGroupEdit);

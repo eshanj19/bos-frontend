@@ -43,7 +43,7 @@ const CoachEditActions = translate(
       <CardActions style={{ justifyContent: "flex-end" }}>
         <ShowButton basePath={basePath} record={data} />
         <Button color="primary" onClick={() => onToggleDialog(data.key)}>
-          Reset Password
+          {translate("ra.action.reset_password")}
         </Button>
       </CardActions>
     );
@@ -123,7 +123,7 @@ const CoachEdit = translate(({ classes, translate, ...props }) => {
     <div>
       <Edit
         undoable={false}
-        title="Coach Edit"
+        title={translate("ra.edit coach")}
         actions={
           <CoachEditActions
             onToggleDialog={userKey => {

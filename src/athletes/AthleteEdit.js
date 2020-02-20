@@ -91,7 +91,7 @@ const AthleteEdit = translate(({ classes, translate, ...props }) => {
   return (
     <div>
       <Edit
-        title="Athlete Edit"
+        title={translate("ra.edit athlete")}
         undoable={false}
         actions={
           <AthleteEditActions

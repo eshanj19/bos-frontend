@@ -19,6 +19,7 @@ import api from "../../api";
 import DeleteIcon from "@material-ui/icons/Clear";
 import FlareIcon from "@material-ui/icons/Flare";
 import { withSnackbar } from "notistack";
+import { withTranslate } from "react-admin";
 
 export const styles = {
   first_name: { display: "inline-block" },
@@ -441,21 +442,26 @@ class Curriculum extends Component {
   };
 
   render() {
-    const { classes, initialData, ...props } = this.props;
+    const { classes, initialData, translate, ...props } = this.props;
     const { days, isEdit } = this.state;
     // console.log({ state: this.state.days });
     return (
       <div className={classes.root}>
         <div className={classes.header_wrapper}>
           <div>
-            <h3>{isEdit ? "Edit" : "Create"} Curriculum</h3>
+            <h3>
+              {isEdit
+                ? translate("ra.action.edit")
+                : translate("ra.action.create")}{" "}
+              {translate("ra.option.curriculum")}
+            </h3>
           </div>
           <div>
             {/* <Button onClick={() => this.handleSave)} contained="true" color="primary">
               Save
             </Button> */}
             <Button onClick={() => this.handleSubmit(false)} color="primary">
-              Save
+              {translate("ra.action.save")}
             </Button>
           </div>
         </div>
@@ -464,7 +470,7 @@ class Curriculum extends Component {
             <div>
               <Input
                 style={{ width: "200px", marginBottom: "24px" }}
-                placeholder="Curriculum Name"
+                placeholder={translate("ra.title.curriculum_name")}
                 onChange={({ target: { value } }) => {
                   this.setState({ curriculumName: value });
                 }}
@@ -474,7 +480,7 @@ class Curriculum extends Component {
             <div>
               <Input
                 style={{ width: "400px", marginBottom: "24px" }}
-                placeholder="Curriculum Description"
+                placeholder={translate("ra.title.curriculum_description")}
                 multiline
                 value={this.state.curriculumDescription || ""}
                 onChange={({ target: { value } }) => {
@@ -489,8 +495,8 @@ class Curriculum extends Component {
                   type={RESOURCE_ITEMS.DAY}
                   onInputChange={this.handleAddDayInputChange}
                   onAddClick={this.handleAddDayClick}
-                  title="+ Add Day"
-                  inputPlaceholderText="Enter Day Title"
+                  title={<span> + {translate("ra.action.add_day")}</span>}
+                  inputPlaceholderText={translate("ra.title.enter_day_title")}
                 />
               ) : (
                 this.renderDays(day, index)
@@ -504,6 +510,7 @@ class Curriculum extends Component {
 
   renderMeasurements = (measurements, sessionId, dayId) => {
     const { measurementOptions } = this.state;
+    const { translate } = this.props;
     return measurements.map((item, index) => {
       return item.id === PLACEHOLDER_ID_MEASUREMENT ? (
         <PlaceholderItem
@@ -512,7 +519,7 @@ class Curriculum extends Component {
           onInputChange={selected =>
             this.handleAddMeasurementInputChange(sessionId, dayId, selected)
           }
-          title="+ Add Measurement"
+          title={<span> + {translate("ra.action.add_measurement")}</span>}
           style={{ marginLeft: "20px", marginTop: "10px" }}
           options={this.state.measurementOptions}
         />
@@ -540,7 +547,7 @@ class Curriculum extends Component {
                   }}
                 />
               }
-              label="Mandatory"
+              label={translate("ra.action.mandatory")}
             />
           </div>
         </div>
@@ -550,6 +557,7 @@ class Curriculum extends Component {
 
   renderFiles = (files, sessionId, dayId) => {
     const { fileOptions } = this.state;
+    const { translate } = this.props;
     return files.map((item, index) => {
       return item.id === PLACEHOLDER_ID_FILE ? (
         <PlaceholderItem
@@ -558,7 +566,7 @@ class Curriculum extends Component {
           onInputChange={selected =>
             this.handleAddFileInputChange(sessionId, dayId, selected)
           }
-          title="+ Add File"
+          title={<span> + {translate("ra.action.add_file")}</span>}
           style={{ marginLeft: "20px", marginTop: "10px" }}
           options={this.state.fileOptions}
         />
@@ -583,6 +591,7 @@ class Curriculum extends Component {
   };
 
   renderSessions = (sessions, dayId) => {
+    const { translate } = this.props;
     return sessions.map((session, index) => {
       return session.id === PLACEHOLDER_ID ? (
         <PlaceholderItem
@@ -594,9 +603,9 @@ class Curriculum extends Component {
           onCreateOption={value => {
             this.handleSessionCreateOption(value, dayId);
           }}
-          title="+ Add Session"
+          title={<span> + {translate("ra.action.add_session")}</span>}
           style={{ marginLeft: "10px", marginTop: "10px" }}
-          inputPlaceholderText="Enter Session Title"
+          inputPlaceholderText={translate("ra.Enter Session Title")}
           options={this.state.sessionOptions}
         />
       ) : (
@@ -649,4 +658,6 @@ class Curriculum extends Component {
   };
 }
 
-export default withRouter(withSnackbar(withStyles(styles)(Curriculum)));
+export default withTranslate(
+  withRouter(withSnackbar(withStyles(styles)(Curriculum)))
+);

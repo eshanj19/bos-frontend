@@ -13,6 +13,7 @@ import withStyles from "@material-ui/core/styles/withStyles";
 import CreatableSelect from "react-select/creatable";
 import { RESOURCE_ITEMS, INPUT_TYPE } from "../../utils";
 import Select from "react-select";
+import { withTranslate } from "react-admin";
 
 const styles = {
   placeholder_item: {
@@ -31,8 +32,15 @@ const styles = {
   placeholder_title: { fontSize: "1rem", color: "white" }
 };
 
-function PlaceholderItem({ onInputChange, onAddClick, title, ...props }) {
+function PlaceholderItem({
+  onInputChange,
+  onAddClick,
+  title,
+  translate,
+  ...props
+}) {
   const [showInput, updateInputState] = useState(false);
+
   const handleInputState = () => {
     updateInputState(!showInput);
   };
@@ -68,7 +76,7 @@ function PlaceholderItem({ onInputChange, onAddClick, title, ...props }) {
             onClick={onAddClick}
             color="primary"
           >
-            Add
+            {translate("ra.action.add")}
           </Button>
         </>
       )}
@@ -84,4 +92,4 @@ function PlaceholderItem({ onInputChange, onAddClick, title, ...props }) {
   );
 }
 
-export default withStyles(styles)(PlaceholderItem);
+export default withTranslate(withStyles(styles)(PlaceholderItem));

@@ -19,11 +19,12 @@ import React, { Component } from "react";
 import withStyles from "@material-ui/core/styles/withStyles";
 
 import { styles } from "./PermissionGroupCreate";
-import { Paper, Button } from "@material-ui/core";
+import { Paper, Button, Grid } from "@material-ui/core";
 import PermissionList from "./PermissionList";
 import api from "../api";
 import instance from "../axios";
 import { getGroupName } from "../utils";
+import { List } from "react-admin";
 
 class PermissionGroupShow extends Component {
   constructor(props) {
@@ -116,8 +117,9 @@ class PermissionGroupShow extends Component {
     const { currentGroupPermissions, groupName, flag } = this.state;
     const props = this.props;
     return (
-      <div>
+      <Grid>
         <h3> Permissions for group : {groupName} </h3>
+
         {
           <PermissionList
             currentGroupPermissions={currentGroupPermissions}
@@ -126,7 +128,7 @@ class PermissionGroupShow extends Component {
             {...props}
           />
         }
-      </div>
+      </Grid>
     );
   }
 }

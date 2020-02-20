@@ -27,6 +27,7 @@ import {
 import withStyles from "@material-ui/core/styles/withStyles";
 import PermissionGroupList from "../common/PermissionGroupList";
 import { FieldArray, Field } from "formik";
+import { translate } from "react-admin";
 
 export const styles = {
   name: { display: "inline-block" },
@@ -39,7 +40,7 @@ export const styles = {
   confirm_password: { display: "inline-block" }
 };
 
-const PermissionGroupCreateForm = props => {
+const PermissionGroupCreateForm = translate(({ translate, ...props }) => {
   const {
     values: { name },
     errors,
@@ -134,7 +135,7 @@ const PermissionGroupCreateForm = props => {
             name="name"
             helperText={touched.name ? errors.name : ""}
             error={touched.name && Boolean(errors.name)}
-            label="Name of Permission Group"
+            label={translate("ra.title.names_of_permission_group")}
             value={name}
             onChange={change.bind(null, "name")}
           />
@@ -158,11 +159,11 @@ const PermissionGroupCreateForm = props => {
           color="primary"
           disabled={!isValid}
         >
-          Submit
+          {translate("ra.action.submit")}
         </Button>
       </Grid>
     </form>
   );
-};
+});
 
 export default withStyles(styles)(PermissionGroupCreateForm);

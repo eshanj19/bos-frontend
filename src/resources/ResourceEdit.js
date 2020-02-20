@@ -18,23 +18,33 @@
 import React from "react";
 import { Edit, BooleanInput, SimpleForm, TextInput } from "react-admin";
 import withStyles from "@material-ui/core/styles/withStyles";
+import { translate } from "react-admin";
 
 import { styles } from "./common/Curriculum";
 
-const ResourceEdit = ({ classes, ...props }) => {
+const ResourceEdit = translate(({ classes, translate, ...props }) => {
   return (
     <Edit undoable={false} {...props}>
       <SimpleForm>
-        <TextInput source="first_name" formClassName={classes.first_name} />
-        <TextInput source="last_name" formClassName={classes.last_name} />
+        <TextInput
+          label={translate("ra.title.first_name")}
+          source="first_name"
+          formClassName={classes.first_name}
+        />
+        <TextInput
+          label={translate("ra.title.last_name")}
+          source="last_name"
+          formClassName={classes.last_name}
+        />
         <BooleanInput
           source="is_active"
-          label="Active"
+          label={translate("ra.action.active")}
           formClassName={classes.is_active}
         />
         <TextInput
           type="email"
           source="email"
+          label={translate("ra.title.email")}
           validation={{ email: true }}
           fullWidth={true}
           formClassName={classes.email}
@@ -42,6 +52,6 @@ const ResourceEdit = ({ classes, ...props }) => {
       </SimpleForm>
     </Edit>
   );
-};
+});
 
 export default withStyles(styles)(ResourceEdit);

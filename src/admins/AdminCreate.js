@@ -82,7 +82,7 @@ const AdminCreate = translate(({ classes, translate, ...props }) => {
     }
   };
   return (
-    <Create undoable={false} {...props}>
+    <Create undoable={false} {...props} title={translate("ra.create admin")}>
       <SimpleForm redirect="list" validate={validateAdminCreation}>
         <TextInput
           autoFocus

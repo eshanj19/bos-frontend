@@ -59,6 +59,7 @@ const AdminList = translate(({ classes, permissions, translate, ...props }) => (
   <List
     {...props}
     filters={<AdminFilter />}
+    title={translate("ra.menu.admins")}
     sort={{ field: "first_name", order: "ASC" }}
     perPage={25}
     filterDefaultValues={{ is_active: true }}

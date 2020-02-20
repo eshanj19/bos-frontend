@@ -5,6 +5,7 @@ import { withRouter } from "react-router-dom";
 import head from "lodash/head";
 import api from "../../api";
 import { withSnackbar } from "notistack";
+import { withTranslate } from "react-admin";
 
 const styles = {
   custom_file_upload: {
@@ -131,15 +132,22 @@ class File extends Component {
   };
   render() {
     const { selectedFile, error, selectedFileName } = this.state;
+    const { translate } = this.props;
     return (
       <div>
         <div className={this.props.classes.header_wrapper}>
           <div>
-            <h3> {this.state.isEdit ? "Edit" : "Create"} File Resource</h3>
+            <h3>
+              {" "}
+              {this.state.isEdit
+                ? translate("ra.action.edit")
+                : translate("ra.action.create")}{" "}
+              {translate("ra.file resource")}
+            </h3>
           </div>
           <div>
             <Button onClick={this.handleSubmit} color="primary">
-              Save
+              {translate("ra.action.save")}
             </Button>
           </div>
         </div>
@@ -155,7 +163,7 @@ class File extends Component {
                   htmlFor="file-upload"
                   className={this.props.classes.custom_file_upload}
                 >
-                  <span>Select File</span>
+                  <span>{translate("ra.action.select_file")}</span>
                 </label>
                 <input
                   onChange={this.handleFileChange}
@@ -177,7 +185,7 @@ class File extends Component {
               <>
                 <div>
                   <TextField
-                    label="File name"
+                    label={translate("ra.title.file_name")}
                     // className={classes.grid_element}
                     value={selectedFileName}
                     onChange={this.handleChange}
@@ -185,7 +193,7 @@ class File extends Component {
                 </div>
                 <div>
                   <TextField
-                    label="File Description"
+                    label={translate("ra.title.file_description")}
                     // className={classes.grid_element}
                     value={this.state.fileDescription || ""}
                     style={{ width: "250px" }}
@@ -204,4 +212,6 @@ class File extends Component {
   }
 }
 
-export default withRouter(withSnackbar(withStyles(styles)(File)));
+export default withTranslate(
+  withRouter(withSnackbar(withStyles(styles)(File)))
+);

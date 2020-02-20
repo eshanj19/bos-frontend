@@ -19,6 +19,7 @@ import React from "react";
 import withStyles from "@material-ui/core/styles/withStyles";
 import { Create, TextInput, SimpleForm, SelectInput } from "react-admin";
 import { GENDER_CHOICES } from "../constants";
+import { translate } from "react-admin";
 
 export const styles = {
   grid_element: { marginLeft: 32, marginTop: 10, marginBottom: 10 },
@@ -60,21 +61,34 @@ const validateRequestCreation = values => {
   return errors;
 };
 
-const RequestCreate = ({ classes, ...props }) => {
+const RequestCreate = translate(({ classes, translate, ...props }) => {
   return (
-    <Create undoable={false} {...props}>
+    <Create undoable={false} {...props} title={translate("ra.create request")}>
       <SimpleForm redirect="list" validate={validateRequestCreation}>
         <TextInput
           autoFocus
           source="first_name"
+          label={translate("ra.title.first_name")}
           formClassName={classes.first_name}
         />
-        <TextInput source="middle_name" formClassName={classes.generic} />
-        <TextInput source="last_name" formClassName={classes.last_name} />
-        <SelectInput source="gender" choices={GENDER_CHOICES} />
+        <TextInput
+          label={translate("ra.title.middle_name")}
+          source="middle_name"
+          formClassName={classes.generic}
+        />
+        <TextInput
+          label={translate("ra.title.last_name")}
+          source="last_name"
+          formClassName={classes.last_name}
+        />
+        <SelectInput
+          label={translate("ra.title.gender")}
+          source="gender"
+          choices={GENDER_CHOICES}
+        />
       </SimpleForm>
     </Create>
   );
-};
+});
 
 export default withStyles(styles)(RequestCreate);

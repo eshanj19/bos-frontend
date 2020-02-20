@@ -27,6 +27,7 @@ import withStyles from "@material-ui/core/styles/withStyles";
 import { Route } from "react-router-dom";
 import { Drawer } from "@material-ui/core";
 import RequestShow from "./RequestShow";
+import { withTranslate } from "react-admin";
 
 const styles = {
   nb_commands: { color: "purple" }
@@ -43,7 +44,7 @@ class RequestList extends Component {
   };
 
   render() {
-    const { classes, permissions, ...props } = this.props;
+    const { classes, permissions, translate, ...props } = this.props;
 
     return (
       <div>
@@ -61,16 +62,29 @@ class RequestList extends Component {
                   {...props}
                   sort={{ field: "creation_time", order: "ASC" }}
                   perPage={25}
+                  // title={translate("ra.menu.requests")}
                   filterDefaultValues={{ is_active: true }}
                   exporter={false}
                 >
                   <Responsive
                     medium={
                       <Datagrid rowClick="edit">
-                        <DateField label="Date" source="creation_time" />
-                        <TextField source="first_name" />
-                        <TextField source="last_name" />
-                        <ChipField source="status" />
+                        <DateField
+                          label={translate("ra.title.date")}
+                          source="creation_time"
+                        />
+                        <TextField
+                          label={translate("ra.title.first_name")}
+                          source="first_name"
+                        />
+                        <TextField
+                          label={translate("ra.title.last_name")}
+                          source="last_name"
+                        />
+                        <ChipField
+                          label={translate("ra.title.status")}
+                          source="status"
+                        />
                       </Datagrid>
                     }
                   />
@@ -98,4 +112,4 @@ class RequestList extends Component {
     );
   }
 }
-export default withStyles(styles)(RequestList);
+export default withTranslate(withStyles(styles)(RequestList));

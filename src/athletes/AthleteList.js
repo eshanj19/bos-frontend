@@ -60,6 +60,7 @@ const AthleteList = translate(
     <List
       {...props}
       filters={<AthleteFilter />}
+      title={translate("ra.title.athlete")}
       sort={{ field: "first_name", order: "ASC" }}
       perPage={25}
       filterDefaultValues={{ is_active: true }}

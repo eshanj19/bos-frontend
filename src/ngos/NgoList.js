@@ -36,6 +36,7 @@ import { hasAccess } from "ra-auth-acl";
 import DeactivateAction from "../common/DeactivateAction";
 import { translate } from "react-admin";
 import { withTranslate } from "react-admin";
+import { race } from "redux-saga/effects";
 
 const styles = {
   nb_commands: { color: "purple" }
@@ -59,23 +60,22 @@ class NgoList extends Component {
       <BooleanInput
         label={translate("ra.title.is_active")}
         source="is_active"
-        label="Active"
         alwaysOn
       />
     </Filter>
   ));
 
-  PostBulkActions = props => (
+  PostBulkActions = translate(({ translate, ...props }) => (
     <BulkActions {...props}>
       <DeactivateAction
         {...props}
-        label="Deactivate"
+        label={translate("ra.action.dectivate")}
         customPath="deactivate"
         onSuccess={this.onSuccess}
       />
       <BulkDeleteAction />
     </BulkActions>
-  );
+  ));
 
   onSuccess = () => {
     this.props.history.goBack();
@@ -87,6 +87,7 @@ class NgoList extends Component {
     return (
       <List
         {...props}
+        title={translate("ra.menu.ngos")}
         filters={<this.NgoFilter />}
         sort={{ field: "name", order: "ASC" }}
         perPage={25}

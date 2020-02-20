@@ -23,7 +23,7 @@ import { translate } from "react-admin";
 import { styles } from "./NgoCreate";
 
 const NgoEdit = translate(({ classes, translate, ...props }) => (
-  <Edit undoable={false} title="Ngo Edit" {...props}>
+  <Edit undoable={false} title={translate("ra.edit ngo")} {...props}>
     <SimpleForm>
       <TextInput
         autoFocus

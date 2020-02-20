@@ -33,7 +33,7 @@ class AthleteShow extends Component {
   render() {
     const { classes, translate, ...props } = this.props;
     return (
-      <Show title="Athlete information" {...props}>
+      <Show title={translate("ra.athlete_information")} {...props}>
         <SimpleShowLayout>
           <TextField
             label={translate("ra.title.first_name")}
