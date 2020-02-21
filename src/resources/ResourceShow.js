@@ -1,11 +1,22 @@
 import React, { useEffect, useState } from "react";
-import { Card, CardContent } from "@material-ui/core";
+import { Card, CardContent, Grid } from "@material-ui/core";
 import { withRouter } from "react-router-dom";
 import api from "../api";
 import uniqueId from "lodash/uniqueId";
 import find from "lodash/find";
 import withStyles from "@material-ui/core/styles/withStyles";
 import { withTranslate } from "react-admin";
+import { BooleanInput, List, Filter } from "react-admin";
+import { Button } from "@material-ui/core";
+import { withSnackbar } from "notistack";
+import {
+  checkIfValidImageExtension,
+  getFileExtensionFromURL,
+  checkIfValidPDFExtension
+} from "../utils";
+import { Document, Page, pdfjs } from "react-pdf";
+import spacing from "@material-ui/core/styles/spacing";
+pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 
 const styles = {
   required_star: { marginLeft: "5px", color: "red" },
@@ -33,6 +44,36 @@ function ResourceShow(props) {
       setFileMaster(data);
     });
   }, []);
+
+  const onDocumentLoadSuccess = ({ numPages }) => {
+    setNumPages(numPages);
+  };
+
+  const setAsCoachRegistration = id => {
+    const ngoKey = localStorage.getItem("ngo_key");
+    // crudUpdateMany("ping", id, null, "/ping");
+    console.log(props);
+    api
+      .setAsCoachRegistrationSession(ngoKey, { resource: id })
+      .then(response => {
+        api.handleSuccess(response, props.enqueueSnackbar);
+      })
+      .catch(error => {
+        api.handleError(error, props.enqueueSnackbar);
+      });
+  };
+  const setAsAthleteRegistration = id => {
+    const ngoKey = localStorage.getItem("ngo_key");
+    api
+      .setAsAthleteRegistrationSession(ngoKey, { resource: id })
+      .then(response => {
+        api.handleSuccess(response, props.enqueueSnackbar);
+      })
+      .catch(error => {
+        api.handleError(error, props.enqueueSnackbar);
+      });
+  };
+
   const _renderFiles = files => {
     if (!files || files.length === 0 || fileMaster.length === 0) return [];
     const view = [];
@@ -87,12 +128,88 @@ function ResourceShow(props) {
     return <div className={props.classes.ml10}>{view}</div>;
   };
 
-  const renderRegistrationForm = () => {
-    console.log("jknejkfnw");
+  const showButtons = () => {
+    const { id, translate } = props;
+    console.log(id);
+    return (
+      <Grid>
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={() => {
+            setAsCoachRegistration(id);
+          }}
+        >
+          {translate("ra.Set As Coach Registration")}
+        </Button>
+        <Button
+          variant="contained"
+          color="primary"
+          style={{ marginLeft: 2 }}
+          onClick={() => {
+            setAsAthleteRegistration(id);
+          }}
+        >
+          {translate("ra.Set As Coach Registration")}
+        </Button>
+      </Grid>
+    );
+  };
+
+  const _renderRegistration = data => {
+    const { files, measurements } = data;
+    const view = [];
+    view.push(<h4 key={uniqueId()}>{data.label}</h4>);
+    view.push(_renderFiles(files));
+    view.push(_renderMeasurements(measurements));
+
+    return (
+      <div className={props.classes.ml10}>
+        <Grid style={{ marginLeft: 260 }}>{showButtons()}</Grid>
+        {view}
+      </div>
+    );
+  };
+
+  const _renderFile = () => {
+    const { data, label } = resourceData;
+    const { url } = data;
+    const view = [];
+    view.push(<h4 key={uniqueId()}>{label}</h4>);
+    const fileExtension = getFileExtensionFromURL(url);
+    if (checkIfValidImageExtension(fileExtension)) {
+      view.push(<img src={url}></img>);
+    } else if (checkIfValidPDFExtension(fileExtension)) {
+      view.push(
+        <div>
+          <Document
+            file={url}
+            onLoadSuccess={onDocumentLoadSuccess}
+            onLoadError={console.error}
+          >
+            <Page pageNumber={pageNumber} />
+          </Document>
+          <p>
+            Page {pageNumber} of {numPages}
+          </p>
+        </div>
+      );
+    }
+    // view.push();
+    return <div className={props.classes.ml10}>{view}</div>;
   };
   const renderSession = () => {
     const { data } = resourceData;
     return _renderSession(data);
+  };
+
+  const renderRegistration = () => {
+    const { data } = resourceData;
+    return _renderRegistration(data);
+  };
+
+  const renderFile = () => {
+    return _renderFile();
   };
   const renderCurriculum = () => {
     const {
@@ -120,8 +237,10 @@ function ResourceShow(props) {
           renderSession()
         ) : resourceData.type === "curriculum" ? (
           renderCurriculum()
+        ) : resourceData.type === "file" ? (
+          renderFile()
         ) : resourceData.type === "registration" ? (
-          renderRegistrationForm()
+          renderRegistration()
         ) : (
           <div></div>
         )}
@@ -130,4 +249,6 @@ function ResourceShow(props) {
   );
 }
 
-export default withTranslate(withRouter(withStyles(styles)(ResourceShow)));
+export default withSnackbar(
+  withTranslate(withRouter(withStyles(styles)(ResourceShow)))
+);

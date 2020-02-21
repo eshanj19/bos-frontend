@@ -85,6 +85,7 @@ const BulkActionButtons = props => {
     api.activateResource(id).then(response => {});
   };
   const { resourceList, selectedIds } = props;
+  console.log(props);
 
   if (
     selectedIds.length === 1 &&
