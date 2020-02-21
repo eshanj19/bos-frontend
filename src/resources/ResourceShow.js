@@ -6,6 +6,13 @@ import uniqueId from "lodash/uniqueId";
 import find from "lodash/find";
 import withStyles from "@material-ui/core/styles/withStyles";
 import { withTranslate } from "react-admin";
+import {
+  checkIfValidImageExtension,
+  getFileExtensionFromURL,
+  checkIfValidPDFExtension
+} from "../utils";
+import { Document, Page, pdfjs } from "react-pdf";
+pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 
 const styles = {
   required_star: { marginLeft: "5px", color: "red" },
@@ -18,6 +25,8 @@ function ResourceShow(props) {
   const [resourceData, setResourceData] = useState({});
   const [measurementMaster, setMeasurementMaster] = useState([]);
   const [fileMaster, setFileMaster] = useState([]);
+  const [numPages, setNumPages] = useState([]);
+  const [pageNumber, setPageNumber] = useState(1);
   useEffect(() => {
     const ngoKey = localStorage.getItem("ngo_key");
     const {
@@ -33,6 +42,11 @@ function ResourceShow(props) {
       setFileMaster(data);
     });
   }, []);
+
+  const onDocumentLoadSuccess = ({ numPages }) => {
+    setNumPages(numPages);
+  };
+
   const _renderFiles = files => {
     if (!files || files.length === 0 || fileMaster.length === 0) return [];
     const view = [];
@@ -87,12 +101,41 @@ function ResourceShow(props) {
     return <div className={props.classes.ml10}>{view}</div>;
   };
 
-  const renderRegistrationForm = () => {
-    console.log("jknejkfnw");
+
+  const _renderFile = () => {
+    const { data, label } = resourceData;
+    const { url } = data;
+    const view = [];
+    view.push(<h4 key={uniqueId()}>{label}</h4>);
+    const fileExtension = getFileExtensionFromURL(url);
+    if (checkIfValidImageExtension(fileExtension)) {
+      view.push(<img src={url}></img>);
+    } else if (checkIfValidPDFExtension(fileExtension)) {
+      view.push(
+        <div>
+          <Document
+            file={url}
+            onLoadSuccess={onDocumentLoadSuccess}
+            onLoadError={console.error}
+          >
+            <Page pageNumber={pageNumber} />
+          </Document>
+          <p>
+            Page {pageNumber} of {numPages}
+          </p>
+        </div>
+      );
+    }
+    // view.push();
+    return <div className={props.classes.ml10}>{view}</div>;
+
   };
   const renderSession = () => {
     const { data } = resourceData;
     return _renderSession(data);
+  };
+  const renderFile = () => {
+    return _renderFile();
   };
   const renderCurriculum = () => {
     const {
@@ -120,8 +163,10 @@ function ResourceShow(props) {
           renderSession()
         ) : resourceData.type === "curriculum" ? (
           renderCurriculum()
-        ) : resourceData.type === "registration" ? (
-          renderRegistrationForm()
+
+        )  : resourceData.type === "file" ? (
+          renderFile()
+
         ) : (
           <div></div>
         )}
