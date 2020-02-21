@@ -68,3 +68,9 @@ export const GENDER_CHOICES = [
   { id: "male", name: "Male" },
   { id: "female", name: "Female" }
 ];
+
+export const VALID_PDF_EXTENSIONS = [".pdf"];
+
+export const VALID_IMAGE_EXTENSIONS = [".png", ".jpeg", ".jpg"];
+export const VALID_FILE_EXTENSIONS =
+  VALID_PDF_EXTENSIONS + VALID_IMAGE_EXTENSIONS;

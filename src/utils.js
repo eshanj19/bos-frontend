@@ -16,6 +16,7 @@
  */
 
 import { capitalizeString } from "./stringUtils";
+import { VALID_IMAGE_EXTENSIONS, VALID_PDF_EXTENSIONS } from "./constants";
 
 export const getGroupName = name => {
   const ngoKey = localStorage.getItem("ngo_key");
@@ -101,3 +102,31 @@ export const flat_hierarchy = [
 export function capitalizeFirstLetter(string) {
   return string.charAt(0).toUpperCase() + string.slice(1);
 }
+
+export const getFileExtensionFromURL = url => {
+  const fileExtension = url
+    .toLowerCase()
+    .split(".")
+    .pop();
+  return "." + fileExtension;
+};
+
+export const checkIfValidImageExtension = fileExtension => {
+  for (let index = 0; index < VALID_IMAGE_EXTENSIONS.length; index++) {
+    const validFileExtension = VALID_IMAGE_EXTENSIONS[index];
+    if (validFileExtension === fileExtension) {
+      return true;
+    }
+  }
+  return false;
+};
+
+export const checkIfValidPDFExtension = fileExtension => {
+  for (let index = 0; index < VALID_PDF_EXTENSIONS.length; index++) {
+    const validFileExtension = VALID_PDF_EXTENSIONS[index];
+    if (validFileExtension === fileExtension) {
+      return true;
+    }
+  }
+  return false;
+};
