@@ -100,6 +100,8 @@ function ResourceShow(props) {
     view.push(_renderMeasurements(measurements));
     return <div className={props.classes.ml10}>{view}</div>;
   };
+
+
   const _renderFile = () => {
     const { data, label } = resourceData;
     const { url } = data;
@@ -126,6 +128,7 @@ function ResourceShow(props) {
     }
     // view.push();
     return <div className={props.classes.ml10}>{view}</div>;
+
   };
   const renderSession = () => {
     const { data } = resourceData;
@@ -139,6 +142,7 @@ function ResourceShow(props) {
       data: { days },
       label = ""
     } = resourceData;
+
     const view = [];
     view.push(<h3>{label}</h3>);
     const daysView = days.map(day => {
@@ -159,8 +163,10 @@ function ResourceShow(props) {
           renderSession()
         ) : resourceData.type === "curriculum" ? (
           renderCurriculum()
-        ) : resourceData.type === "file" ? (
+
+        )  : resourceData.type === "file" ? (
           renderFile()
+
         ) : (
           <div></div>
         )}

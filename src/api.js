@@ -70,11 +70,16 @@ const resetPassword = (key, body) => {
 };
 
 const request_accept = (key, body) => {
+  console.log(toFormData(body));
   return axios.post(`/requests/${key}/request_accept/`, toFormData(body));
 };
 
 const request_reject = key => {
   return axios.post(`/requests/${key}/request_reject/`);
+};
+
+const check_username = (key, body) => {
+  return axios.post(`/requests/${key}/check_username/`, toFormData(body));
 };
 
 const put = (url, body) => {
@@ -284,6 +289,7 @@ const api = {
   resetPassword,
   request_accept,
   request_reject,
+  check_username,
   getForgotPasswordToken,
   isForgotPasswordTokenValid,
   forgotPassword,
