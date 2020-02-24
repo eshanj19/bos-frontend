@@ -15,11 +15,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import React, { Component } from "react";
+import React, { Component, useEffect } from "react";
 import { Responsive, withDataProvider } from "react-admin";
 import compose from "recompose/compose";
 import { connect } from "react-redux";
 import Welcome from "./Welcome";
+import { translate, changeLocale } from "react-admin";
+import withStyles from "@material-ui/core/styles/withStyles";
 
 const styles = {
   flex: { display: "flex" },
@@ -29,36 +31,45 @@ const styles = {
   singleCol: { marginTop: "2em", marginBottom: "2em" }
 };
 
-class Dashboard extends Component {
-  state = {};
-
-  componentDidMount() {}
-
-  componentDidUpdate(prevProps) {
-    // handle refresh
-    if (this.props.version !== prevProps.version) {
+const Dashboard = ({
+  classes,
+  theme,
+  locale,
+  changeTheme,
+  changeLocale,
+  translate
+}) => {
+  useEffect(() => {
+    const locale = localStorage.getItem("locale");
+    console.log("Dashboard");
+    console.log(locale);
+    if (locale) {
+      changeLocale(locale);
     }
-  }
-
-  render() {
-    const {} = this.state;
-    return (
-      <Responsive
-        medium={
-          <div>
-            <Welcome />
-          </div>
-        }
-      />
-    );
-  }
-}
+  }, []);
+  return (
+    <Responsive
+      medium={
+        <div>
+          <Welcome />
+        </div>
+      }
+    />
+  );
+};
 
 const mapStateToProps = state => ({
-  version: state.admin.ui.viewVersion
+  version: state.admin.ui.viewVersion,
+  locale: state.i18n.locale
 });
 
-export default compose(
-  connect(mapStateToProps),
-  withDataProvider
-)(Dashboard);
+const enhance = compose(
+  connect(mapStateToProps, {
+    changeLocale
+  }),
+  translate,
+  withDataProvider,
+  withStyles(styles)
+);
+
+export default enhance(Dashboard);

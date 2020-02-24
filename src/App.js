@@ -17,9 +17,7 @@
 
 import React, { Component } from "react";
 import { Admin, Resource, fetchUtils } from "react-admin";
-
 import "./App.css";
-
 import authProvider from "./authProvider";
 import themeReducer from "./themeReducer";
 import { Login, Layout } from "./layout";
@@ -27,8 +25,8 @@ import { Dashboard } from "./dashboard";
 import customRoutes from "./routes";
 import hindiMessages from "./locales/locale_hi_IN.json";
 import drfProvider from "./dataProvider";
-//import englishMessages from "./i18n/en";
 import englishMessages from "./locales/locale_en_IN.json";
+import kannadaMessages from "./locales/locale_ka_IN.json";
 
 import resources from "./resources";
 import coaches from "./coaches";
@@ -40,21 +38,22 @@ import athletes from "./athletes";
 import ngos from "./ngos";
 import { ResourceWithPermissions } from "ra-auth-acl";
 import measurementTypes from "./measurementTypes";
-import { API_URL, locale_hi } from "./constants";
+import { API_URL, localeHI_IN, localeKA_IN, localeEN_IN } from "./constants";
 import errorSagas from "./dataProvider/errorSaga";
-import api from "./api";
 import readings from "./readings";
 import requests from "./requests";
-import { locale_hi_IN } from "./constants";
 
 const i18nProvider = locale => {
-  if (locale === locale_hi) {
-    return import("./locales/locale_hi_IN.json").then(
-      messages => messages.default
-    );
+  if (locale === localeHI_IN) {
+    return hindiMessages;
+  }
+  if (locale === localeKA_IN) {
+    return kannadaMessages;
+  }
+  if (locale === localeEN_IN) {
+    return englishMessages;
   }
 
-  // Always fallback on english
   return englishMessages;
 };
 
@@ -81,7 +80,7 @@ class App extends Component {
         dashboard={Dashboard}
         loginPage={Login}
         appLayout={Layout}
-        locale="en"
+        locale={localeEN_IN}
         i18nProvider={i18nProvider}
       >
         {permissions => [

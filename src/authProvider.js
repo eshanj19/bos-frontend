@@ -35,25 +35,32 @@ export default async (type, params) => {
     if (data) {
       const {
         permissions,
-        group,
         ngo,
         username,
         key,
-        // language,
+        language,
         ngo_name,
-        is_reset_password,
         first_name
       } = data;
-      // console.log(data);
       localStorage.setItem("username", username);
+      localStorage.setItem("user_key", key);
       localStorage.setItem("ngo_key", ngo);
       localStorage.setItem("permissions", permissions);
+      localStorage.setItem("locale", language);
+      localStorage.setItem("ngo_name", ngo_name);
+      localStorage.setItem("first_name", first_name);
+
       return Promise.resolve();
     } else return Promise.reject();
   }
   if (type === AUTH_LOGOUT) {
     localStorage.removeItem("username");
+    localStorage.removeItem("user_key");
+    localStorage.removeItem("ngo_key");
     localStorage.removeItem("permissions");
+    localStorage.removeItem("language");
+    localStorage.removeItem("ngo_name");
+    localStorage.removeItem("first_name");
     return Promise.resolve();
   }
   if (type === AUTH_ERROR) {
@@ -62,7 +69,6 @@ export default async (type, params) => {
   if (type === AUTH_CHECK) {
     const { data } = await api.isAuthenticated();
     const { is_authenticated } = data;
-    console.log(`IS AUTH ${is_authenticated}`);
     if (!is_authenticated) {
       return Promise.reject();
     } else {
@@ -71,7 +77,6 @@ export default async (type, params) => {
   }
   if (type === AUTH_GET_PERMISSIONS) {
     let permissions = localStorage.getItem("permissions").split(",");
-    // console.log(permissions);
     const authPermissions = {};
     const init = {
       enabled: false,

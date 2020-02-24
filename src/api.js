@@ -269,6 +269,10 @@ const getAllUsersByNgo = ngoKey => {
   return axios.get(`/ngos/${ngoKey}/all_users/`);
 };
 
+const changeLanguage = (userKey, data) => {
+  return axios.post(`/users/${userKey}/change_language/`, data);
+};
+
 const api = {
   handleSuccess,
   handleError,
@@ -316,7 +320,8 @@ const api = {
   submitFile,
   saveOrgHierarchy,
   getPermissionGroups,
-  editFile
+  editFile,
+  changeLanguage
 };
 
 export default api;

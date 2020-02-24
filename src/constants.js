@@ -19,7 +19,8 @@ export const API_URL = process.env.REACT_APP_API_URL;
 
 export const AVAILABLE_LANGUAGES = [
   { label: "English", value: "en_IN" },
-  { label: "मराठी", value: "mr_IN" }
+  { label: "हिंदी", value: "hi_IN" },
+  { label: "ಕನ್ನಡ", value: "ka_IN" }
 ];
 
 export const ATHLETE = "athlete";
@@ -61,8 +62,9 @@ export const RESOURCE_TYPE_CURRICULUM = "curriculum";
 export const PERMISSION_REQUESTS_SHOW = "requests.show";
 export const PERMISSION_REQUESTS_LIST = "requests.list";
 
-export const locale_en = "en_IN";
-export const locale_hi = "hi_IN";
+export const localeEN_IN = "en_IN";
+export const localeHI_IN = "hi_IN";
+export const localeKA_IN = "ka_IN";
 
 export const GENDER_CHOICES = [
   { id: "male", name: "Male" },
@@ -70,7 +72,7 @@ export const GENDER_CHOICES = [
 ];
 
 export const VALID_PDF_EXTENSIONS = [".pdf"];
-
+export const VALID_VIDEO_EXTENSIONS = [".mp4"];
 export const VALID_IMAGE_EXTENSIONS = [".png", ".jpeg", ".jpg"];
 export const VALID_FILE_EXTENSIONS =
-  VALID_PDF_EXTENSIONS + VALID_IMAGE_EXTENSIONS;
+  VALID_PDF_EXTENSIONS + VALID_IMAGE_EXTENSIONS + VALID_VIDEO_EXTENSIONS;
