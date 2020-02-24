@@ -35,7 +35,10 @@ class RequestModal extends Component {
       }
     } = this.props;
 
-    const username = first_name.concat("__" + last_name);
+    const uname = first_name.concat("__" + last_name);
+    var username = uname.toLowerCase();
+    username = username.trim();
+    console.log(username);
     let unamedata = {
       username: username
     };

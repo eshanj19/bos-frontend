@@ -70,7 +70,7 @@ class Menu extends Component {
                   handleToggle={() => this.handleToggle("bosCatalog")}
                   isOpen={this.state.bosCatalog}
                   sidebarIsOpen={open}
-                  name="BOS Admin"
+                  name={translate("ra.bosadmin")}
                   icon={<measurements.icon />}
                 >
                   <MenuItemLink
@@ -97,13 +97,13 @@ class Menu extends Component {
                   handleToggle={() => this.handleToggle("userCatalog")}
                   isOpen={this.state.userCatalog}
                   sidebarIsOpen={open}
-                  name="Users"
+                  name={translate("ra.title.users")}
                   icon={<admins.icon />}
                 >
                   {hasAccess(permissions, "users.enabled") && (
                     <MenuItemLink
                       to={`/admins`}
-                      primaryText={"Admins"}
+                      primaryText={translate("ra.menu.admins")}
                       leftIcon={<admins.icon />}
                       onClick={onMenuClick}
                     />
@@ -111,7 +111,7 @@ class Menu extends Component {
                   {hasAccess(permissions, "users.enabled") && (
                     <MenuItemLink
                       to={`/coaches`}
-                      primaryText={"Coaches"}
+                      primaryText={translate("ra.menu.coaches")}
                       leftIcon={<coaches.icon />}
                       onClick={onMenuClick}
                     />
@@ -119,7 +119,7 @@ class Menu extends Component {
                   {hasAccess(permissions, "users.enabled") && (
                     <MenuItemLink
                       to={`/athletes`}
-                      primaryText={"Athletes"}
+                      primaryText={translate("ra.title.athlete")}
                       leftIcon={<athletes.icon />}
                       onClick={onMenuClick}
                     />
@@ -127,7 +127,7 @@ class Menu extends Component {
                   {hasAccess(permissions, "users.enabled") && (
                     <MenuItemLink
                       to={`/user_groups`}
-                      primaryText={"User Groups"}
+                      primaryText={translate("ra.menu.usergroup")}
                       leftIcon={<userGroups.icon />}
                       onClick={onMenuClick}
                     />
@@ -135,7 +135,7 @@ class Menu extends Component {
                   {hasAccess(permissions, "users.enabled") && (
                     <MenuItemLink
                       to={`/organisation`}
-                      primaryText={"Organisation"}
+                      primaryText={translate("ra.menu.organisation")}
                       leftIcon={<organisation.icon />}
                       onClick={onMenuClick}
                     />
@@ -143,7 +143,7 @@ class Menu extends Component {
                   {hasAccess(permissions, "users.enabled") && (
                     <MenuItemLink
                       to={`/requests`}
-                      primaryText={"Requests"}
+                      primaryText={translate("ra.menu.requests")}
                       leftIcon={<resources.icon />}
                       onClick={onMenuClick}
                     />
@@ -163,7 +163,7 @@ class Menu extends Component {
               return (
                 <MenuItemLink
                   to={`/resources`}
-                  primaryText={"Resources"}
+                  primaryText={translate("ra.title.resources")}
                   leftIcon={<resources.icon />}
                   onClick={onMenuClick}
                 />
