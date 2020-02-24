@@ -1,5 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { Card, CardContent, Grid } from "@material-ui/core";
+import {
+  Card,
+  CardContent,
+  Grid,
+  Tooltip,
+  CardActions
+} from "@material-ui/core";
 import { withRouter } from "react-router-dom";
 import api from "../api";
 import uniqueId from "lodash/uniqueId";
@@ -8,7 +14,10 @@ import withStyles from "@material-ui/core/styles/withStyles";
 import { withTranslate } from "react-admin";
 import { BooleanInput, List, Filter } from "react-admin";
 import { Button } from "@material-ui/core";
+import { Icon } from "@material-ui/core";
 import { withSnackbar } from "notistack";
+import { GridListTileBar } from "@material-ui/core";
+import { CardActionArea, CardMedia } from "@material-ui/core";
 import {
   checkIfValidImageExtension,
   getFileExtensionFromURL,
@@ -16,6 +25,7 @@ import {
 } from "../utils";
 import { Document, Page, pdfjs } from "react-pdf";
 import spacing from "@material-ui/core/styles/spacing";
+import { COACH } from "../constants";
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 
 const styles = {
@@ -29,6 +39,8 @@ function ResourceShow(props) {
   const [resourceData, setResourceData] = useState({});
   const [measurementMaster, setMeasurementMaster] = useState([]);
   const [fileMaster, setFileMaster] = useState([]);
+  const [numPages, setNumPages] = useState([]);
+  const [pageNumber, setPageNumber] = useState(1);
   useEffect(() => {
     const ngoKey = localStorage.getItem("ngo_key");
     const {
@@ -132,27 +144,43 @@ function ResourceShow(props) {
     const { id, translate } = props;
     console.log(id);
     return (
-      <Grid>
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={() => {
-            setAsCoachRegistration(id);
-          }}
-        >
-          {translate("ra.Set As Coach Registration")}
-        </Button>
-        <Button
-          variant="contained"
-          color="primary"
-          style={{ marginLeft: 2 }}
-          onClick={() => {
-            setAsAthleteRegistration(id);
-          }}
-        >
-          {translate("ra.Set As Coach Registration")}
-        </Button>
-      </Grid>
+      <CardActions
+        style={{
+          justifyContent: "flex-end",
+          direction: "row",
+          alignItems: "flex-start",
+          spacing: 2
+        }}
+      >
+        <CardMedia>
+          <Tooltip title={translate("ra.Set As Coach Registration")}>
+            <Icon>
+              <img
+                src={"coach.png"}
+                height={40}
+                width={40}
+                onClick={() => {
+                  setAsCoachRegistration(id);
+                }}
+              />
+            </Icon>
+          </Tooltip>
+        </CardMedia>
+        <CardMedia>
+          <Tooltip title={translate("ra.Set As Athlete Registration")}>
+            <Icon>
+              <img
+                src={"athletes.png"}
+                height={45}
+                width={40}
+                onClick={() => {
+                  setAsAthleteRegistration(id);
+                }}
+              />
+            </Icon>
+          </Tooltip>
+        </CardMedia>
+      </CardActions>
     );
   };
 

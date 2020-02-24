@@ -54,31 +54,6 @@ class RequestModal extends Component {
     this.setState({ flag: false });
   }
 
-  // createUsername = () => {
-  //   const {
-  //     controllerProps: {
-  //       record: { first_name, last_name, key, status, gender, middle_name }
-  //     }
-  //   } = this.props;
-
-  //   const uname = first_name.concat("__" + last_name);
-  //   let unamedata = {
-  //     uname: uname
-  //   };
-  //   api
-  //     .check_username(key, unamedata)
-  //     .then(Response => {
-  //       console(Response.data);
-  //     })
-  //     .catch(error => {
-  //       console.log(error);
-  //     });
-  //   this.setState({ username: uname });
-  //   this.setState({ key: key });
-
-  //   this.setState({ flag: false });
-  // };
-
   onSetPassword = event => {
     this.setState({ password: event.target.value });
   };
@@ -104,7 +79,6 @@ class RequestModal extends Component {
 
     return (
       <div>
-        {/* {this.state.flag == true ? this.createUsername() : null} */}
         <Dialog fullWidth open={props.showFlag}>
           <div
             style={{
