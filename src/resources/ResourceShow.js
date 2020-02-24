@@ -1,17 +1,31 @@
 import React, { useEffect, useState } from "react";
-import { Card, CardContent } from "@material-ui/core";
+import {
+  Card,
+  CardContent,
+  Grid,
+  Tooltip,
+  CardActions
+} from "@material-ui/core";
 import { withRouter } from "react-router-dom";
 import api from "../api";
 import uniqueId from "lodash/uniqueId";
 import find from "lodash/find";
 import withStyles from "@material-ui/core/styles/withStyles";
 import { withTranslate } from "react-admin";
+import { BooleanInput, List, Filter } from "react-admin";
+import { Button } from "@material-ui/core";
+import { Icon } from "@material-ui/core";
+import { withSnackbar } from "notistack";
+import { GridListTileBar } from "@material-ui/core";
+import { CardActionArea, CardMedia } from "@material-ui/core";
 import {
   checkIfValidImageExtension,
   getFileExtensionFromURL,
   checkIfValidPDFExtension
 } from "../utils";
 import { Document, Page, pdfjs } from "react-pdf";
+import spacing from "@material-ui/core/styles/spacing";
+import { COACH } from "../constants";
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 
 const styles = {
@@ -45,6 +59,31 @@ function ResourceShow(props) {
 
   const onDocumentLoadSuccess = ({ numPages }) => {
     setNumPages(numPages);
+  };
+
+  const setAsCoachRegistration = id => {
+    const ngoKey = localStorage.getItem("ngo_key");
+    // crudUpdateMany("ping", id, null, "/ping");
+    console.log(props);
+    api
+      .setAsCoachRegistrationSession(ngoKey, { resource: id })
+      .then(response => {
+        api.handleSuccess(response, props.enqueueSnackbar);
+      })
+      .catch(error => {
+        api.handleError(error, props.enqueueSnackbar);
+      });
+  };
+  const setAsAthleteRegistration = id => {
+    const ngoKey = localStorage.getItem("ngo_key");
+    api
+      .setAsAthleteRegistrationSession(ngoKey, { resource: id })
+      .then(response => {
+        api.handleSuccess(response, props.enqueueSnackbar);
+      })
+      .catch(error => {
+        api.handleError(error, props.enqueueSnackbar);
+      });
   };
 
   const _renderFiles = files => {
@@ -101,6 +140,64 @@ function ResourceShow(props) {
     return <div className={props.classes.ml10}>{view}</div>;
   };
 
+  const showButtons = () => {
+    const { id, translate } = props;
+    console.log(id);
+    return (
+      <CardActions
+        style={{
+          justifyContent: "flex-end",
+          direction: "row",
+          alignItems: "flex-start",
+          spacing: 2
+        }}
+      >
+        <CardMedia>
+          <Tooltip title={translate("ra.Set As Coach Registration")}>
+            <Icon>
+              <img
+                src={"coach.png"}
+                height={40}
+                width={40}
+                onClick={() => {
+                  setAsCoachRegistration(id);
+                }}
+              />
+            </Icon>
+          </Tooltip>
+        </CardMedia>
+        <CardMedia>
+          <Tooltip title={translate("ra.Set As Athlete Registration")}>
+            <Icon>
+              <img
+                src={"athletes.png"}
+                height={45}
+                width={40}
+                onClick={() => {
+                  setAsAthleteRegistration(id);
+                }}
+              />
+            </Icon>
+          </Tooltip>
+        </CardMedia>
+      </CardActions>
+    );
+  };
+
+  const _renderRegistration = data => {
+    const { files, measurements } = data;
+    const view = [];
+    view.push(<h4 key={uniqueId()}>{data.label}</h4>);
+    view.push(_renderFiles(files));
+    view.push(_renderMeasurements(measurements));
+
+    return (
+      <div className={props.classes.ml10}>
+        <Grid style={{ marginLeft: 260 }}>{showButtons()}</Grid>
+        {view}
+      </div>
+    );
+  };
 
   const _renderFile = () => {
     const { data, label } = resourceData;
@@ -128,12 +225,17 @@ function ResourceShow(props) {
     }
     // view.push();
     return <div className={props.classes.ml10}>{view}</div>;
-
   };
   const renderSession = () => {
     const { data } = resourceData;
     return _renderSession(data);
   };
+
+  const renderRegistration = () => {
+    const { data } = resourceData;
+    return _renderRegistration(data);
+  };
+
   const renderFile = () => {
     return _renderFile();
   };
@@ -163,10 +265,10 @@ function ResourceShow(props) {
           renderSession()
         ) : resourceData.type === "curriculum" ? (
           renderCurriculum()
-
-        )  : resourceData.type === "file" ? (
+        ) : resourceData.type === "file" ? (
           renderFile()
-
+        ) : resourceData.type === "registration" ? (
+          renderRegistration()
         ) : (
           <div></div>
         )}
@@ -175,4 +277,6 @@ function ResourceShow(props) {
   );
 }
 
-export default withTranslate(withRouter(withStyles(styles)(ResourceShow)));
+export default withSnackbar(
+  withTranslate(withRouter(withStyles(styles)(ResourceShow)))
+);

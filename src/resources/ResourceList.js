@@ -97,7 +97,6 @@ const BulkActionButtons = props => {
             setAsCoachRegistration(selectedIds[0]);
           }}
         >
-          {/* Set As Coach Registration */}
           {translate("ra.Set As Coach Registration")}
         </Button>
         <Button
@@ -105,7 +104,6 @@ const BulkActionButtons = props => {
             setAsAthleteRegistration(selectedIds[0]);
           }}
         >
-          {/* Set As Athlete Registration */}
           {translate("ra.Set As Athlete Registration")}
         </Button>
 
