@@ -45,7 +45,6 @@ const AthleteFilter = translate(({ translate, ...props }) => (
     <BooleanInput
       label={translate("ra.action.active")}
       source="is_active"
-      label="Active"
       alwaysOn
     />
   </Filter>

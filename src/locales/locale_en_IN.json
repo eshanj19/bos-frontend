@@ -1,6 +1,7 @@
 {
   "ra": {
     "action": {
+      "Dashboard": "Dashboard",
       "save": "Save",
       "create": "Create",
       "edit": "Edit",
@@ -62,7 +63,7 @@
       "uom": "uom",
       "inputtype": "input type",
       "measurements": "Measurements",
-      "athlete": "Athelet",
+      "athlete": "Athlete",
       "value": "Value",
       "name_of_ngo": "Name of NGO",
       "first_name_ngo_admin": "First Name of NGO Admin",
@@ -102,11 +103,12 @@
       "admins": "Admins",
       "requests": "Requests",
       "coaches": "Coaches",
-      "organisation": "Organisation"
+      "organisation": "Organisation",
+      "usergroup": "User groups"
     },
     "theme": { "light": "light", "dark": "Dark" },
     "Create Measurement type": "Create Measurement type",
-    "applicant's details": "Applicant's Details",
+    "applicant's details": "Apllicant's Details",
     "language": { "en": "En", "hi": "Hi" },
     "configuration": "Configuration",
     "logout": "Logout",
@@ -121,7 +123,7 @@
     "Edit training session": "Edit Training Session",
     "Edit file resources": "Edit FileResources",
     "Edit registration form": "Edit Registration Form",
-    "Set As Athlete Registration": "Set As Athlete Registration",
+    " Set As Athlete Registration": "Set As Athlete Registration",
     "Set As Coach Registration": "Set As Coach Registration",
     "Members with no athlete/coach relationship": "Members with no athlete/coach relationship",
     "Welcome to Bridges of Sports platform": "Welcome to Bridges of Sports platform",
@@ -149,6 +151,8 @@
     "edit measurement type": "Edit Measurement Type",
     "Enter Session Title": "Enter Session Title",
     "measurement information": "Measurement Information",
-    "Edit Reading": "Edit Reading"
+    "Edit Reading": "Edit Reading",
+
+    "bosadmin": "Bos Admin"
   }
 }

@@ -80,7 +80,7 @@ class App extends Component {
         dashboard={Dashboard}
         loginPage={Login}
         appLayout={Layout}
-        locale={localeEN_IN}
+        locale={localeHI_IN}
         i18nProvider={i18nProvider}
       >
         {permissions => [
