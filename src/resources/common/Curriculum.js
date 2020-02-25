@@ -20,6 +20,7 @@ import DeleteIcon from "@material-ui/icons/Clear";
 import FlareIcon from "@material-ui/icons/Flare";
 import { withSnackbar } from "notistack";
 import { withTranslate } from "react-admin";
+import { LOCAL_STORAGE_NGO_KEY } from "../../constants";
 
 export const styles = {
   first_name: { display: "inline-block" },
@@ -96,7 +97,7 @@ class Curriculum extends Component {
     const { initialData } = this.props;
     const isEdit = initialData ? true : false;
     this.setState({ isEdit: isEdit });
-    const ngoKey = localStorage.getItem("ngo_key");
+    const ngoKey = localStorage.getItem(LOCAL_STORAGE_NGO_KEY);
     api.getFileDropdownOptionsForNgo(ngoKey).then(({ data }) => {
       const sanitizedOptions = data.map(option => {
         return {

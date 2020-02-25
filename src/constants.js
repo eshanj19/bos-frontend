@@ -76,3 +76,11 @@ export const VALID_VIDEO_EXTENSIONS = [".mp4"];
 export const VALID_IMAGE_EXTENSIONS = [".png", ".jpeg", ".jpg"];
 export const VALID_FILE_EXTENSIONS =
   VALID_PDF_EXTENSIONS + VALID_IMAGE_EXTENSIONS + VALID_VIDEO_EXTENSIONS;
+
+export const LOCAL_STORAGE_LOCALE = "locale";
+export const LOCAL_STORAGE_USERNAME = "username";
+export const LOCAL_STORAGE_USER_KEY = "user_key";
+export const LOCAL_STORAGE_NGO_KEY = "ngo_key";
+export const LOCAL_STORAGE_PERMISSIONS = "permissions";
+export const LOCAL_STORAGE_NGO_NAME = "ngo_name";
+export const LOCAL_STORAGE_FIRST_NAME = "first_name";

@@ -24,7 +24,13 @@ import { translate, changeLocale, Title } from "react-admin";
 import withStyles from "@material-ui/core/styles/withStyles";
 import compose from "recompose/compose";
 import { changeTheme } from "./actions";
-import { localeEN_IN, localeHI_IN, localeKA_IN } from "../constants";
+import {
+  localeEN_IN,
+  localeHI_IN,
+  localeKA_IN,
+  LOCAL_STORAGE_LOCALE,
+  LOCAL_STORAGE_USER_KEY
+} from "../constants";
 import api from "../api";
 import { withSnackbar } from "notistack";
 
@@ -44,13 +50,13 @@ const Configuration = ({
 }) => {
   const onClickChangeLocale = locale => {
     const data = { language: locale };
-    const userKey = localStorage.getItem("user_key");
+    const userKey = localStorage.getItem(LOCAL_STORAGE_USER_KEY);
     api
       .changeLanguage(userKey, data)
       .then(response => {
         api.handleSuccess(response, enqueueSnackbar);
         changeLocale(locale);
-        localStorage.setItem("language", locale);
+        localStorage.setItem(LOCAL_STORAGE_LOCALE, locale);
       })
       .catch(response => {
         api.handleError(response, enqueueSnackbar);

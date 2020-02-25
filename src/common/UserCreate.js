@@ -31,7 +31,7 @@ import {
   Toolbar
 } from "@material-ui/core";
 import BaselineList from "./BaselineList";
-import { ATHLETE, COACH, ADMIN } from "../constants";
+import { ATHLETE, COACH, ADMIN, LOCAL_STORAGE_NGO_KEY } from "../constants";
 import PermissionGroupList from "./PermissionGroupList";
 import find from 'lodash/find';
 import instance from "../axios";
@@ -89,7 +89,7 @@ class UserCreate extends Component {
   componentDidMount() {
     const { role } = this.state;
     var apiCalls = [];
-    const ngoKey = localStorage.getItem("ngo_key");
+    const ngoKey = localStorage.getItem(LOCAL_STORAGE_NGO_KEY);
 
     if (role === ATHLETE) {
       apiCalls.push(api.getAthleteRegistrationResource(ngoKey));

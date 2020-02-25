@@ -45,7 +45,10 @@ import api from "../api";
 import { withDataProvider } from "ra-core";
 import ResourceTypeField from "./common/ResourceTypeField";
 import { withSnackbar } from "notistack";
-import { RESOURCE_TYPE_REGISTRATION_FORM } from "../constants";
+import {
+  RESOURCE_TYPE_REGISTRATION_FORM,
+  LOCAL_STORAGE_NGO_KEY
+} from "../constants";
 import { translate } from "react-admin";
 
 const styles = {
@@ -54,7 +57,7 @@ const styles = {
 
 const BulkActionButtons = props => {
   const setAsCoachRegistration = id => {
-    const ngoKey = localStorage.getItem("ngo_key");
+    const ngoKey = localStorage.getItem(LOCAL_STORAGE_NGO_KEY);
     // crudUpdateMany("ping", id, null, "/ping");
     console.log(props);
     api
@@ -68,7 +71,7 @@ const BulkActionButtons = props => {
       });
   };
   const setAsAthleteRegistration = id => {
-    const ngoKey = localStorage.getItem("ngo_key");
+    const ngoKey = localStorage.getItem(LOCAL_STORAGE_NGO_KEY);
     api
       .setAsAthleteRegistrationSession(ngoKey, { resource: id })
       .then(response => {
@@ -292,7 +295,7 @@ const BosDatagrid = props => (
 const ResourcesList = translate(({ classes, translate, ...props }) => (
   <List
     {...props}
-    sort={{ field: "label", order: "ASC" }}
+    sort={{ field: "last_modification_time", order: "DESC" }}
     perPage={25}
     filters={<ResourceFilter />}
     filterDefaultValues={{ is_active: true }}

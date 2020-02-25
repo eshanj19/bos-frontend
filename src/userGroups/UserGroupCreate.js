@@ -27,6 +27,7 @@ import {
 } from "react-admin";
 import api from "../api";
 import { translate } from "react-admin";
+import { LOCAL_STORAGE_NGO_KEY } from "../constants";
 
 export const styles = {
   label: { display: "block" },
@@ -64,7 +65,7 @@ const UserGroupCreate = translate(({ classes, translate, ...props }) => {
   const [userChoices, setUserChoices] = useState([]);
   useEffect(() => {
     //fetch possible resource choices.
-    const ngoKey = localStorage.getItem("ngo_key");
+    const ngoKey = localStorage.getItem(LOCAL_STORAGE_NGO_KEY);
     api.getResourcesByNgo(ngoKey).then(({ data }) => {
       console.log(data);
       const choices = data.map(d => ({ id: d.key, name: d.label }));

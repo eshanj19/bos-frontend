@@ -29,7 +29,7 @@ import withStyles from "@material-ui/core/styles/withStyles";
 import { Button, CardActions } from "@material-ui/core";
 import api from "../api";
 import ResetPasswordDialog from "../common/ResetPasswordDialog";
-import { GENDER_CHOICES } from "../constants";
+import { GENDER_CHOICES, LOCAL_STORAGE_NGO_KEY } from "../constants";
 import { translate } from "react-admin";
 
 const styles = {
@@ -61,7 +61,7 @@ const CoachEdit = translate(({ classes, translate, ...props }) => {
 
   useEffect(() => {
     //fetch possible resource choices.
-    const ngoKey = localStorage.getItem("ngo_key");
+    const ngoKey = localStorage.getItem(LOCAL_STORAGE_NGO_KEY);
     api.getResourcesByNgo(ngoKey).then(({ data }) => {
       console.log(data);
       const choices = data.map(d => ({ id: d.key, name: d.label }));
@@ -76,7 +76,7 @@ const CoachEdit = translate(({ classes, translate, ...props }) => {
 
   useEffect(() => {
     //fetch possible resource choices.
-    const ngoKey = localStorage.getItem("ngo_key");
+    const ngoKey = localStorage.getItem(LOCAL_STORAGE_NGO_KEY);
     api.getPermissionGroups(ngoKey).then(({ data }) => {
       const choices = data.map(d => ({
         id: d.id,

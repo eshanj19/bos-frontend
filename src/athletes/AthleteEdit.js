@@ -35,7 +35,7 @@ import {
   Input
 } from "@material-ui/core";
 import api from "../api";
-import { GENDER_CHOICES } from "../constants";
+import { GENDER_CHOICES, LOCAL_STORAGE_NGO_KEY } from "../constants";
 import { translate } from "react-admin";
 
 const styles = {
@@ -60,7 +60,7 @@ const AthleteEdit = translate(({ classes, translate, ...props }) => {
   const [resourceChoices, setResourceChoices] = useState([]);
   useEffect(() => {
     //fetch possible resource choices.
-    const ngoKey = localStorage.getItem("ngo_key");
+    const ngoKey = localStorage.getItem(LOCAL_STORAGE_NGO_KEY);
     api.getResourcesByNgo(ngoKey).then(({ data }) => {
       console.log(data);
       const choices = data.map(d => ({ id: d.key, name: d.label }));

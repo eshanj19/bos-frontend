@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import Session from "../common/Session";
 import api from "../../api";
 import uniqueId from "lodash/uniqueId";
+import { LOCAL_STORAGE_NGO_KEY } from "../../constants";
 
 export default function EditSession(props) {
   const [initialData, setInitialData] = useState(null);
@@ -11,7 +12,7 @@ export default function EditSession(props) {
      * make do server curriculum data to represent
      * internal data state
      */
-    const ngoKey = localStorage.getItem("ngo_key");
+    const ngoKey = localStorage.getItem(LOCAL_STORAGE_NGO_KEY);
     // axios.all([api.getFileDropdownOptionsForNgo(ngoKey),api.getMeasurementDropdownOptionsForNgo(ngoKey)])
     //   .then(axios.spread((fileMaster,measurementMaster) => {
 

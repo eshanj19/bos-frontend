@@ -22,6 +22,7 @@ import { connect } from "react-redux";
 import Welcome from "./Welcome";
 import { translate, changeLocale } from "react-admin";
 import withStyles from "@material-ui/core/styles/withStyles";
+import { LOCAL_STORAGE_LOCALE } from "../constants";
 
 const styles = {
   flex: { display: "flex" },
@@ -40,7 +41,7 @@ const Dashboard = ({
   translate
 }) => {
   useEffect(() => {
-    const locale = localStorage.getItem("locale");
+    const locale = localStorage.getItem(LOCAL_STORAGE_LOCALE);
     console.log("Dashboard");
     console.log(locale);
     if (locale) {

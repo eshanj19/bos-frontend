@@ -44,6 +44,7 @@ import RequestModal from "./RequestModal";
 import DataField from "../common/DataField";
 import { withSnackbar } from "notistack";
 import { withTranslate } from "react-admin";
+import { LOCAL_STORAGE_NGO_KEY } from "../constants";
 
 class RequestShow extends Component {
   constructor(props) {
@@ -98,7 +99,7 @@ class RequestShow extends Component {
   };
 
   componentDidMount() {
-    var localkey = localStorage.getItem("ngo_key");
+    var localkey = localStorage.getItem(LOCAL_STORAGE_NGO_KEY);
 
     api
       .getMeasurementDropdownOptionsForNgo(localkey)

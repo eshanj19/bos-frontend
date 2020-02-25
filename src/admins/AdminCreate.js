@@ -25,7 +25,7 @@ import {
 } from "react-admin";
 import withStyles from "@material-ui/core/styles/withStyles";
 import api from "../api";
-import { GENDER_CHOICES } from "../constants";
+import { GENDER_CHOICES, LOCAL_STORAGE_NGO_KEY } from "../constants";
 import { translate } from "react-admin";
 
 export const styles = {
@@ -61,7 +61,7 @@ const AdminCreate = translate(({ classes, translate, ...props }) => {
   const [permissionGroupChoices, setPermissionGroupChoices] = useState([]);
   useEffect(() => {
     //fetch possible resource choices.
-    const ngoKey = localStorage.getItem("ngo_key");
+    const ngoKey = localStorage.getItem(LOCAL_STORAGE_NGO_KEY);
     api.getPermissionGroups(ngoKey).then(({ data }) => {
       const choices = data.map(d => ({
         id: d.id,

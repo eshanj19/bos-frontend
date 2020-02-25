@@ -18,6 +18,7 @@ import api from "../api";
 import { withSnackbar } from "notistack";
 import UserSelectionMenu from "./UserSelectionMenu";
 import { withTranslate } from "react-admin";
+import { LOCAL_STORAGE_NGO_KEY } from "../constants";
 
 /**
  * example user hierarchy stored in state --
@@ -50,7 +51,7 @@ class OrganisationShow extends Component {
   }
 
   componentDidMount() {
-    const ngoKey = localStorage.getItem("ngo_key");
+    const ngoKey = localStorage.getItem(LOCAL_STORAGE_NGO_KEY);
     api
       .getUserHierarchy(ngoKey)
       .then(response => {
@@ -227,7 +228,7 @@ class OrganisationShow extends Component {
   handleSave = () => {
     const { orgHierarchy, zeroEdgeNodes } = this.state;
     const payload = [orgHierarchy].concat(zeroEdgeNodes);
-    const ngoKey = localStorage.getItem("ngo_key");
+    const ngoKey = localStorage.getItem(LOCAL_STORAGE_NGO_KEY);
     console.log(payload);
     // return;
     api

@@ -24,6 +24,15 @@ import {
 } from "react-admin";
 import api from "./api";
 import { checkPermission } from "./utils";
+import {
+  LOCAL_STORAGE_LOCALE,
+  LOCAL_STORAGE_USERNAME,
+  LOCAL_STORAGE_USER_KEY,
+  LOCAL_STORAGE_NGO_KEY,
+  LOCAL_STORAGE_PERMISSIONS,
+  LOCAL_STORAGE_NGO_NAME,
+  LOCAL_STORAGE_FIRST_NAME
+} from "./constants";
 
 export default async (type, params) => {
   if (type === AUTH_LOGIN) {
@@ -42,25 +51,25 @@ export default async (type, params) => {
         ngo_name,
         first_name
       } = data;
-      localStorage.setItem("username", username);
-      localStorage.setItem("user_key", key);
-      localStorage.setItem("ngo_key", ngo);
-      localStorage.setItem("permissions", permissions);
-      localStorage.setItem("locale", language);
-      localStorage.setItem("ngo_name", ngo_name);
-      localStorage.setItem("first_name", first_name);
+      localStorage.setItem(LOCAL_STORAGE_USERNAME, username);
+      localStorage.setItem(LOCAL_STORAGE_USER_KEY, key);
+      localStorage.setItem(LOCAL_STORAGE_NGO_KEY, ngo);
+      localStorage.setItem(LOCAL_STORAGE_PERMISSIONS, permissions);
+      localStorage.setItem(LOCAL_STORAGE_LOCALE, language);
+      localStorage.setItem(LOCAL_STORAGE_NGO_NAME, ngo_name);
+      localStorage.setItem(LOCAL_STORAGE_FIRST_NAME, first_name);
 
       return Promise.resolve();
     } else return Promise.reject();
   }
   if (type === AUTH_LOGOUT) {
-    localStorage.removeItem("username");
-    localStorage.removeItem("user_key");
-    localStorage.removeItem("ngo_key");
-    localStorage.removeItem("permissions");
-    localStorage.removeItem("language");
-    localStorage.removeItem("ngo_name");
-    localStorage.removeItem("first_name");
+    localStorage.removeItem(LOCAL_STORAGE_USERNAME);
+    localStorage.removeItem(LOCAL_STORAGE_USER_KEY);
+    localStorage.removeItem(LOCAL_STORAGE_NGO_KEY);
+    localStorage.removeItem(LOCAL_STORAGE_PERMISSIONS);
+    localStorage.removeItem(LOCAL_STORAGE_LOCALE);
+    localStorage.removeItem(LOCAL_STORAGE_NGO_NAME);
+    localStorage.removeItem(LOCAL_STORAGE_FIRST_NAME);
     return Promise.resolve();
   }
   if (type === AUTH_ERROR) {
@@ -76,7 +85,9 @@ export default async (type, params) => {
     }
   }
   if (type === AUTH_GET_PERMISSIONS) {
-    let permissions = localStorage.getItem("permissions").split(",");
+    let permissions = localStorage
+      .getItem(LOCAL_STORAGE_PERMISSIONS)
+      .split(",");
     const authPermissions = {};
     const init = {
       enabled: false,

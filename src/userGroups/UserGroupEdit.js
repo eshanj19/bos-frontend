@@ -30,6 +30,7 @@ import {
   AutocompleteArrayInput
 } from "react-admin";
 import api from "../api";
+import { LOCAL_STORAGE_NGO_KEY } from "../constants";
 
 const UserGroupEdit = translate(
   ({ classes, permissions, translate, ...props }) => {
@@ -37,7 +38,7 @@ const UserGroupEdit = translate(
     const [userChoices, setUserChoices] = useState([]);
     useEffect(() => {
       //fetch possible resource choices.
-      const ngoKey = localStorage.getItem("ngo_key");
+      const ngoKey = localStorage.getItem(LOCAL_STORAGE_NGO_KEY);
       api.getResourcesByNgo(ngoKey).then(({ data }) => {
         console.log(data);
         const choices = data.map(d => ({ id: d.key, name: d.label }));

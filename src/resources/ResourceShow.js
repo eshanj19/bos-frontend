@@ -12,20 +12,18 @@ import uniqueId from "lodash/uniqueId";
 import find from "lodash/find";
 import withStyles from "@material-ui/core/styles/withStyles";
 import { withTranslate } from "react-admin";
-import { BooleanInput, List, Filter } from "react-admin";
-import { Button } from "@material-ui/core";
 import { Icon } from "@material-ui/core";
 import { withSnackbar } from "notistack";
-import { GridListTileBar } from "@material-ui/core";
-import { CardActionArea, CardMedia } from "@material-ui/core";
+import FilePlayer from "react-player/lib/players/FilePlayer";
+import { CardMedia } from "@material-ui/core";
 import {
   checkIfValidImageExtension,
   getFileExtensionFromURL,
-  checkIfValidPDFExtension
+  checkIfValidPDFExtension,
+  checkIfValidVideoExtension
 } from "../utils";
 import { Document, Page, pdfjs } from "react-pdf";
-import spacing from "@material-ui/core/styles/spacing";
-import { COACH } from "../constants";
+import { LOCAL_STORAGE_NGO_KEY } from "../constants";
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 
 const styles = {
@@ -42,7 +40,7 @@ function ResourceShow(props) {
   const [numPages, setNumPages] = useState([]);
   const [pageNumber, setPageNumber] = useState(1);
   useEffect(() => {
-    const ngoKey = localStorage.getItem("ngo_key");
+    const ngoKey = localStorage.getItem(LOCAL_STORAGE_NGO_KEY);
     const {
       params: { id }
     } = props.match;
@@ -62,7 +60,7 @@ function ResourceShow(props) {
   };
 
   const setAsCoachRegistration = id => {
-    const ngoKey = localStorage.getItem("ngo_key");
+    const ngoKey = localStorage.getItem(LOCAL_STORAGE_NGO_KEY);
     // crudUpdateMany("ping", id, null, "/ping");
     console.log(props);
     api
@@ -75,7 +73,7 @@ function ResourceShow(props) {
       });
   };
   const setAsAthleteRegistration = id => {
-    const ngoKey = localStorage.getItem("ngo_key");
+    const ngoKey = localStorage.getItem(LOCAL_STORAGE_NGO_KEY);
     api
       .setAsAthleteRegistrationSession(ngoKey, { resource: id })
       .then(response => {
@@ -157,6 +155,7 @@ function ResourceShow(props) {
             <Icon>
               <img
                 src={"coach.png"}
+                alt=""
                 height={40}
                 width={40}
                 onClick={() => {
@@ -171,6 +170,7 @@ function ResourceShow(props) {
             <Icon>
               <img
                 src={"athletes.png"}
+                alt=""
                 height={45}
                 width={40}
                 onClick={() => {
@@ -206,7 +206,7 @@ function ResourceShow(props) {
     view.push(<h4 key={uniqueId()}>{label}</h4>);
     const fileExtension = getFileExtensionFromURL(url);
     if (checkIfValidImageExtension(fileExtension)) {
-      view.push(<img src={url}></img>);
+      view.push(<img src={url} alt=""></img>);
     } else if (checkIfValidPDFExtension(fileExtension)) {
       view.push(
         <div>
@@ -220,6 +220,20 @@ function ResourceShow(props) {
           <p>
             Page {pageNumber} of {numPages}
           </p>
+        </div>
+      );
+    } else if (checkIfValidVideoExtension(fileExtension)) {
+      view.push(
+        <div className="player-wrapper">
+          <FilePlayer
+            className="react-player"
+            width="100%"
+            height="100%"
+            url={url}
+            controls={true}
+            light={true}
+            playing={false}
+          />
         </div>
       );
     }

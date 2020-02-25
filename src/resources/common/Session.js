@@ -18,6 +18,7 @@ import api from "../../api";
 import DeleteIcon from "@material-ui/icons/Clear";
 import { withSnackbar } from "notistack";
 import { withTranslate } from "react-admin";
+import { LOCAL_STORAGE_NGO_KEY } from "../../constants";
 
 export const styles = {
   first_name: { display: "inline-block" },
@@ -66,7 +67,7 @@ class Session extends Component {
 
   componentDidMount() {
     console.log(this.props);
-    const ngoKey = localStorage.getItem("ngo_key");
+    const ngoKey = localStorage.getItem(LOCAL_STORAGE_NGO_KEY);
     const { initialData, isRegistrationForm } = this.props;
     api.getFileDropdownOptionsForNgo(ngoKey).then(({ data }) => {
       const sanitizedOptions = data.map(option => {

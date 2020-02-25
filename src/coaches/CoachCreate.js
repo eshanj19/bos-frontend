@@ -25,7 +25,7 @@ import {
   SimpleForm,
   SelectInput
 } from "react-admin";
-import { GENDER_CHOICES } from "../constants";
+import { GENDER_CHOICES, LOCAL_STORAGE_NGO_KEY } from "../constants";
 import { translate } from "react-admin";
 
 export const styles = {
@@ -79,7 +79,7 @@ const CoachCreate = translate(({ classes, translate, ...props }) => {
   const [permissionGroupChoices, setPermissionGroupChoices] = useState([]);
   useEffect(() => {
     //fetch possible resource choices.
-    const ngoKey = localStorage.getItem("ngo_key");
+    const ngoKey = localStorage.getItem(LOCAL_STORAGE_NGO_KEY);
     api.getPermissionGroups(ngoKey).then(({ data }) => {
       console.log(data);
       const choices = data.map(d => ({
