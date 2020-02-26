@@ -27,13 +27,11 @@ import {
   Grid,
   Card,
   CardContent,
-  CardActions,
   Toolbar
 } from "@material-ui/core";
 import BaselineList from "./BaselineList";
 import { ATHLETE, COACH, ADMIN, LOCAL_STORAGE_NGO_KEY } from "../constants";
-import PermissionGroupList from "./PermissionGroupList";
-import find from 'lodash/find';
+import find from "lodash/find";
 import instance from "../axios";
 export const styles = {
   grid_element: { marginLeft: 32, marginTop: 10, marginBottom: 10 },
@@ -176,7 +174,7 @@ class UserCreate extends Component {
     //     break;
     //   }
     // }
-    const measurement = find(baselineMeasurements,{key});
+    const measurement = find(baselineMeasurements, { key });
     measurement.value = value;
     this.setState({ baselineMeasurements: baselineMeasurements });
   };

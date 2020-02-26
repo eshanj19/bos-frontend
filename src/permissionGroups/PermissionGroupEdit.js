@@ -26,6 +26,7 @@ import instance from "../axios";
 import { getGroupName } from "../utils";
 import { withTranslate } from "react-admin";
 import { List } from "react-admin";
+import { withSnackbar } from "notistack";
 
 class PermissionGroupEdit extends Component {
   constructor(props) {
@@ -50,6 +51,7 @@ class PermissionGroupEdit extends Component {
 
   handleSaveButton = () => {
     var { match, currentGroupPermissions } = this.state;
+    const { enqueueSnackbar } = this.props;
     var checkedGroupPermissions = [];
     currentGroupPermissions.forEach(permission => {
       if (permission.checked) {
@@ -58,13 +60,11 @@ class PermissionGroupEdit extends Component {
     });
     api
       .put(match.url, checkedGroupPermissions)
-      .then(({ response }) => {
-        console.log(response);
+      .then(response => {
+        api.handleSuccess(response, enqueueSnackbar);
       })
-      .catch(({ response }) => {
-        console.log(response);
-
-        api.handleError(response);
+      .catch(response => {
+        api.handleError(response, enqueueSnackbar);
       });
   };
 
@@ -108,8 +108,6 @@ class PermissionGroupEdit extends Component {
         })
       )
       .catch(({ response }) => {
-        console.log(response);
-
         api.handleError(response);
       });
   }
@@ -153,4 +151,6 @@ class PermissionGroupEdit extends Component {
   }
 }
 
-export default withTranslate(withStyles(styles)(PermissionGroupEdit));
+export default withSnackbar(
+  withTranslate(withStyles(styles)(PermissionGroupEdit))
+);

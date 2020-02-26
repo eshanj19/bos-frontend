@@ -27,6 +27,10 @@ import withStyles from "@material-ui/core/styles/withStyles";
 import { hasAccess } from "ra-auth-acl";
 import PermissionGroupNameField from "./PermissionGroupNameField";
 import { translate } from "react-admin";
+import {
+  PERMISSION_PERMISSION_GROUP_SHOW,
+  PERMISSION_PERMISSION_GROUP_EDIT
+} from "../constants";
 
 const styles = {
   nb_commands: { color: "purple" }
@@ -48,8 +52,12 @@ const PermissionGroupList = translate(
               label={translate("ra.title.name")}
               source="name"
             />
-            {hasAccess(permissions, "permission_groups.show") && <ShowButton />}
-            {hasAccess(permissions, "permission_groups.edit") && <EditButton />}
+            {hasAccess(permissions, PERMISSION_PERMISSION_GROUP_SHOW) && (
+              <ShowButton />
+            )}
+            {hasAccess(permissions, PERMISSION_PERMISSION_GROUP_EDIT) && (
+              <EditButton />
+            )}
           </Datagrid>
         }
       />

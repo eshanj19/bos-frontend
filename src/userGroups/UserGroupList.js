@@ -22,17 +22,16 @@ import {
   List,
   TextField,
   Responsive,
-  ShowButton,
   DateField,
   BooleanField,
   Filter,
   SearchInput,
-  SelectInput,
   BooleanInput
 } from "react-admin";
 import withStyles from "@material-ui/core/styles/withStyles";
 import { hasAccess } from "ra-auth-acl";
 import { translate } from "react-admin";
+import { PERMISSION_USER_GROUP_EDIT } from "../constants";
 
 const styles = {
   nb_commands: { color: "purple" }
@@ -78,8 +77,10 @@ const UserGroupList = translate(
               source="last_modification_time"
               showTime
             />
-            {/* {hasAccess(permissions, "users.show") || true && <ShowButton />} */}
-            {hasAccess(permissions, "users.edit") || (true && <EditButton />)}
+            {/* {hasAccess(permissions, PERMISSION_USER_GROUP_SHOW) && ( <ShowButton />} )*/}
+            {hasAccess(permissions, PERMISSION_USER_GROUP_EDIT) && (
+              <EditButton />
+            )}
           </Datagrid>
         }
       />

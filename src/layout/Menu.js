@@ -32,7 +32,6 @@ import {
 import SubMenu from "./SubMenu";
 import admins from "../admins";
 import coaches from "../coaches";
-import requests from "../requests";
 import athletes from "../athletes";
 import userGroups from "../userGroups";
 import organisation from "../organisation";
@@ -43,6 +42,20 @@ import ngos from "../ngos";
 import readings from "../readings";
 import permissionGroups from "../permissionGroups";
 import { hasAccess } from "ra-auth-acl";
+import {
+  PERMISSION_ADMIN_ENABLED,
+  PERMISSION_USER_ENABLED,
+  PERMISSION_ATHLETE_ENABLED,
+  PERMISSION_COACH_ENABLED,
+  PERMISSION_USER_GROUP_ENABLED,
+  PERMISSION_USER_HIERARCHY_ENABLED,
+  PERMISSION_RESOURCE_ENABLED,
+  PERMISSION_MEASUREMENT_ENABLED,
+  PERMISSION_READING_ENABLED,
+  PERMISSION_PERMISSION_GROUP_ENABLED,
+  PERMISSION_MEASUREMENT_TYPE_ENABLED,
+  PERMISSION_NGO_ENABLED
+} from "../constants";
 
 class Menu extends Component {
   state = {};
@@ -64,7 +77,7 @@ class Menu extends Component {
 
         <WithPermissions
           render={({ permissions }) => {
-            if (hasAccess(permissions, "ngos.enabled")) {
+            if (hasAccess(permissions, PERMISSION_NGO_ENABLED)) {
               return (
                 <SubMenu
                   handleToggle={() => this.handleToggle("bosCatalog")}
@@ -91,7 +104,7 @@ class Menu extends Component {
 
         <WithPermissions
           render={({ permissions }) => {
-            if (hasAccess(permissions, "users.enabled")) {
+            if (hasAccess(permissions, PERMISSION_USER_ENABLED)) {
               return (
                 <SubMenu
                   handleToggle={() => this.handleToggle("userCatalog")}
@@ -100,7 +113,7 @@ class Menu extends Component {
                   name={translate("ra.title.users")}
                   icon={<admins.icon />}
                 >
-                  {hasAccess(permissions, "users.enabled") && (
+                  {hasAccess(permissions, PERMISSION_ADMIN_ENABLED) && (
                     <MenuItemLink
                       to={`/admins`}
                       primaryText={translate("ra.menu.admins")}
@@ -108,7 +121,7 @@ class Menu extends Component {
                       onClick={onMenuClick}
                     />
                   )}
-                  {hasAccess(permissions, "users.enabled") && (
+                  {hasAccess(permissions, PERMISSION_COACH_ENABLED) && (
                     <MenuItemLink
                       to={`/coaches`}
                       primaryText={translate("ra.menu.coaches")}
@@ -116,7 +129,7 @@ class Menu extends Component {
                       onClick={onMenuClick}
                     />
                   )}
-                  {hasAccess(permissions, "users.enabled") && (
+                  {hasAccess(permissions, PERMISSION_ATHLETE_ENABLED) && (
                     <MenuItemLink
                       to={`/athletes`}
                       primaryText={translate("ra.title.athlete")}
@@ -124,7 +137,7 @@ class Menu extends Component {
                       onClick={onMenuClick}
                     />
                   )}
-                  {hasAccess(permissions, "users.enabled") && (
+                  {hasAccess(permissions, PERMISSION_USER_GROUP_ENABLED) && (
                     <MenuItemLink
                       to={`/user_groups`}
                       primaryText={translate("ra.menu.usergroup")}
@@ -132,7 +145,10 @@ class Menu extends Component {
                       onClick={onMenuClick}
                     />
                   )}
-                  {hasAccess(permissions, "users.enabled") && (
+                  {hasAccess(
+                    permissions,
+                    PERMISSION_USER_HIERARCHY_ENABLED
+                  ) && (
                     <MenuItemLink
                       to={`/organisation`}
                       primaryText={translate("ra.menu.organisation")}
@@ -140,7 +156,7 @@ class Menu extends Component {
                       onClick={onMenuClick}
                     />
                   )}
-                  {hasAccess(permissions, "users.enabled") && (
+                  {hasAccess(permissions, PERMISSION_COACH_ENABLED) && (
                     <MenuItemLink
                       to={`/requests`}
                       primaryText={translate("ra.menu.requests")}
@@ -156,10 +172,9 @@ class Menu extends Component {
           }}
         />
 
-        {/* TODO permissions */}
         <WithPermissions
           render={({ permissions }) => {
-            if (hasAccess(permissions, "resources.enabled")) {
+            if (hasAccess(permissions, PERMISSION_RESOURCE_ENABLED)) {
               return (
                 <MenuItemLink
                   to={`/resources`}
@@ -176,7 +191,7 @@ class Menu extends Component {
 
         <WithPermissions
           render={({ permissions }) => {
-            if (hasAccess(permissions, "measurements.enabled")) {
+            if (hasAccess(permissions, PERMISSION_MEASUREMENT_ENABLED)) {
               return (
                 <MenuItemLink
                   to={`/measurements`}
@@ -195,7 +210,7 @@ class Menu extends Component {
 
         <WithPermissions
           render={({ permissions }) => {
-            if (hasAccess(permissions, "readings.enabled")) {
+            if (hasAccess(permissions, PERMISSION_READING_ENABLED)) {
               return (
                 <MenuItemLink
                   to={`/readings`}
@@ -214,7 +229,7 @@ class Menu extends Component {
 
         <WithPermissions
           render={({ permissions }) => {
-            if (hasAccess(permissions, "measurement_types.enabled")) {
+            if (hasAccess(permissions, PERMISSION_MEASUREMENT_TYPE_ENABLED)) {
               return (
                 <MenuItemLink
                   to={`/measurement_types`}
@@ -233,7 +248,7 @@ class Menu extends Component {
 
         <WithPermissions
           render={({ permissions }) => {
-            if (hasAccess(permissions, "permission_groups.enabled")) {
+            if (hasAccess(permissions, PERMISSION_PERMISSION_GROUP_ENABLED)) {
               return (
                 <MenuItemLink
                   to={`/permission_groups`}

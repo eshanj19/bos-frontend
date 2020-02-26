@@ -41,133 +41,25 @@ import {
   Checkbox
 } from "@material-ui/core";
 import EditIcon from "@material-ui/icons/Edit";
-import api from "../api";
 import { withDataProvider } from "ra-core";
 import ResourceTypeField from "./common/ResourceTypeField";
 import { withSnackbar } from "notistack";
-import {
-  RESOURCE_TYPE_REGISTRATION_FORM,
-  LOCAL_STORAGE_NGO_KEY
-} from "../constants";
 import { translate } from "react-admin";
+import {
+  RESOURCE_TYPE_FILE,
+  RESOURCE_TYPE_REGISTRATION_FORM,
+  RESOURCE_TYPE_TRAINING_SESSION,
+  RESOURCE_TYPE_CURRICULUM,
+  PERMISSION_FILE_CREATE,
+  PERMISSION_REGISTRATION_FORM_CREATE,
+  PERMISSION_CURICULA_CREATE,
+  PERMISSION_TRAINING_SESSION_CREATE
+} from "../constants";
+import { hasAccess } from "ra-auth-acl";
 
 const styles = {
   nb_commands: { color: "purple" }
 };
-
-const BulkActionButtons = props => {
-  const setAsCoachRegistration = id => {
-    const ngoKey = localStorage.getItem(LOCAL_STORAGE_NGO_KEY);
-    // crudUpdateMany("ping", id, null, "/ping");
-    console.log(props);
-    api
-      .setAsCoachRegistrationSession(ngoKey, { resource: id })
-      .then(response => {
-        api.handleSuccess(response, props.enqueueSnackbar);
-        props.history.push(props.basePath);
-      })
-      .catch(error => {
-        api.handleError(error, props.enqueueSnackbar);
-      });
-  };
-  const setAsAthleteRegistration = id => {
-    const ngoKey = localStorage.getItem(LOCAL_STORAGE_NGO_KEY);
-    api
-      .setAsAthleteRegistrationSession(ngoKey, { resource: id })
-      .then(response => {
-        api.handleSuccess(response, props.enqueueSnackbar);
-      })
-      .catch(error => {
-        api.handleError(error, props.enqueueSnackbar);
-      });
-  };
-  const deactivateResource = id => {
-    api.deactivateResource(id).then(response => {});
-  };
-  const activateResource = id => {
-    api.activateResource(id).then(response => {});
-  };
-  const { resourceList, selectedIds } = props;
-
-  if (
-    selectedIds.length === 1 &&
-    resourceList[selectedIds[0]].type === RESOURCE_TYPE_REGISTRATION_FORM
-  ) {
-    return (
-      <>
-        <Button
-          onClick={() => {
-            setAsCoachRegistration(selectedIds[0]);
-          }}
-        >
-          {translate("ra.Set As Coach Registration")}
-        </Button>
-        <Button
-          onClick={() => {
-            setAsAthleteRegistration(selectedIds[0]);
-          }}
-        >
-          {translate("ra.Set As Athlete Registration")}
-        </Button>
-
-        {resourceList[selectedIds[0]].is_active === true ? (
-          <Button
-            onClick={() => {
-              deactivateResource(selectedIds[0]);
-            }}
-            color="secondary"
-          >
-            {translate("ra.action.deactivate")}
-          </Button>
-        ) : (
-          <Button
-            onClick={() => {
-              activateResource(selectedIds[0]);
-            }}
-          >
-            {translate("ra.action.activate")}
-          </Button>
-        )}
-      </>
-    );
-  } else {
-    var areAllActive = true;
-    var areAllInactive = true;
-    selectedIds.forEach(selectedId => {
-      var resource = resourceList[selectedId];
-      if (resource.is_active === true) {
-        areAllInactive = false;
-      } else {
-        areAllActive = false;
-      }
-    });
-    if (areAllActive === true && areAllInactive === false) {
-      return (
-        <Button
-          onClick={() => {
-            deactivateResource(selectedIds[0]);
-          }}
-        >
-          {translate("ra.action.deactivate")}
-        </Button>
-      );
-    } else if (areAllActive === false && areAllInactive === true) {
-      return (
-        <Button
-          onClick={() => {
-            activateResource(selectedIds[0]);
-          }}
-        >
-          {translate("ra.action.activate")}
-        </Button>
-      );
-    } else {
-      return <div>YOLO</div>;
-    }
-  }
-};
-
-// const DatagridRow = withRouter(Row);
 
 const DatagridRow = ({
   record,
@@ -223,10 +115,10 @@ const ResourceFilter = translate(({ translate, ...props }) => (
       label={translate("ra.title.type")}
       source="type"
       choices={[
-        { id: "session", name: "Session" },
-        { id: "curriculum", name: "Curriculum" },
-        { id: "file", name: "File" },
-        { id: "registration", name: "Registration Form" }
+        { id: RESOURCE_TYPE_TRAINING_SESSION, name: "Session" },
+        { id: RESOURCE_TYPE_CURRICULUM, name: "Curriculum" },
+        { id: RESOURCE_TYPE_FILE, name: "File" },
+        { id: RESOURCE_TYPE_REGISTRATION_FORM, name: "Registration Form" }
       ]}
       alwaysOn
     />
@@ -238,7 +130,7 @@ const ResourceFilter = translate(({ translate, ...props }) => (
   </Filter>
 ));
 
-const CreateActions = translate(({ translate, ...props }) => {
+const CreateActions = translate(({ translate, permissions, ...props }) => {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
   const handleClick = event => {
@@ -250,6 +142,8 @@ const CreateActions = translate(({ translate, ...props }) => {
   const handleMenuSelect = item => {
     props.history.push({ pathname: `/resources/create/${item}` });
   };
+  console.log(permissions);
+
   return (
     <>
       <Button
@@ -268,18 +162,31 @@ const CreateActions = translate(({ translate, ...props }) => {
         onClose={handleClose}
         TransitionComponent={Fade}
       >
-        <MenuItem onClick={() => handleMenuSelect("curriculum")}>
-          {translate("ra.option.curriculum")}
-        </MenuItem>
-        <MenuItem onClick={() => handleMenuSelect("session")}>
-          {translate("ra.option.training_session")}
-        </MenuItem>
-        <MenuItem onClick={() => handleMenuSelect("file")}>
-          {translate("ra.option.file")}
-        </MenuItem>
-        <MenuItem onClick={() => handleMenuSelect("registration")}>
-          {translate("ra.option.registration_form")}
-        </MenuItem>
+        {hasAccess(permissions, PERMISSION_CURICULA_CREATE) && (
+          <MenuItem onClick={() => handleMenuSelect(RESOURCE_TYPE_CURRICULUM)}>
+            {translate("ra.option.curriculum")}
+          </MenuItem>
+        )}
+        {hasAccess(permissions, PERMISSION_TRAINING_SESSION_CREATE) && (
+          <MenuItem
+            onClick={() => handleMenuSelect(RESOURCE_TYPE_TRAINING_SESSION)}
+          >
+            {translate("ra.option.training_session")}
+          </MenuItem>
+        )}
+        {hasAccess(permissions, PERMISSION_FILE_CREATE) && (
+          <MenuItem onClick={() => handleMenuSelect(RESOURCE_TYPE_FILE)}>
+            {translate("ra.option.file")}
+          </MenuItem>
+        )}
+
+        {hasAccess(permissions, PERMISSION_REGISTRATION_FORM_CREATE) && (
+          <MenuItem
+            onClick={() => handleMenuSelect(RESOURCE_TYPE_REGISTRATION_FORM)}
+          >
+            {translate("ra.option.registration_form")}
+          </MenuItem>
+        )}
       </Menu>
     </>
   );
@@ -300,7 +207,6 @@ const ResourcesList = translate(({ classes, translate, ...props }) => (
     filters={<ResourceFilter />}
     filterDefaultValues={{ is_active: true }}
     actions={<CreateActions {...props} />}
-    bulkActionButtons={<BulkActionButtons {...props} />}
   >
     {/* <Responsive
       medium={

@@ -37,6 +37,7 @@ import DeactivateAction from "../common/DeactivateAction";
 import { translate } from "react-admin";
 import { withTranslate } from "react-admin";
 import { race } from "redux-saga/effects";
+import { PERMISSION_NGO_EDIT, PERMISSION_NGO_SHOW } from "../constants";
 
 const styles = {
   nb_commands: { color: "purple" }
@@ -119,8 +120,8 @@ class NgoList extends Component {
                 source="last_modification_time"
                 showTime
               />
-              {/* {hasAccess(permissions, "ngos.show") && <ShowButton />} */}
-              {hasAccess(permissions, "ngos.edit") && <EditButton />}
+              {/* {hasAccess(permissions, PERMISSION_NGO_SHOW) && <ShowButton />} */}
+              {hasAccess(permissions, PERMISSION_NGO_EDIT) && <EditButton />}
             </Datagrid>
           }
         />

@@ -27,17 +27,12 @@ import {
 
 import React, { Component } from "react";
 import { USER } from "../authSchema";
-import { List } from "react-admin";
 
 export var cardS = {
   display: "block"
 };
 
 class PermissionList extends Component {
-  constructor(props) {
-    super(props);
-  }
-
   handleChange = name => event => {
     this.props.handleCheckbox(name, event.target.checked);
   };
@@ -45,23 +40,22 @@ class PermissionList extends Component {
   getCheckedPermission = () => {
     const { currentGroupPermissions, classes, flag } = this.props;
     const clubpermissions = [
-      { key: "_group", name: "Group" },
       { key: "_curriculum", name: "Curriculum" },
-      { key: "_athlete", name: "Athlete" },
-      { key: "_coach", name: "Coach" },
+      { key: "_athlete", name: "Athletes" },
+      { key: "_coach", name: "Coachs" },
       { key: "_resource", name: "Resources" },
-      { key: "_usergroup", name: "User Group" },
-      { key: "_ngoregistrationresource", name: "Ngo Registration" },
+      { key: "_customusergroup", name: "User Group" },
+      { key: "_ngoregistrationresource", name: "Registration Forms" },
       { key: "_userhierarchy", name: "User Hierarchy" },
 
       { key: "_ngo", name: "Ngo" },
-      { key: "_trainingsession", name: "Training session" },
-      { key: "_userresource", name: "User Resources" },
+      { key: "_trainingsession", name: "Training sessions" },
+      // { key: "_userresource", name: "User Resources" },
 
-      { key: "_userreading", name: "User Reading" },
-      { key: "_user", name: "User" },
-      { key: "_file", name: "File" },
-      { key: "_admin", name: "Admin" },
+      { key: "_userreading", name: "User Readings" },
+      // { key: "_user", name: "Users" },
+      { key: "_file", name: "Files" },
+      { key: "_admin", name: "Admins" },
       { key: "_measurement", name: "Measurements" }
     ];
 

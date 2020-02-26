@@ -32,6 +32,7 @@ import {
 import withStyles from "@material-ui/core/styles/withStyles";
 import { hasAccess } from "ra-auth-acl";
 import { translate } from "react-admin";
+import { PERMISSION_MEASUREMENT_TYPE_EDIT } from "../constants";
 
 const MeasurementTypeFilter = translate(({ translate, ...props }) => (
   <Filter {...props}>
@@ -82,8 +83,9 @@ const MeasurementTypeList = translate(
               source="last_modification_time"
               showTime
             />
-            {/* {hasAccess(permissions, "measurement_types.show") && <ShowButton />} */}
-            {hasAccess(permissions, "measurement_types.edit") && <EditButton />}
+            {hasAccess(permissions, PERMISSION_MEASUREMENT_TYPE_EDIT) && (
+              <EditButton />
+            )}
           </Datagrid>
         }
       />

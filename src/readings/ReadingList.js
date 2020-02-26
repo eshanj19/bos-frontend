@@ -18,6 +18,7 @@ import withStyles from "@material-ui/core/styles/withStyles";
 import { hasAccess } from "ra-auth-acl";
 import FullNameField from "../common/FullNameField";
 import { translate } from "react-admin";
+import { PERMISSION_READING_EDIT } from "../constants";
 
 const ReadingFilter = translate(({ translate, ...props }) => (
   <Filter {...props}>
@@ -100,8 +101,7 @@ const ReadingList = translate(
               showTime
             />
             {/* <DateField source="last_modification_time" showTime /> */}
-            {/* {hasAccess(permissions, "readings.show") && <ShowButton />} */}
-            {hasAccess(permissions, "readings.edit") && <EditButton />}
+            {hasAccess(permissions, PERMISSION_READING_EDIT) && <EditButton />}
           </Datagrid>
         }
       />
