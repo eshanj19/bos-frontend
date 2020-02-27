@@ -23,10 +23,10 @@ import themeReducer from "./themeReducer";
 import { Login, Layout } from "./layout";
 import { Dashboard } from "./dashboard";
 import customRoutes from "./routes";
-import hindiMessages from "./locales/locale_hi_IN.json";
 import drfProvider from "./dataProvider";
-import englishMessages from "./locales/locale_en_IN.json";
-import kannadaMessages from "./locales/locale_ka_IN.json";
+import englishMessages from "./i18n/en_IN.js";
+import hindiMessages from "./i18n/hi_IN.js";
+import kannadaMessages from "./i18n/ka_IN.js";
 
 import resources from "./resources";
 import coaches from "./coaches";

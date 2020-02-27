@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
@@ -42,12 +42,19 @@ const styles = {
 const Configuration = ({
   classes,
   theme,
-  locale,
   changeTheme,
   changeLocale,
   translate,
   enqueueSnackbar
 }) => {
+  const [locale, setLocale] = useState([]);
+  useEffect(() => {
+    //fetch possible resource choices.
+    const locale = localStorage.getItem(LOCAL_STORAGE_LOCALE);
+    setLocale(locale);
+    changeLocale(locale);
+  }, []);
+
   const onClickChangeLocale = locale => {
     const data = { language: locale };
     const userKey = localStorage.getItem(LOCAL_STORAGE_USER_KEY);
@@ -57,6 +64,7 @@ const Configuration = ({
         api.handleSuccess(response, enqueueSnackbar);
         changeLocale(locale);
         localStorage.setItem(LOCAL_STORAGE_LOCALE, locale);
+        setLocale(locale);
       })
       .catch(response => {
         api.handleError(response, enqueueSnackbar);

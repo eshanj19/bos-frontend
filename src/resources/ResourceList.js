@@ -142,8 +142,6 @@ const CreateActions = translate(({ translate, permissions, ...props }) => {
   const handleMenuSelect = item => {
     props.history.push({ pathname: `/resources/create/${item}` });
   };
-  console.log(permissions);
-
   return (
     <>
       <Button
@@ -243,7 +241,7 @@ const ResourcesList = translate(({ classes, translate, ...props }) => (
         source="last_modification_time"
         showTime
       />
-      <ShowButton />
+      <ShowButton label={translate("ra.action.show")} />
       <Button id="edit_button" color="primary">
         {translate("ra.action.edit")}
       </Button>
