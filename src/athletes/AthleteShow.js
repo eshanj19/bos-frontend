@@ -16,18 +16,13 @@
  */
 
 import React, { Component } from "react";
-import {
-  Show,
-  SimpleShowLayout,
-  BooleanField,
-  TextField,
-  SelectField
-} from "react-admin";
+import { Show, SimpleShowLayout, BooleanField, TextField } from "react-admin";
 import withStyles from "@material-ui/core/styles/withStyles";
 
 import { styles } from "../admins/AdminCreate";
 import { GENDER_CHOICES } from "../constants";
 import { withTranslate } from "react-admin";
+import GenderField from "../common/GenderField";
 
 class AthleteShow extends Component {
   render() {
@@ -50,7 +45,7 @@ class AthleteShow extends Component {
             source="last_name"
             formClassName={classes.last_name}
           />
-          <SelectField
+          <GenderField
             label={translate("ra.title.gender")}
             source="gender"
             choices={GENDER_CHOICES}

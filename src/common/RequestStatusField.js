@@ -1,3 +1,6 @@
+import { REQUEST_STATUS_CHOICES } from "../constants";
+import { withTranslate } from "react-admin";
+
 /*
  *  Copyright (c) 2019 Maverick Labs
  *
@@ -15,12 +18,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import RequestList from "./RequestList";
-import RequestCreate from "./RequestCreate";
-import RequestShow from "./RequestShow";
-
-export default {
-  create: RequestCreate,
-  show: RequestShow,
-  list: RequestList
+const RequestStatusField = ({ record, translate }) => {
+  if (record.status === REQUEST_STATUS_CHOICES[0]["id"]) {
+    return translate("ra.request.pending");
+  }
+  if (record.status === REQUEST_STATUS_CHOICES[1]["id"]) {
+    return translate("ra.request.approved");
+  }
+  if (record.status === REQUEST_STATUS_CHOICES[2]["id"]) {
+    return translate("ra.request.rejected");
+  }
+  return record.gender;
 };
+
+export default withTranslate(RequestStatusField);

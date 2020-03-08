@@ -99,19 +99,19 @@ export const PERMISSION_TRAINING_SESSION_ENABLED = "sessions.enabled";
 export const PERMISSION_TRAINING_SESSION_LIST = "sessions.list";
 export const PERMISSION_TRAINING_SESSION_SHOW = "sessions.show";
 
-export const PERMISSION_CURICULA_CREATE = "curicula.create";
-export const PERMISSION_CURICULA_DELETE = "curicula.delete";
-export const PERMISSION_CURICULA_EDIT = "curicula.edit";
-export const PERMISSION_CURICULA_ENABLED = "curicula.enabled";
-export const PERMISSION_CURICULA_LIST = "curicula.list";
-export const PERMISSION_CURICULA_SHOW = "curicula.show";
+export const PERMISSION_CURRICULA_CREATE = "curricula.create";
+export const PERMISSION_CURRICULA_DELETE = "curricula.delete";
+export const PERMISSION_CURRICULA_EDIT = "curricula.edit";
+export const PERMISSION_CURRICULA_ENABLED = "curricula.enabled";
+export const PERMISSION_CURRICULA_LIST = "curricula.list";
+export const PERMISSION_CURRICULA_SHOW = "curricula.show";
 
-export const PERMISSION_USER_HIERARCHY_CREATE = "user_hierarchy.create";
-export const PERMISSION_USER_HIERARCHY_DELETE = "user_hierarchy.delete";
-export const PERMISSION_USER_HIERARCHY_EDIT = "user_hierarchy.edit";
-export const PERMISSION_USER_HIERARCHY_ENABLED = "user_hierarchy.enabled";
-export const PERMISSION_USER_HIERARCHY_LIST = "user_hierarchy.list";
-export const PERMISSION_USER_HIERARCHY_SHOW = "user_hierarchy.show";
+export const PERMISSION_USER_HIERARCHY_CREATE = "user_hierarchies.create";
+export const PERMISSION_USER_HIERARCHY_DELETE = "user_hierarchies.delete";
+export const PERMISSION_USER_HIERARCHY_EDIT = "user_hierarchies.edit";
+export const PERMISSION_USER_HIERARCHY_ENABLED = "user_hierarchies.enabled";
+export const PERMISSION_USER_HIERARCHY_LIST = "user_hierarchies.list";
+export const PERMISSION_USER_HIERARCHY_SHOW = "user_hierarchies.show";
 
 export const PERMISSION_MEASUREMENT_CREATE = "measurements.create";
 export const PERMISSION_MEASUREMENT_DELETE = "measurements.delete";
@@ -155,6 +155,12 @@ export const localeKA_IN = "ka_IN";
 export const GENDER_CHOICES = [
   { id: "male", name: "Male" },
   { id: "female", name: "Female" }
+];
+
+export const REQUEST_STATUS_CHOICES = [
+  { id: "pending", name: "ra.request.pending" },
+  { id: "approved", name: "ra.request.approved" },
+  { id: "rejected", name: "ra.request.rejected" }
 ];
 
 export const VALID_PDF_EXTENSIONS = [".pdf"];

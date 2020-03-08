@@ -35,7 +35,7 @@ class RequestModal extends Component {
       }
     } = this.props;
 
-    const uname = first_name.concat("__" + last_name);
+    const uname = first_name.concat("_" + last_name);
     var username = uname.toLowerCase();
     username = username.trim();
     console.log(username);
@@ -44,17 +44,14 @@ class RequestModal extends Component {
     };
     console.log(unamedata);
     api
-      .check_username(key, unamedata)
+      .checkUsername(key, unamedata)
       .then(Response => {
-        console(Response);
+        console.log(Response);
       })
       .catch(error => {
         console.log(error);
       });
-    this.setState({ username: username });
-    this.setState({ key: key });
-
-    this.setState({ flag: false });
+    this.setState({ username: username, key: key, flag: false });
   }
 
   onSetPassword = event => {
@@ -82,7 +79,7 @@ class RequestModal extends Component {
 
     return (
       <div>
-        <Dialog fullWidth open={props.showFlag}>
+        <Dialog open={props.showFlag}>
           <div
             style={{
               display: "flex",

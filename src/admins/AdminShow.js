@@ -16,18 +16,12 @@
  */
 
 import React, { Component } from "react";
-import {
-  Show,
-  SimpleShowLayout,
-  BooleanField,
-  TextField,
-  SelectField
-} from "react-admin";
+import { Show, SimpleShowLayout, BooleanField, TextField } from "react-admin";
 import withStyles from "@material-ui/core/styles/withStyles";
 import { withTranslate } from "react-admin";
 
 import { styles } from "../admins/AdminCreate";
-import { GENDER_CHOICES } from "../constants";
+import GenderField from "../common/GenderField";
 
 class AdminShow extends Component {
   render() {
@@ -50,11 +44,7 @@ class AdminShow extends Component {
             source="last_name"
             formClassName={classes.last_name}
           />
-          <SelectField
-            label={translate("ra.title.gender")}
-            source="gender"
-            choices={GENDER_CHOICES}
-          />
+          <GenderField label={translate("ra.title.gender")} source="gender" />
           <BooleanField
             source="is_active"
             label={translate("ra.action.active")}

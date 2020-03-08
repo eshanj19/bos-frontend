@@ -22,8 +22,6 @@ import {
   ShowController,
   ShowView
 } from "react-admin";
-import IconButton from "@material-ui/core/IconButton";
-import CloseIcon from "@material-ui/icons/Close";
 import api from "../api";
 import { Typography, Grid } from "@material-ui/core";
 
@@ -45,6 +43,7 @@ import DataField from "../common/DataField";
 import { withSnackbar } from "notistack";
 import { withTranslate } from "react-admin";
 import { LOCAL_STORAGE_NGO_KEY } from "../constants";
+import ConfirmationModal from "../common/ConfirmationModal";
 
 class RequestShow extends Component {
   constructor(props) {
@@ -53,45 +52,52 @@ class RequestShow extends Component {
       measurements: [],
       data: [],
       showFlag: false,
+      showConfirmationModal: false,
       username: "",
       password: "",
       confirmpassword: ""
     };
   }
 
-  resetStatus = () => {
-    const { onCancel, classes, permissions, ...props } = this.props;
-    const { enqueueSnackbar } = props;
+  onCancel = () => {
+    this.props.history.goBack();
+  };
+  showConfirmationModal = () => {
+    this.setState({ showConfirmationModal: true });
+  };
+  dismissConfirmationModal = () => {
+    this.setState({ showConfirmationModal: false });
+  };
+
+  rejectRequest = () => {
+    const { enqueueSnackbar } = this.props;
+    console.log(this.props);
     let userKey = this.props.id;
 
     api
-      .request_reject(userKey)
+      .requestReject(userKey)
       .then(response => {
-        console.log(response);
         api.handleSuccess(response, enqueueSnackbar);
-        this.props.onCancel();
+        this.onCancel();
       })
       .catch(error => {
-        console.log(error);
+        api.handleError(error, enqueueSnackbar);
       });
   };
 
-  submitRequestData = (username, key, confirmpassword, password) => {
-    const { onCancel, classes, permissions, ...props } = this.props;
-
-    const { enqueueSnackbar } = props;
-    let submitdata = {
+  submitRequestData = (username, key, confirmPassword, password) => {
+    const { enqueueSnackbar } = this.props;
+    let submitData = {
       username: username,
-      confirmpassword: confirmpassword,
-      password: password,
-      status: "Accepted"
+      confirmpassword: confirmPassword,
+      password: password
     };
     api
-      .request_accept(key, submitdata)
+      .requestAccept(key, submitData)
       .then(response => {
         console.log(response);
         api.handleSuccess(response, enqueueSnackbar);
-        this.props.onCancel();
+        this.onCancel();
       })
       .catch(error => {
         api.handleError(error, enqueueSnackbar);
@@ -112,7 +118,7 @@ class RequestShow extends Component {
   }
 
   render() {
-    const { onCancel, classes, permissions, translate, ...props } = this.props;
+    const { classes, permissions, translate, ...props } = this.props;
 
     return (
       <div style={{ marginTop: 60 }}>
@@ -127,9 +133,6 @@ class RequestShow extends Component {
           <Typography variant="h1" component="h2">
             {translate("ra.applicant's details")}
           </Typography>
-          <IconButton onClick={onCancel}>
-            <CloseIcon />
-          </IconButton>
         </div>
         <div
           style={{
@@ -142,7 +145,7 @@ class RequestShow extends Component {
               <ShowView
                 {...props}
                 {...controllerProps}
-                style={{ width: 400, height: 700 }}
+                title={translate("ra.title.request_show")}
               >
                 <SimpleShowLayout>
                   <DateField
@@ -198,7 +201,7 @@ class RequestShow extends Component {
                       </Grid>
                     )}
                   {controllerProps.record &&
-                    controllerProps.record.status == "pending" && (
+                    controllerProps.record.status === "pending" && (
                       <div style={{ marginTop: 20, marginLeft: 50 }}>
                         <Button
                           color="primary"
@@ -217,7 +220,7 @@ class RequestShow extends Component {
                           variant="raised"
                           size="small"
                           style={{ marginLeft: 50 }}
-                          onClick={this.resetStatus}
+                          onClick={this.showConfirmationModal}
                         >
                           <ThumbDown
                             color="primary"
@@ -231,7 +234,13 @@ class RequestShow extends Component {
                     showFlag={this.state.showFlag}
                     controllerProps={controllerProps}
                     submitRequestData={this.submitRequestData}
-                    onCancel={this.props.onCancel}
+                    onCancel={this.onCancel}
+                  />
+
+                  <ConfirmationModal
+                    showConfirmationModal={this.state.showConfirmationModal}
+                    handleYesClick={this.rejectRequest}
+                    handleNoClick={this.dismissConfirmationModal}
                   />
                 </SimpleShowLayout>
               </ShowView>
@@ -243,4 +252,4 @@ class RequestShow extends Component {
   }
 }
 
-export default withTranslate(withStyles(styles)(RequestShow));
+export default withTranslate(withSnackbar(withStyles(styles)(RequestShow)));

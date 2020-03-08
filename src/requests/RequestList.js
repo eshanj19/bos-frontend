@@ -14,102 +14,76 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import React, { Fragment, Component } from "react";
-import {
-  Datagrid,
-  List,
-  Responsive,
-  TextField,
-  DateField,
-  ChipField
-} from "react-admin";
+import React from "react";
+import { Datagrid, List, Responsive, DateField, ChipField } from "react-admin";
 import withStyles from "@material-ui/core/styles/withStyles";
-import { Route } from "react-router-dom";
-import { Drawer } from "@material-ui/core";
-import RequestShow from "./RequestShow";
-import { withTranslate } from "react-admin";
+import FullNameField from "../common/FullNameField";
+import GenderField from "../common/GenderField";
+import {
+  translate,
+  Filter,
+  SearchInput,
+  SelectInput,
+  ShowButton
+} from "react-admin";
+import { REQUEST_STATUS_CHOICES } from "../constants";
+import RequestStatusField from "../common/RequestStatusField";
 
 const styles = {
   nb_commands: { color: "purple" }
 };
 
-class RequestList extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {};
-  }
+const RequestFilter = translate(({ translate, ...props }) => {
+  var translatedRequestStatuses = [];
+  REQUEST_STATUS_CHOICES.forEach(element => {
+    const { id, name } = element;
+    translatedRequestStatuses.push({
+      id: id,
+      name: translate(name)
+    });
+  });
+  return (
+    <Filter {...props}>
+      <SearchInput label={translate("ra.title.name")} source="name" alwaysOn />
+      <SelectInput
+        label={translate("ra.title.status")}
+        source="status"
+        alwaysOn
+        choices={translatedRequestStatuses}
+      />
+    </Filter>
+  );
+});
 
-  handleclose = () => {
-    this.props.history.push("/requests");
-  };
+const RequestList = translate(
+  ({ classes, permissions, translate, ...props }) => (
+    <List
+      {...props}
+      sort={{ field: "creation_time", order: "DESC" }}
+      perPage={25}
+      filters={<RequestFilter />}
+      filterDefaultValues={{ is_active: true }}
+      exporter={false}
+    >
+      <Responsive
+        medium={
+          <Datagrid>
+            <FullNameField label={translate("ra.title.full_name")} />
+            <GenderField label={translate("ra.title.gender")} />
+            <RequestStatusField
+              label={translate("ra.title.status")}
+              source="status"
+            />
+            <DateField
+              label={translate("ra.title.date")}
+              source="creation_time"
+            />
+            <ShowButton />
+          </Datagrid>
+        }
+      />
+    </List>
+  )
+);
 
-  render() {
-    const { classes, permissions, translate, ...props } = this.props;
-
-    return (
-      <div>
-        <Route path="/requests/:id">
-          {({ match }) => {
-            const isMatch = !!(
-              match &&
-              match.params &&
-              match.params.id !== "create"
-            );
-
-            return (
-              <Fragment>
-                <List
-                  {...props}
-                  sort={{ field: "creation_time", order: "ASC" }}
-                  perPage={25}
-                  // title={translate("ra.menu.requests")}
-                  filterDefaultValues={{ is_active: true }}
-                  exporter={false}
-                >
-                  <Responsive
-                    medium={
-                      <Datagrid rowClick="edit">
-                        <DateField
-                          label={translate("ra.title.date")}
-                          source="creation_time"
-                        />
-                        <TextField
-                          label={translate("ra.title.first_name")}
-                          source="first_name"
-                        />
-                        <TextField
-                          label={translate("ra.title.last_name")}
-                          source="last_name"
-                        />
-                        <ChipField
-                          label={translate("ra.title.status")}
-                          source="status"
-                        />
-                      </Datagrid>
-                    }
-                  />
-                </List>
-
-                <Drawer
-                  variant="persistent"
-                  open={isMatch}
-                  anchor="right"
-                  style={{ zindex: 100 }}
-                >
-                  {isMatch ? (
-                    <RequestShow
-                      id={match.params.id}
-                      {...props}
-                      onCancel={this.handleclose}
-                    />
-                  ) : null}
-                </Drawer>
-              </Fragment>
-            );
-          }}
-        </Route>
-      </div>
-    );
-  }
-}
-export default withTranslate(withStyles(styles)(RequestList));
+export default withStyles(styles)(RequestList);

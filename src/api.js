@@ -69,16 +69,15 @@ const resetPassword = (key, body) => {
   return axios.post(`/users/${key}/reset_password/`, toFormData(body));
 };
 
-const request_accept = (key, body) => {
-  console.log(toFormData(body));
+const requestAccept = (key, body) => {
   return axios.post(`/requests/${key}/request_accept/`, toFormData(body));
 };
 
-const request_reject = key => {
+const requestReject = key => {
   return axios.post(`/requests/${key}/request_reject/`);
 };
 
-const check_username = (key, body) => {
+const checkUsername = (key, body) => {
   return axios.post(`/requests/${key}/check_username/`, toFormData(body));
 };
 
@@ -291,9 +290,9 @@ const api = {
   getAllPermissions,
   isAuthenticated,
   resetPassword,
-  request_accept,
-  request_reject,
-  check_username,
+  requestAccept,
+  requestReject,
+  checkUsername,
   getForgotPasswordToken,
   isForgotPasswordTokenValid,
   forgotPassword,

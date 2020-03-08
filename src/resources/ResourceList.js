@@ -52,7 +52,7 @@ import {
   RESOURCE_TYPE_CURRICULUM,
   PERMISSION_FILE_CREATE,
   PERMISSION_REGISTRATION_FORM_CREATE,
-  PERMISSION_CURICULA_CREATE,
+  PERMISSION_CURRICULA_CREATE,
   PERMISSION_TRAINING_SESSION_CREATE
 } from "../constants";
 import { hasAccess } from "ra-auth-acl";
@@ -160,7 +160,7 @@ const CreateActions = translate(({ translate, permissions, ...props }) => {
         onClose={handleClose}
         TransitionComponent={Fade}
       >
-        {hasAccess(permissions, PERMISSION_CURICULA_CREATE) && (
+        {hasAccess(permissions, PERMISSION_CURRICULA_CREATE) && (
           <MenuItem onClick={() => handleMenuSelect(RESOURCE_TYPE_CURRICULUM)}>
             {translate("ra.option.curriculum")}
           </MenuItem>

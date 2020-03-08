@@ -24,7 +24,7 @@ import ResourceShow from "./ResourceShow";
 
 export default {
   list: ResourceList,
-  show : ResourceShow,
+  show: ResourceShow,
   // create: ResourceCreate,
   edit: ResourceEdit,
   icon: ResourceIcon

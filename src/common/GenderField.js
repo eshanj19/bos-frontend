@@ -1,3 +1,6 @@
+import { GENDER_CHOICES } from "../constants";
+import { withTranslate } from "react-admin";
+
 /*
  *  Copyright (c) 2019 Maverick Labs
  *
@@ -15,12 +18,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import RequestList from "./RequestList";
-import RequestCreate from "./RequestCreate";
-import RequestShow from "./RequestShow";
-
-export default {
-  create: RequestCreate,
-  show: RequestShow,
-  list: RequestList
+const GenderField = ({ record, translate }) => {
+  if (record.gender === GENDER_CHOICES[0]["id"]) {
+    return translate("ra.gender.male");
+  }
+  if (record.gender === GENDER_CHOICES[1]["id"]) {
+    return translate("ra.gender.female");
+  }
+  return record.gender;
 };
+
+export default withTranslate(GenderField);
