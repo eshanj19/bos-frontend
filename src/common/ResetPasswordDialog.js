@@ -4,17 +4,16 @@ import {
   DialogTitle,
   DialogContent,
   Button,
-  Input
+  Input,
+  DialogActions
 } from "@material-ui/core";
+import { withTranslate } from "react-admin";
 
-export default function ResetPasswordDialog(props) {
+const ResetPasswordDialog = props => {
+  const { translate } = props;
   return (
-    <Dialog
-      fullWidth
-      open={props.showDialog}
-      onClose={() => props.toggleDialog()}
-    >
-      <DialogTitle>Reset Password</DialogTitle>
+    <Dialog open={props.showDialog} onClose={() => props.toggleDialog()}>
+      <DialogTitle>{translate("Reset password")}</DialogTitle>
       <DialogContent>
         <div>
           <Input
@@ -23,8 +22,7 @@ export default function ResetPasswordDialog(props) {
             onChange={({ target }) => {
               props.onChangCurrentPassword(target.value);
             }}
-            style={{ width: "250px" }}
-            placeholder="Enter current password"
+            placeholder={translate("Enter current password")}
           ></Input>
         </div>
         <div style={{ marginTop: "20px" }}>
@@ -34,8 +32,7 @@ export default function ResetPasswordDialog(props) {
             onChange={({ target }) => {
               props.onChangePassword(target.value);
             }}
-            style={{ width: "250px" }}
-            placeholder="Enter new password"
+            placeholder={translate("Enter new password")}
           ></Input>
         </div>
         <div style={{ marginTop: "20px" }}>
@@ -45,11 +42,11 @@ export default function ResetPasswordDialog(props) {
             onChange={({ target }) => {
               props.onChangeConfirmPassword(target.value);
             }}
-            style={{ width: "250px" }}
-            placeholder="Confirm new password"
+            placeholder={translate("Confirm new password")}
           ></Input>
         </div>
-        <div style={{ marginTop: "25px" }}>
+
+        <DialogActions>
           <Button
             color="primary"
             variant="raised"
@@ -58,14 +55,16 @@ export default function ResetPasswordDialog(props) {
             Reset
           </Button>
           <Button
-            style={{ marginLeft: "0.8rem" }}
+            // style={{ marginLeft: "0.8rem" }}
             color="primary"
             onClick={() => props.toggleDialog()}
           >
             Cancel
           </Button>
-        </div>
+        </DialogActions>
       </DialogContent>
     </Dialog>
   );
-}
+};
+
+export default withTranslate(ResetPasswordDialog);

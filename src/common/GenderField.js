@@ -28,4 +28,8 @@ const GenderField = ({ record, translate }) => {
   return record.gender;
 };
 
+GenderField.defaultProps = {
+  addLabel: true
+};
+
 export default withTranslate(GenderField);

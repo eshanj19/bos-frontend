@@ -20,7 +20,8 @@ import {
   SimpleShowLayout,
   DateField,
   ShowController,
-  ShowView
+  ShowView,
+  TextField
 } from "react-admin";
 import api from "../api";
 import { Typography, Grid } from "@material-ui/core";
@@ -29,21 +30,22 @@ import Button from "@material-ui/core/Button";
 import ThumbDown from "@material-ui/icons/ThumbDown";
 import ThumbUp from "@material-ui/icons/ThumbUp";
 import withStyles from "@material-ui/core/styles/withStyles";
-
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
-
-import { styles } from "../common/UserCreate";
+import TableHead from "@material-ui/core/TableHead";
+import TableCell from "@material-ui/core/TableCell";
+import TableRow from "@material-ui/core/TableRow";
+import { styles } from "../common/Styles";
 
 import RequestData from "./RequestData";
-import Paper from "@material-ui/core/Paper";
 import RequestModal from "./RequestModal";
 
-import DataField from "../common/DataField";
 import { withSnackbar } from "notistack";
 import { withTranslate } from "react-admin";
 import { LOCAL_STORAGE_NGO_KEY } from "../constants";
 import ConfirmationModal from "../common/ConfirmationModal";
+import GenderField from "../common/GenderField";
+import RequestStatusField from "../common/RequestStatusField";
 
 class RequestShow extends Component {
   constructor(props) {
@@ -67,6 +69,9 @@ class RequestShow extends Component {
   };
   dismissConfirmationModal = () => {
     this.setState({ showConfirmationModal: false });
+  };
+  dismissRequestModal = () => {
+    this.setState({ showFlag: false });
   };
 
   rejectRequest = () => {
@@ -121,132 +126,117 @@ class RequestShow extends Component {
     const { classes, permissions, translate, ...props } = this.props;
 
     return (
-      <div style={{ marginTop: 60 }}>
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            margin: "1em"
-          }}
-        >
+      <div>
+        <div className={classes.sectionHeader}>
           <Typography variant="h1" component="h2">
             {translate("ra.applicant's details")}
           </Typography>
         </div>
-        <div
-          style={{
-            borderLeftColor: "white",
-            borderLeftStyle: "solid"
-          }}
-        >
-          <ShowController {...props}>
-            {controllerProps => (
-              <ShowView
-                {...props}
-                {...controllerProps}
-                title={translate("ra.title.request_show")}
-              >
-                <SimpleShowLayout>
-                  <DateField
-                    label={translate("ra.title.date")}
-                    source="creation_time"
-                  />
-                  <DataField
-                    label={translate("ra.title.first_name")}
-                    source="first_name"
-                  />
-                  <DataField
-                    label={translate("ra.title.middle_name")}
-                    source="middle_name"
-                  />
-                  <DataField
-                    label={translate("ra.title.last_name")}
-                    source="last_name"
-                  />
-                  <DataField
-                    label={translate("ra.title.status")}
-                    source="status"
-                  />
-                  <DataField label={translate("ra.title.role")} source="role" />
-                  <DataField
-                    label={translate("ra.title.gender")}
-                    source="gender"
-                  />
+        <ShowController {...props}>
+          {controllerProps => (
+            <ShowView
+              {...props}
+              {...controllerProps}
+              title={translate("ra.title.request_show")}
+            >
+              <SimpleShowLayout classes={classes}>
+                <DateField
+                  label={translate("ra.title.date")}
+                  source="creation_time"
+                />
+                <TextField
+                  label={translate("ra.title.first_name")}
+                  source="first_name"
+                />
+                <TextField
+                  label={translate("ra.title.middle_name")}
+                  source="middle_name"
+                />
+                <TextField
+                  label={translate("ra.title.last_name")}
+                  source="last_name"
+                />
+                <RequestStatusField
+                  label={translate("ra.title.status")}
+                  source="status"
+                  className={classes.requestStatus}
+                />
+                <TextField label={translate("ra.title.role")} source="role" />
+                <GenderField
+                  label={translate("ra.title.gender")}
+                  source="gender"
+                  className={classes.gender}
+                />
 
-                  {controllerProps.record &&
-                    controllerProps.record.data.measurements != null && (
-                      <Grid>
-                        <Typography variant="caption" display="block">
-                          {translate("ra.title.measurements")}
-                        </Typography>
-                        <Paper style={{ marginTop: 10 }}>
-                          <Table label="Measurements">
-                            <TableBody
-                              style={{
-                                background: "#E8EAF6	",
-                                justifyContent: "center"
-                              }}
-                            >
-                              {
-                                <RequestData
-                                  controllerProps={controllerProps}
-                                  measurements={this.state.measurements}
-                                  {...props}
-                                />
-                              }
-                            </TableBody>
-                          </Table>
-                        </Paper>
-                      </Grid>
-                    )}
-                  {controllerProps.record &&
-                    controllerProps.record.status === "pending" && (
-                      <div style={{ marginTop: 20, marginLeft: 50 }}>
-                        <Button
+                {controllerProps.record &&
+                  controllerProps.record.data.measurements != null && (
+                    <Grid style={{ marginTop: 10 }}>
+                      <Typography
+                        variant="caption"
+                        display="block"
+                        style={{ marginTop: 10 }}
+                      >
+                        {translate("ra.title.measurements")}
+                      </Typography>
+                      <Table label="Measurements" className={classes.table}>
+                        <TableBody>
+                          {
+                            <RequestData
+                              controllerProps={controllerProps}
+                              measurements={this.state.measurements}
+                              {...props}
+                            />
+                          }
+                        </TableBody>
+                      </Table>
+                    </Grid>
+                  )}
+                {controllerProps.record &&
+                  controllerProps.record.status === "pending" && (
+                    <div style={{ marginTop: "1em", marginBottom: "1em" }}>
+                      <Button
+                        color="primary"
+                        variant="raised"
+                        size="small"
+                        onClick={() => this.setState({ showFlag: true })}
+                      >
+                        <ThumbUp
                           color="primary"
-                          variant="raised"
-                          size="small"
-                          onClick={() => this.setState({ showFlag: true })}
-                        >
-                          <ThumbUp
-                            color="primary"
-                            style={{ paddingRight: "0.5em", color: "white" }}
-                          />
-                          {translate("ra.action.accept")}
-                        </Button>
-                        <Button
+                          style={{ paddingRight: "0.5em", color: "white" }}
+                        />
+                        {translate("ra.action.accept")}
+                      </Button>
+                      <Button
+                        color="primary"
+                        variant="raised"
+                        size="small"
+                        style={{ marginLeft: 50 }}
+                        onClick={this.showConfirmationModal}
+                      >
+                        <ThumbDown
                           color="primary"
-                          variant="raised"
-                          size="small"
-                          style={{ marginLeft: 50 }}
-                          onClick={this.showConfirmationModal}
-                        >
-                          <ThumbDown
-                            color="primary"
-                            style={{ paddingRight: "0.5em", color: "white" }}
-                          />
-                          {translate("ra.action.decline")}
-                        </Button>
-                      </div>
-                    )}
-                  <RequestModal
-                    showFlag={this.state.showFlag}
-                    controllerProps={controllerProps}
-                    submitRequestData={this.submitRequestData}
-                    onCancel={this.onCancel}
-                  />
+                          style={{ paddingRight: "0.5em", color: "white" }}
+                        />
+                        {translate("ra.action.decline")}
+                      </Button>
+                    </div>
+                  )}
+                <RequestModal
+                  showFlag={this.state.showFlag}
+                  controllerProps={controllerProps}
+                  submitRequestData={this.submitRequestData}
+                  dismiss={this.dismissRequestModal}
+                />
 
-                  <ConfirmationModal
-                    showConfirmationModal={this.state.showConfirmationModal}
-                    handleYesClick={this.rejectRequest}
-                    handleNoClick={this.dismissConfirmationModal}
-                  />
-                </SimpleShowLayout>
-              </ShowView>
-            )}
-          </ShowController>
-        </div>
+                <ConfirmationModal
+                  showConfirmationModal={this.state.showConfirmationModal}
+                  handleYesClick={this.rejectRequest}
+                  handleNoClick={this.dismissConfirmationModal}
+                />
+              </SimpleShowLayout>
+            </ShowView>
+          )}
+        </ShowController>
       </div>
     );
   }

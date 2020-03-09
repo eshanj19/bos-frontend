@@ -42,7 +42,7 @@ class RequestData extends Component {
       }
       requestMeasurements.forEach(requestMeasurementItem => {
         measurements.forEach(measurementItem => {
-          if (requestMeasurementItem.key == measurementItem.key) {
+          if (requestMeasurementItem.key === measurementItem.key) {
             let dict = {
               measurement: measurementItem.label,
               value: requestMeasurementItem.value
@@ -56,9 +56,22 @@ class RequestData extends Component {
 
     const mapped = lists.map(list => {
       return (
-        <TableRow>
-          <TableCell>{list.measurement}</TableCell>
-          <TableCell>{list.value}</TableCell>
+        <TableRow key={list.id}>
+          <TableCell
+            style={{
+              border: 0
+            }}
+          >
+            {list.measurement}
+          </TableCell>
+          <TableCell
+            style={{
+              border: 0
+            }}
+            numeric
+          >
+            {list.value}
+          </TableCell>
         </TableRow>
       );
     });

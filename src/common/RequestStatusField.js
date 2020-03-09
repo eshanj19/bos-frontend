@@ -31,4 +31,8 @@ const RequestStatusField = ({ record, translate }) => {
   return record.gender;
 };
 
+RequestStatusField.defaultProps = {
+  addLabel: true
+};
+
 export default withTranslate(RequestStatusField);

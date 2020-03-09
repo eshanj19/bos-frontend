@@ -22,6 +22,13 @@ export const darkTheme = {
 };
 
 export const lightTheme = {
+  overrides: {
+    // MuiInputLabel: {
+    //   root: {
+    //     fontSize: "1.5rem"
+    //   }
+    // }
+  },
   palette: {
     secondary: {
       light: "#5f5fc4",

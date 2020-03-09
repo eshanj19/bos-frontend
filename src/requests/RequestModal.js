@@ -4,10 +4,9 @@ import {
   DialogTitle,
   DialogContent,
   Button,
-  Input
+  Input,
+  DialogActions
 } from "@material-ui/core";
-import IconButton from "@material-ui/core/IconButton";
-import CloseIcon from "@material-ui/icons/Close";
 import { withTranslate } from "react-admin";
 import api from "../api";
 
@@ -38,19 +37,13 @@ class RequestModal extends Component {
     const uname = first_name.concat("_" + last_name);
     var username = uname.toLowerCase();
     username = username.trim();
-    console.log(username);
     let unamedata = {
       username: username
     };
-    console.log(unamedata);
     api
       .checkUsername(key, unamedata)
-      .then(Response => {
-        console.log(Response);
-      })
-      .catch(error => {
-        console.log(error);
-      });
+      .then(Response => {})
+      .catch(error => {});
     this.setState({ username: username, key: key, flag: false });
   }
 
@@ -75,57 +68,48 @@ class RequestModal extends Component {
     );
   };
   render() {
-    const { translate, ...props } = this.props;
-
+    const { translate, dismiss, ...props } = this.props;
     return (
       <div>
-        <Dialog open={props.showFlag}>
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "space-between",
-              margin: "1em"
-            }}
-          >
-            <DialogTitle>
-              {translate("ra.Choose username and password")}
-            </DialogTitle>
-            <IconButton onClick={this.props.onCancel}>
-              <CloseIcon />
-            </IconButton>
-          </div>
+        <Dialog
+          open={props.showFlag}
+          aria-labelledby="alert-dialog-title"
+          aria-describedby="alert-dialog-description"
+        >
+          <DialogTitle id="alert-dialog-title">
+            {translate("ra.Choose username and password")}
+          </DialogTitle>
           <DialogContent style={{ margin: "1em" }}>
             <div>
               <Input
-                style={{ width: "250px" }}
                 type="name"
                 value={this.state.username}
                 onChange={this.onSetUsername}
               ></Input>
             </div>
-            <div style={{ marginTop: "20px" }}>
+            <div style={{ marginTop: "1em" }}>
               <Input
-                style={{ width: "250px" }}
                 placeholder={translate("ra.title.enter_password")}
                 value={this.state.password}
                 onChange={this.onSetPassword}
               ></Input>
             </div>
-            <div style={{ marginTop: "20px" }}>
+            <div style={{ marginTop: "1em" }}>
               <Input
-                style={{ width: "250px" }}
                 placeholder={translate("ra.title.confirm_password")}
                 value={this.state.confirmpassword}
                 onChange={this.onSetConfirmpwd}
               ></Input>
             </div>
           </DialogContent>
-          <div style={{ marginLeft: "40px", marginBottom: "10px" }}>
-            <Button color="primary" variant="raised" onClick={this.handleClick}>
-              {translate("ra.action.set")}
+          <DialogActions>
+            <Button onClick={dismiss} color="primary">
+              {translate("Cancel")}
             </Button>
-          </div>
+            <Button onClick={this.handleClick} color="primary" autoFocus>
+              {translate("Approve")}
+            </Button>
+          </DialogActions>
         </Dialog>
       </div>
     );
