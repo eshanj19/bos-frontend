@@ -22,7 +22,7 @@ import { connect } from "react-redux";
 import Welcome from "./Welcome";
 import { translate, changeLocale } from "react-admin";
 import withStyles from "@material-ui/core/styles/withStyles";
-import { LOCAL_STORAGE_LOCALE } from "../constants";
+import { LOCAL_STORAGE_LOCALE, SUPERSET_API_URL } from "../constants";
 
 const styles = {
   flex: { display: "flex" },
@@ -52,7 +52,9 @@ const Dashboard = ({
     <Responsive
       medium={
         <div>
-          <Welcome />
+          <a href={SUPERSET_API_URL}>
+            <Welcome />
+          </a>
         </div>
       }
     />

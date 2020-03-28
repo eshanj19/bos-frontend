@@ -16,7 +16,7 @@
  */
 
 export const API_URL = process.env.REACT_APP_API_URL;
-
+export const SUPERSET_API_URL = process.env.REACT_APP_SUPERSET_API_URL;
 export const AVAILABLE_LANGUAGES = [
   { label: "English", value: "en_IN" },
   { label: "हिंदी", value: "hi_IN" },

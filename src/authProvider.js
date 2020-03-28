@@ -39,28 +39,34 @@ export default async (type, params) => {
     const { username } = params;
     const { password } = params;
     let loginData = { username: username, password: password };
-    let result = await api.login(loginData);
-    let { data } = result;
-    if (data) {
-      const {
-        permissions,
-        ngo,
-        username,
-        key,
-        language,
-        ngo_name,
-        first_name
-      } = data;
-      localStorage.setItem(LOCAL_STORAGE_USERNAME, username);
-      localStorage.setItem(LOCAL_STORAGE_USER_KEY, key);
-      localStorage.setItem(LOCAL_STORAGE_NGO_KEY, ngo);
-      localStorage.setItem(LOCAL_STORAGE_PERMISSIONS, permissions);
-      localStorage.setItem(LOCAL_STORAGE_LOCALE, language);
-      localStorage.setItem(LOCAL_STORAGE_NGO_NAME, ngo_name);
-      localStorage.setItem(LOCAL_STORAGE_FIRST_NAME, first_name);
+    let bosResult = await api.login(loginData);
+    let supersetResult = await api.supersetLogin(loginData);
+    console.log(supersetResult);
+    if (bosResult.status === 200 && supersetResult.status === 200) {
+      let { data } = bosResult;
+      if (data) {
+        const {
+          permissions,
+          ngo,
+          username,
+          key,
+          language,
+          ngo_name,
+          first_name
+        } = data;
+        localStorage.setItem(LOCAL_STORAGE_USERNAME, username);
+        localStorage.setItem(LOCAL_STORAGE_USER_KEY, key);
+        localStorage.setItem(LOCAL_STORAGE_NGO_KEY, ngo);
+        localStorage.setItem(LOCAL_STORAGE_PERMISSIONS, permissions);
+        localStorage.setItem(LOCAL_STORAGE_LOCALE, language);
+        localStorage.setItem(LOCAL_STORAGE_NGO_NAME, ngo_name);
+        localStorage.setItem(LOCAL_STORAGE_FIRST_NAME, first_name);
 
-      return Promise.resolve();
-    } else return Promise.reject();
+        return Promise.resolve();
+      } else return Promise.reject();
+    } else {
+      return Promise.reject();
+    }
   }
   if (type === AUTH_LOGOUT) {
     localStorage.removeItem(LOCAL_STORAGE_USERNAME);

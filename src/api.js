@@ -16,14 +16,13 @@
  */
 
 import axios from "./axios";
-import { useSnackbar } from "notistack";
+import supersetAxios from "./supersetAxios";
 import {
   SNACKBAR_ERROR,
   SNACKBAR_SUCCESS,
   API_ERROR_UNKNOWN,
   API_SUCCESS
 } from "./constants";
-import { enqueueSnackbar } from "notistack";
 
 const toFormData = data => {
   const fd = new FormData();
@@ -35,6 +34,9 @@ const toFormData = data => {
 
 const login = data => {
   return axios.post("/login/", toFormData(data));
+};
+const supersetLogin = data => {
+  return supersetAxios.post("/login/", toFormData(data));
 };
 
 const get = url => {
@@ -276,6 +278,7 @@ const api = {
   handleSuccess,
   handleError,
   login,
+  supersetLogin,
   get,
   put,
   post,
