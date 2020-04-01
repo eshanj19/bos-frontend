@@ -41,8 +41,8 @@ export default async (type, params) => {
     let loginData = { username: username, password: password };
     let bosResult = await api.login(loginData);
     let supersetResult = await api.supersetLogin(loginData);
-    console.log(supersetResult);
     if (bosResult.status === 200 && supersetResult.status === 200) {
+      // if (bosResult.status === 200) {
       let { data } = bosResult;
       if (data) {
         const {
@@ -69,14 +69,20 @@ export default async (type, params) => {
     }
   }
   if (type === AUTH_LOGOUT) {
-    localStorage.removeItem(LOCAL_STORAGE_USERNAME);
-    localStorage.removeItem(LOCAL_STORAGE_USER_KEY);
-    localStorage.removeItem(LOCAL_STORAGE_NGO_KEY);
-    localStorage.removeItem(LOCAL_STORAGE_PERMISSIONS);
-    localStorage.removeItem(LOCAL_STORAGE_LOCALE);
-    localStorage.removeItem(LOCAL_STORAGE_NGO_NAME);
-    localStorage.removeItem(LOCAL_STORAGE_FIRST_NAME);
-    return Promise.resolve();
+    let supersetResult = await api.supersetLogout();
+    console.log(supersetResult);
+    if (supersetResult.status === 200) {
+      localStorage.removeItem(LOCAL_STORAGE_USERNAME);
+      localStorage.removeItem(LOCAL_STORAGE_USER_KEY);
+      localStorage.removeItem(LOCAL_STORAGE_NGO_KEY);
+      localStorage.removeItem(LOCAL_STORAGE_PERMISSIONS);
+      localStorage.removeItem(LOCAL_STORAGE_LOCALE);
+      localStorage.removeItem(LOCAL_STORAGE_NGO_NAME);
+      localStorage.removeItem(LOCAL_STORAGE_FIRST_NAME);
+      return Promise.resolve();
+    } else {
+      return Promise.reject();
+    }
   }
   if (type === AUTH_ERROR) {
     return Promise.resolve();

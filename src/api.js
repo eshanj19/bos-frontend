@@ -35,8 +35,13 @@ const toFormData = data => {
 const login = data => {
   return axios.post("/login/", toFormData(data));
 };
+
 const supersetLogin = data => {
   return supersetAxios.post("/login/", toFormData(data));
+};
+
+const supersetLogout = () => {
+  return supersetAxios.get("/logout/");
 };
 
 const get = url => {
@@ -279,6 +284,7 @@ const api = {
   handleError,
   login,
   supersetLogin,
+  supersetLogout,
   get,
   put,
   post,

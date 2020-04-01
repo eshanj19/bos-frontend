@@ -32,10 +32,12 @@ const styles = {
 const Welcome = ({ classes, translate }) => (
   <Card>
     <CardContent>
-      <Typography variant="headline" component="h2">
+      {/* <Typography variant="headline" component="h2">
         {translate("ra.Welcome to Bridges of Sports platform")}
+      </Typography> */}
+      <Typography component="p">
+        Click here to visit the analytics platform
       </Typography>
-      {/* <Typography component="p">This page is under development</Typography> */}
     </CardContent>
   </Card>
 );
