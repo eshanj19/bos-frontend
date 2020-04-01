@@ -19,6 +19,7 @@ import React from "react";
 import { Create, TextInput, SimpleForm, BooleanInput } from "react-admin";
 import withStyles from "@material-ui/core/styles/withStyles";
 import { required } from "ra-core";
+import { translate } from "react-admin";
 
 export const styles = {
   label: { display: "block" },
@@ -27,23 +28,24 @@ export const styles = {
   is_active: { display: "block" }
 };
 
-const MeasurementTypeCreate = ({ classes, ...props }) => (
-  <Create {...props}>
+const MeasurementTypeCreate = translate(({ classes, translate, ...props }) => (
+  <Create {...props} title={translate("ra.create measurement type")}>
     <SimpleForm redirect="list">
       <TextInput
         autoFocus
+        label={translate("ra.title.label")}
         source="label"
         formClassName={classes.label}
         validate={required()}
       />
       <BooleanInput
         source="is_active"
-        label="Active"
+        label={translate("ra.action.active")}
         formClassName={classes.is_active}
         defaultValue={true}
       />
     </SimpleForm>
   </Create>
-);
+));
 
 export default withStyles(styles)(MeasurementTypeCreate);

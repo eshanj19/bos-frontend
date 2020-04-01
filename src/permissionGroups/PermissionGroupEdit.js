@@ -24,6 +24,9 @@ import PermissionList from "./PermissionList";
 import api from "../api";
 import instance from "../axios";
 import { getGroupName } from "../utils";
+import { withTranslate } from "react-admin";
+import { List } from "react-admin";
+import { withSnackbar } from "notistack";
 
 class PermissionGroupEdit extends Component {
   constructor(props) {
@@ -48,6 +51,7 @@ class PermissionGroupEdit extends Component {
 
   handleSaveButton = () => {
     var { match, currentGroupPermissions } = this.state;
+    const { enqueueSnackbar } = this.props;
     var checkedGroupPermissions = [];
     currentGroupPermissions.forEach(permission => {
       if (permission.checked) {
@@ -56,13 +60,11 @@ class PermissionGroupEdit extends Component {
     });
     api
       .put(match.url, checkedGroupPermissions)
-      .then(({ response }) => {
-        console.log(response);
+      .then(response => {
+        api.handleSuccess(response, enqueueSnackbar);
       })
-      .catch(({ response }) => {
-        console.log(response);
-
-        api.handleError(response);
+      .catch(response => {
+        api.handleError(response, enqueueSnackbar);
       });
   };
 
@@ -106,8 +108,6 @@ class PermissionGroupEdit extends Component {
         })
       )
       .catch(({ response }) => {
-        console.log(response);
-
         api.handleError(response);
       });
   }
@@ -115,9 +115,13 @@ class PermissionGroupEdit extends Component {
   render() {
     const { currentGroupPermissions, groupName, flag } = this.state;
     const props = this.props;
+    const { translate } = this.props;
     return (
       <div>
-        <h3 style={{ marginLeft: 10 }}> Permissions for group: {groupName} </h3>
+        <h3 style={{ marginLeft: 10 }}>
+          {" "}
+          {translate("ra.Permissions for group")}: {groupName}{" "}
+        </h3>
         <PermissionList
           currentGroupPermissions={currentGroupPermissions}
           flag={flag}
@@ -139,7 +143,7 @@ class PermissionGroupEdit extends Component {
             style={{ marginTop: 10, marginBottom: 5 }}
             onClick={this.handleSaveButton}
           >
-            Save
+            {translate("ra.action.submit")}
           </Button>
         </Grid>
       </div>
@@ -147,4 +151,6 @@ class PermissionGroupEdit extends Component {
   }
 }
 
-export default withStyles(styles)(PermissionGroupEdit);
+export default withSnackbar(
+  withTranslate(withStyles(styles)(PermissionGroupEdit))
+);

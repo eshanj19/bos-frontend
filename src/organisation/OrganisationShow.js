@@ -17,6 +17,8 @@ import sortBy from "lodash/sortBy";
 import api from "../api";
 import { withSnackbar } from "notistack";
 import UserSelectionMenu from "./UserSelectionMenu";
+import { withTranslate } from "react-admin";
+import { LOCAL_STORAGE_NGO_KEY } from "../constants";
 
 /**
  * example user hierarchy stored in state --
@@ -49,7 +51,7 @@ class OrganisationShow extends Component {
   }
 
   componentDidMount() {
-    const ngoKey = localStorage.getItem("ngo_key");
+    const ngoKey = localStorage.getItem(LOCAL_STORAGE_NGO_KEY);
     api
       .getUserHierarchy(ngoKey)
       .then(response => {
@@ -226,7 +228,7 @@ class OrganisationShow extends Component {
   handleSave = () => {
     const { orgHierarchy, zeroEdgeNodes } = this.state;
     const payload = [orgHierarchy].concat(zeroEdgeNodes);
-    const ngoKey = localStorage.getItem("ngo_key");
+    const ngoKey = localStorage.getItem(LOCAL_STORAGE_NGO_KEY);
     console.log(payload);
     // return;
     api
@@ -242,6 +244,7 @@ class OrganisationShow extends Component {
 
   render() {
     const { orgHierarchy, zeroEdgeNodes, searchedUserList } = this.state;
+    const { translate } = this.props;
     console.log({ orgHierarchy });
     return (
       <div>
@@ -253,11 +256,11 @@ class OrganisationShow extends Component {
           }}
         >
           <div>
-            <h3>View/Edit Organisation</h3>
+            <h3>{translate("ra.title.view_edit_organisation")}</h3>
           </div>
           <div>
             <Button onClick={() => this.handleSave(true)} color="primary">
-              Save
+              {translate("ra.action.save")}
             </Button>
           </div>
         </div>
@@ -283,10 +286,12 @@ class OrganisationShow extends Component {
             </div>
             <div>
               <div>
-                <h5>Members with no athlete/coach relationship.</h5>
+                <h5>
+                  {translate("ra.Members with no athlete/coach relationship")}
+                </h5>
                 {zeroEdgeNodes.length > 0
                   ? this.renderZeroEdgeNodes()
-                  : "-- No members --"}
+                  : translate("ra.title.no_members")}
                 {this.renderMenuItems()}
               </div>
             </div>
@@ -298,6 +303,7 @@ class OrganisationShow extends Component {
 
   renderZeroEdgeNodes = () => {
     const { orgHierarchy, zeroEdgeNodes } = this.state;
+    const { translate } = this.props;
     return zeroEdgeNodes.map(item => {
       return (
         <Fragment key={item.key}>
@@ -317,7 +323,9 @@ class OrganisationShow extends Component {
                 }}
               >
                 <PersonAddIcon />{" "}
-                <span style={{ marginLeft: "5px" }}>Set Parent</span>
+                <span style={{ marginLeft: "5px" }}>
+                  {translate("ra.title.set_parent")}
+                </span>
               </Button>
             </Grid>
           </Grid>
@@ -369,7 +377,7 @@ class OrganisationShow extends Component {
   };
 }
 
-export default withSnackbar(OrganisationShow);
+export default withTranslate(withSnackbar(OrganisationShow));
 
 /**
  * if the node is from zero-edge node,

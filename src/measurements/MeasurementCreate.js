@@ -26,6 +26,7 @@ import {
   AutocompleteInput
 } from "react-admin";
 import withStyles from "@material-ui/core/styles/withStyles";
+import { translate } from "react-admin";
 
 export const styles = {
   label: { display: "block" },
@@ -48,13 +49,23 @@ export const validateMeasurementCreation = values => {
   return errors;
 };
 
-const MeasurementCreate = ({ classes, ...props }) => (
-  <Create undoable={false} {...props}>
+const MeasurementCreate = translate(({ classes, translate, ...props }) => (
+  <Create undoable={false} {...props} title={translate("ra.create measuremet")}>
     <SimpleForm redirect="list" validate={validateMeasurementCreation}>
-      <TextInput autoFocus source="label" formClassName={classes.label} />
-      <TextInput source="uom" formClassName={classes.uom} />
+      <TextInput
+        autoFocus
+        label={translate("ra.title.label")}
+        source="label"
+        formClassName={classes.label}
+      />
+      <TextInput
+        label={translate("ra.title.uom")}
+        source="uom"
+        formClassName={classes.uom}
+      />
       <AutocompleteInput
         source="input_type"
+        label={translate("ra.title.inputtype")}
         formClassName={classes.input_type}
         choices={[
           { id: "text", name: "Text" },
@@ -64,7 +75,7 @@ const MeasurementCreate = ({ classes, ...props }) => (
       />
       <ReferenceArrayInput
         formClassName={classes.type}
-        label="Measurement Type"
+        label={translate("ra.menu.measurement_type")}
         source="types"
         filter={{ is_active: true }}
         reference="measurement_types"
@@ -73,12 +84,12 @@ const MeasurementCreate = ({ classes, ...props }) => (
       </ReferenceArrayInput>
       <BooleanInput
         source="is_active"
-        label="Active"
+        label={translate("ra.action.active")}
         formClassName={classes.is_active}
         defaultValue={true}
       />
     </SimpleForm>
   </Create>
-);
+));
 
 export default withStyles(styles)(MeasurementCreate);

@@ -16,25 +16,7 @@
  */
 
 import React, { Component } from "react";
-import {
-  Datagrid,
-  EditButton,
-  Responsive,
-  ShowButton,
-  ArrayField
-} from "react-admin";
-import withStyles from "@material-ui/core/styles/withStyles";
-import { hasAccess } from "ra-auth-acl";
-import Paper from "@material-ui/core/Paper";
-import DataField from "../common/DataField";
-import {
-  Grid,
-  List,
-  ListItem,
-  ListItemText,
-  TableRow,
-  TableCell
-} from "@material-ui/core";
+import { TableRow, TableCell } from "@material-ui/core";
 
 class RequestData extends Component {
   constructor(props) {
@@ -43,7 +25,6 @@ class RequestData extends Component {
   }
 
   getData = () => {
-    const { ...props } = this.props;
     const {
       controllerProps: { record },
       measurements
@@ -61,7 +42,7 @@ class RequestData extends Component {
       }
       requestMeasurements.forEach(requestMeasurementItem => {
         measurements.forEach(measurementItem => {
-          if (requestMeasurementItem.key == measurementItem.key) {
+          if (requestMeasurementItem.key === measurementItem.key) {
             let dict = {
               measurement: measurementItem.label,
               value: requestMeasurementItem.value
@@ -75,10 +56,22 @@ class RequestData extends Component {
 
     const mapped = lists.map(list => {
       return (
-        <TableRow>
-          <TableCell>{list.measurement}</TableCell>
-
-          <TableCell>{list.value}</TableCell>
+        <TableRow key={list.id}>
+          <TableCell
+            style={{
+              border: 0
+            }}
+          >
+            {list.measurement}
+          </TableCell>
+          <TableCell
+            style={{
+              border: 0
+            }}
+            numeric
+          >
+            {list.value}
+          </TableCell>
         </TableRow>
       );
     });

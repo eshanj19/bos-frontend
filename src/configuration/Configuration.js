@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
@@ -24,6 +24,15 @@ import { translate, changeLocale, Title } from "react-admin";
 import withStyles from "@material-ui/core/styles/withStyles";
 import compose from "recompose/compose";
 import { changeTheme } from "./actions";
+import {
+  localeEN_IN,
+  localeHI_IN,
+  localeKA_IN,
+  LOCAL_STORAGE_LOCALE,
+  LOCAL_STORAGE_USER_KEY
+} from "../constants";
+import api from "../api";
+import { withSnackbar } from "notistack";
 
 const styles = {
   label: { width: "10em", display: "inline-block" },
@@ -33,53 +42,86 @@ const styles = {
 const Configuration = ({
   classes,
   theme,
-  locale,
   changeTheme,
   changeLocale,
-  translate
-}) => (
-  <Card>
-    <Title title={translate("pos.configuration")} />
-    <CardContent>
-      <div className={classes.label}>{translate("pos.theme.name")}</div>
-      <Button
-        variant="raised"
-        className={classes.button}
-        color={theme === "light" ? "primary" : "default"}
-        onClick={() => changeTheme("light")}
-      >
-        {translate("pos.theme.light")}
-      </Button>
-      <Button
-        variant="raised"
-        className={classes.button}
-        color={theme === "dark" ? "primary" : "default"}
-        onClick={() => changeTheme("dark")}
-      >
-        {translate("pos.theme.dark")}
-      </Button>
-    </CardContent>
-    <CardContent>
-      <div className={classes.label}>{translate("pos.language")}</div>
-      <Button
-        variant="raised"
-        className={classes.button}
-        color={locale === "en" ? "primary" : "default"}
-        onClick={() => changeLocale("en")}
-      >
-        en
-      </Button>
-      <Button
-        variant="raised"
-        className={classes.button}
-        color={locale === "fr" ? "primary" : "default"}
-        onClick={() => changeLocale("fr")}
-      >
-        fr
-      </Button>
-    </CardContent>
-  </Card>
-);
+  translate,
+  enqueueSnackbar
+}) => {
+  const [locale, setLocale] = useState([]);
+  useEffect(() => {
+    //fetch possible resource choices.
+    const locale = localStorage.getItem(LOCAL_STORAGE_LOCALE);
+    setLocale(locale);
+    changeLocale(locale);
+  }, []);
+
+  const onClickChangeLocale = locale => {
+    const data = { language: locale };
+    const userKey = localStorage.getItem(LOCAL_STORAGE_USER_KEY);
+    api
+      .changeLanguage(userKey, data)
+      .then(response => {
+        api.handleSuccess(response, enqueueSnackbar);
+        changeLocale(locale);
+        localStorage.setItem(LOCAL_STORAGE_LOCALE, locale);
+        setLocale(locale);
+      })
+      .catch(response => {
+        api.handleError(response, enqueueSnackbar);
+      });
+  };
+  return (
+    <Card>
+      <Title title={translate("ra.configuration")} />
+      <CardContent>
+        <div className={classes.label}>{translate("ra.title.theme")}</div>
+        <Button
+          variant="raised"
+          className={classes.button}
+          color={theme === "light" ? "primary" : "default"}
+          onClick={() => changeTheme("light")}
+        >
+          {translate("ra.theme.light")}
+        </Button>
+        <Button
+          variant="raised"
+          className={classes.button}
+          color={theme === "dark" ? "primary" : "default"}
+          onClick={() => changeTheme("dark")}
+        >
+          {translate("ra.theme.dark")}
+        </Button>
+      </CardContent>
+      <CardContent>
+        <div className={classes.label}>{translate("ra.title.language")}</div>
+        <Button
+          variant="raised"
+          className={classes.button}
+          color={locale === localeEN_IN ? "primary" : "default"}
+          onClick={() => onClickChangeLocale(localeEN_IN)}
+        >
+          {translate("ra.language.en")}
+        </Button>
+        <Button
+          variant="raised"
+          className={classes.button}
+          color={locale === localeHI_IN ? "primary" : "default"}
+          onClick={() => onClickChangeLocale(localeHI_IN)}
+        >
+          {translate("ra.language.hi")}
+        </Button>
+        <Button
+          variant="raised"
+          className={classes.button}
+          color={locale === localeKA_IN ? "primary" : "default"}
+          onClick={() => onClickChangeLocale(localeKA_IN)}
+        >
+          {translate("ra.language.ka")}
+        </Button>
+      </CardContent>
+    </Card>
+  );
+};
 
 const mapStateToProps = state => ({
   theme: state.theme,
@@ -87,15 +129,13 @@ const mapStateToProps = state => ({
 });
 
 const enhance = compose(
-  connect(
-    mapStateToProps,
-    {
-      changeLocale,
-      changeTheme
-    }
-  ),
+  connect(mapStateToProps, {
+    changeLocale,
+    changeTheme
+  }),
   translate,
-  withStyles(styles)
+  withStyles(styles),
+  withSnackbar
 );
 
 export default enhance(Configuration);

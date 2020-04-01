@@ -15,38 +15,39 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import React, { Component } from "react";
-import {
-  Show,
-  SimpleShowLayout,
-  BooleanField,
-  TextField,
-  SelectField
-} from "react-admin";
+import React from "react";
+import { Show, SimpleShowLayout, BooleanField, TextField } from "react-admin";
 import withStyles from "@material-ui/core/styles/withStyles";
+import { withTranslate } from "react-admin";
+import { styles } from "../common/Styles";
+import GenderField from "../common/GenderField";
 
-import { styles } from "../admins/AdminCreate";
-import { GENDER_CHOICES } from "../constants";
+const AdminShow = ({ classes, ...props }) => {
+  const { translate } = props;
+  return (
+    <Show title={translate("ra.admin_information")} {...props}>
+      <SimpleShowLayout classes={classes}>
+        <TextField
+          label={translate("ra.title.first_name")}
+          source="first_name"
+        />
+        <TextField
+          label={translate("ra.title.middle_name")}
+          source="middle_name"
+        />
+        <TextField label={translate("ra.title.last_name")} source="last_name" />
+        <GenderField
+          label={translate("ra.title.gender")}
+          source="gender"
+          className={classes.gender}
+        />
+        <BooleanField
+          source="is_active"
+          label={translate("ra.action.active")}
+        />
+      </SimpleShowLayout>
+    </Show>
+  );
+};
 
-class AdminShow extends Component {
-  render() {
-    const { classes, ...props } = this.props;
-    return (
-      <Show title="Admin information" {...props}>
-        <SimpleShowLayout>
-          <TextField source="first_name" formClassName={classes.first_name} />
-          <TextField source="middle_name" formClassName={classes.last_name} />
-          <TextField source="last_name" formClassName={classes.last_name} />
-          <SelectField source="gender" choices={GENDER_CHOICES} />
-          <BooleanField
-            source="is_active"
-            label="Active"
-            formClassName={classes.is_active}
-          />
-        </SimpleShowLayout>
-      </Show>
-    );
-  }
-}
-
-export default withStyles(styles)(AdminShow);
+export default withTranslate(withStyles(styles)(AdminShow));

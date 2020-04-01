@@ -1,5 +1,9 @@
 import axios from "axios";
-import { API_URL, AVAILABLE_LANGUAGES } from "./constants";
+import {
+  API_URL,
+  AVAILABLE_LANGUAGES,
+  LOCAL_STORAGE_LOCALE
+} from "./constants";
 
 const instance = axios.create({
   baseURL: API_URL
@@ -13,7 +17,7 @@ instance.spread = axios.spread;
 
 instance.interceptors.request.use(config => {
   config.headers.common["Accept-Language"] =
-    localStorage.getItem("SELECTED_LANGUAGE") || AVAILABLE_LANGUAGES[0].value;
+    localStorage.getItem(LOCAL_STORAGE_LOCALE) || AVAILABLE_LANGUAGES[0].value;
   return config;
 });
 instance.interceptors.response.use(

@@ -41,129 +41,25 @@ import {
   Checkbox
 } from "@material-ui/core";
 import EditIcon from "@material-ui/icons/Edit";
-import api from "../api";
 import { withDataProvider } from "ra-core";
 import ResourceTypeField from "./common/ResourceTypeField";
 import { withSnackbar } from "notistack";
-import { RESOURCE_TYPE_REGISTRATION_FORM } from "../constants";
+import { translate } from "react-admin";
+import {
+  RESOURCE_TYPE_FILE,
+  RESOURCE_TYPE_REGISTRATION_FORM,
+  RESOURCE_TYPE_TRAINING_SESSION,
+  RESOURCE_TYPE_CURRICULUM,
+  PERMISSION_FILE_CREATE,
+  PERMISSION_REGISTRATION_FORM_CREATE,
+  PERMISSION_CURRICULA_CREATE,
+  PERMISSION_TRAINING_SESSION_CREATE
+} from "../constants";
+import { hasAccess } from "ra-auth-acl";
 
 const styles = {
   nb_commands: { color: "purple" }
 };
-
-const BulkActionButtons = props => {
-  const setAsCoachRegistration = id => {
-    const ngoKey = localStorage.getItem("ngo_key");
-    // crudUpdateMany("ping", id, null, "/ping");
-    console.log(props);
-    api
-      .setAsCoachRegistrationSession(ngoKey, { resource: id })
-      .then(response => {
-        api.handleSuccess(response, props.enqueueSnackbar);
-        props.history.push(props.basePath);
-      })
-      .catch(error => {
-        api.handleError(error, props.enqueueSnackbar);
-      });
-  };
-  const setAsAthleteRegistration = id => {
-    const ngoKey = localStorage.getItem("ngo_key");
-    api
-      .setAsAthleteRegistrationSession(ngoKey, { resource: id })
-      .then(response => {
-        api.handleSuccess(response, props.enqueueSnackbar);
-      })
-      .catch(error => {
-        api.handleError(error, props.enqueueSnackbar);
-      });
-  };
-  const deactivateResource = id => {
-    api.deactivateResource(id).then(response => {});
-  };
-  const activateResource = id => {
-    api.activateResource(id).then(response => {});
-  };
-  const { resourceList, selectedIds } = props;
-
-  if (
-    selectedIds.length === 1 &&
-    resourceList[selectedIds[0]].type === RESOURCE_TYPE_REGISTRATION_FORM
-  ) {
-    return (
-      <>
-        <Button
-          onClick={() => {
-            setAsCoachRegistration(selectedIds[0]);
-          }}
-        >
-          Set As Coach Registration
-        </Button>
-        <Button
-          onClick={() => {
-            setAsAthleteRegistration(selectedIds[0]);
-          }}
-        >
-          Set As Athlete Registration
-        </Button>
-
-        {resourceList[selectedIds[0]].is_active === true ? (
-          <Button
-            onClick={() => {
-              deactivateResource(selectedIds[0]);
-            }}
-            color="secondary"
-          >
-            Deactivate
-          </Button>
-        ) : (
-          <Button
-            onClick={() => {
-              activateResource(selectedIds[0]);
-            }}
-          >
-            Activate
-          </Button>
-        )}
-      </>
-    );
-  } else {
-    var areAllActive = true;
-    var areAllInactive = true;
-    selectedIds.forEach(selectedId => {
-      var resource = resourceList[selectedId];
-      if (resource.is_active === true) {
-        areAllInactive = false;
-      } else {
-        areAllActive = false;
-      }
-    });
-    if (areAllActive === true && areAllInactive === false) {
-      return (
-        <Button
-          onClick={() => {
-            deactivateResource(selectedIds[0]);
-          }}
-        >
-          Deactivate
-        </Button>
-      );
-    } else if (areAllActive === false && areAllInactive === true) {
-      return (
-        <Button
-          onClick={() => {
-            activateResource(selectedIds[0]);
-          }}
-        >
-          Activate
-        </Button>
-      );
-    } else {
-      return <div>YOLO</div>;
-    }
-  }
-};
-
-// const DatagridRow = withRouter(Row);
 
 const DatagridRow = ({
   record,
@@ -212,25 +108,29 @@ const DatagridRow = ({
   </TableRow>
 );
 
-const ResourceFilter = props => (
+const ResourceFilter = translate(({ translate, ...props }) => (
   <Filter {...props}>
-    <SearchInput label="Name" source="label" alwaysOn />
+    <SearchInput label={translate("ra.title.name")} source="label" alwaysOn />
     <SelectInput
-      label="Type"
+      label={translate("ra.title.type")}
       source="type"
       choices={[
-        { id: "session", name: "Session" },
-        { id: "curriculum", name: "Curriculum" },
-        { id: "file", name: "File" },
-        { id: "registration", name: "Registration Form" }
+        { id: RESOURCE_TYPE_TRAINING_SESSION, name: "Session" },
+        { id: RESOURCE_TYPE_CURRICULUM, name: "Curriculum" },
+        { id: RESOURCE_TYPE_FILE, name: "File" },
+        { id: RESOURCE_TYPE_REGISTRATION_FORM, name: "Registration Form" }
       ]}
       alwaysOn
     />
-    <BooleanInput source="is_active" label="Active" alwaysOn />
+    <BooleanInput
+      label={translate("ra.action.active")}
+      source="is_active"
+      alwaysOn
+    />
   </Filter>
-);
+));
 
-const CreateActions = props => {
+const CreateActions = translate(({ translate, permissions, ...props }) => {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
   const handleClick = event => {
@@ -250,7 +150,7 @@ const CreateActions = props => {
         aria-haspopup="true"
         onClick={handleClick}
       >
-        Create
+        {translate("ra.action.create")}
       </Button>
       <Menu
         id="fade-menu"
@@ -260,20 +160,35 @@ const CreateActions = props => {
         onClose={handleClose}
         TransitionComponent={Fade}
       >
-        <MenuItem onClick={() => handleMenuSelect("curriculum")}>
-          Curriculum
-        </MenuItem>
-        <MenuItem onClick={() => handleMenuSelect("session")}>
-          Training Session
-        </MenuItem>
-        <MenuItem onClick={() => handleMenuSelect("file")}>File</MenuItem>
-        <MenuItem onClick={() => handleMenuSelect("registration")}>
-          Registration form
-        </MenuItem>
+        {hasAccess(permissions, PERMISSION_CURRICULA_CREATE) && (
+          <MenuItem onClick={() => handleMenuSelect(RESOURCE_TYPE_CURRICULUM)}>
+            {translate("ra.option.curriculum")}
+          </MenuItem>
+        )}
+        {hasAccess(permissions, PERMISSION_TRAINING_SESSION_CREATE) && (
+          <MenuItem
+            onClick={() => handleMenuSelect(RESOURCE_TYPE_TRAINING_SESSION)}
+          >
+            {translate("ra.option.training_session")}
+          </MenuItem>
+        )}
+        {hasAccess(permissions, PERMISSION_FILE_CREATE) && (
+          <MenuItem onClick={() => handleMenuSelect(RESOURCE_TYPE_FILE)}>
+            {translate("ra.option.file")}
+          </MenuItem>
+        )}
+
+        {hasAccess(permissions, PERMISSION_REGISTRATION_FORM_CREATE) && (
+          <MenuItem
+            onClick={() => handleMenuSelect(RESOURCE_TYPE_REGISTRATION_FORM)}
+          >
+            {translate("ra.option.registration_form")}
+          </MenuItem>
+        )}
       </Menu>
     </>
   );
-};
+});
 
 const BosDatagridBody = props => (
   <DatagridBody {...props} row={<DatagridRow history={props.history} />} />
@@ -282,15 +197,14 @@ const BosDatagrid = props => (
   <Datagrid {...props} body={<BosDatagridBody history={props.history} />} />
 );
 
-const ResourcesList = ({ classes, ...props }) => (
+const ResourcesList = translate(({ classes, translate, ...props }) => (
   <List
     {...props}
-    sort={{ field: "label", order: "ASC" }}
+    sort={{ field: "last_modification_time", order: "DESC" }}
     perPage={25}
     filters={<ResourceFilter />}
     filterDefaultValues={{ is_active: true }}
     actions={<CreateActions {...props} />}
-    bulkActionButtons={<BulkActionButtons {...props} />}
   >
     {/* <Responsive
       medium={
@@ -306,18 +220,34 @@ const ResourcesList = ({ classes, ...props }) => (
       }
     /> */}
     <BosDatagrid history={props.history}>
-      <TextField source="label" type="text" />
-      <ResourceTypeField source="type" type="text" />
-      <BooleanField source="is_active" label="Active" />
-      <DateField label="Created on" source="creation_time" showTime />
-      <DateField label="Modified on" source="last_modification_time" showTime />
-      <ShowButton />
+      <TextField
+        label={translate("ra.title.label")}
+        source="label"
+        type="text"
+      />
+      <ResourceTypeField
+        label={translate("ra.title.type")}
+        source="type"
+        type="text"
+      />
+      <BooleanField label={translate("ra.action.active")} source="is_active" />
+      <DateField
+        label={translate("ra.title.created_on")}
+        source="creation_time"
+        showTime
+      />
+      <DateField
+        label={translate("ra.title.last_mod")}
+        source="last_modification_time"
+        showTime
+      />
+      <ShowButton label={translate("ra.action.show")} />
       <Button id="edit_button" color="primary">
-        Edit
+        {translate("ra.action.edit")}
       </Button>
     </BosDatagrid>
   </List>
-);
+));
 const mapStateToProps = state => {
   return {
     resourceList: state.admin.resources.resources.data

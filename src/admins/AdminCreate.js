@@ -25,7 +25,8 @@ import {
 } from "react-admin";
 import withStyles from "@material-ui/core/styles/withStyles";
 import api from "../api";
-import { GENDER_CHOICES } from "../constants";
+import { GENDER_CHOICES, LOCAL_STORAGE_NGO_KEY } from "../constants";
+import { translate } from "react-admin";
 
 export const styles = {
   first_name: { display: "block" },
@@ -56,13 +57,12 @@ export const validateAdminCreation = values => {
   return errors;
 };
 
-const AdminCreate = ({ classes, ...props }) => {
+const AdminCreate = translate(({ classes, translate, ...props }) => {
   const [permissionGroupChoices, setPermissionGroupChoices] = useState([]);
   useEffect(() => {
     //fetch possible resource choices.
-    const ngoKey = localStorage.getItem("ngo_key");
+    const ngoKey = localStorage.getItem(LOCAL_STORAGE_NGO_KEY);
     api.getPermissionGroups(ngoKey).then(({ data }) => {
-      console.log(data);
       const choices = data.map(d => ({
         id: d.id,
         name: d.name.replace(ngoKey + "_", "")
@@ -82,34 +82,55 @@ const AdminCreate = ({ classes, ...props }) => {
     }
   };
   return (
-    <Create undoable={false} {...props}>
+    <Create undoable={false} {...props} title={translate("ra.create admin")}>
       <SimpleForm redirect="list" validate={validateAdminCreation}>
         <TextInput
           autoFocus
+          label={translate("ra.title.first_name")}
           source="first_name"
           formClassName={classes.first_name}
         />
-        <TextInput source="middle_name" formClassName={classes.generic} />
-        <TextInput source="last_name" formClassName={classes.last_name} />
-        <SelectInput source="gender" choices={GENDER_CHOICES} />
+        <TextInput
+          source="middle_name"
+          label={translate("ra.title.middle_name")}
+          formClassName={classes.generic}
+        />
+        <TextInput
+          source="last_name"
+          label={translate("ra.title.last_name")}
+          formClassName={classes.last_name}
+        />
+        <SelectInput
+          source="gender"
+          label={translate("ra.title.gender")}
+          choices={GENDER_CHOICES}
+        />
         <TextInput
           type="username"
           source="username"
+          label={translate("ra.title.username")}
           formClassName={classes.username}
         />
         <TextInput
           type="password"
           source="password"
+          label={translate("ra.title.password")}
           formClassName={classes.password}
         />
         <TextInput
           type="password"
           source="confirm_password"
+          label={translate("ra.title.confirm_password")}
           formClassName={classes.password}
         />
-        <TextInput type="email" source="email" formClassName={classes.email} />
+        <TextInput
+          type="email"
+          source="email"
+          label={translate("ra.title.email")}
+          formClassName={classes.email}
+        />
         <AutocompleteArrayInput
-          label="Permission group"
+          label={translate("ra.title.permission_group")}
           source="permission_groups"
           choices={permissionGroupChoices}
           onChange={handlePermissionGroupChoiceChange}
@@ -117,6 +138,6 @@ const AdminCreate = ({ classes, ...props }) => {
       </SimpleForm>
     </Create>
   );
-};
+});
 
 export default withStyles(styles)(AdminCreate);

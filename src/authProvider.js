@@ -24,37 +24,65 @@ import {
 } from "react-admin";
 import api from "./api";
 import { checkPermission } from "./utils";
+import {
+  LOCAL_STORAGE_LOCALE,
+  LOCAL_STORAGE_USERNAME,
+  LOCAL_STORAGE_USER_KEY,
+  LOCAL_STORAGE_NGO_KEY,
+  LOCAL_STORAGE_PERMISSIONS,
+  LOCAL_STORAGE_NGO_NAME,
+  LOCAL_STORAGE_FIRST_NAME
+} from "./constants";
 
 export default async (type, params) => {
   if (type === AUTH_LOGIN) {
     const { username } = params;
     const { password } = params;
     let loginData = { username: username, password: password };
-    let result = await api.login(loginData);
-    let { data } = result;
-    if (data) {
-      const {
-        permissions,
-        group,
-        ngo,
-        username,
-        key,
-        // language,
-        ngo_name,
-        is_reset_password,
-        first_name
-      } = data;
-      // console.log(data);
-      localStorage.setItem("username", username);
-      localStorage.setItem("ngo_key", ngo);
-      localStorage.setItem("permissions", permissions);
-      return Promise.resolve();
-    } else return Promise.reject();
+    let bosResult = await api.login(loginData);
+    let supersetResult = await api.supersetLogin(loginData);
+    if (bosResult.status === 200 && supersetResult.status === 200) {
+      // if (bosResult.status === 200) {
+      let { data } = bosResult;
+      if (data) {
+        const {
+          permissions,
+          ngo,
+          username,
+          key,
+          language,
+          ngo_name,
+          first_name
+        } = data;
+        localStorage.setItem(LOCAL_STORAGE_USERNAME, username);
+        localStorage.setItem(LOCAL_STORAGE_USER_KEY, key);
+        localStorage.setItem(LOCAL_STORAGE_NGO_KEY, ngo);
+        localStorage.setItem(LOCAL_STORAGE_PERMISSIONS, permissions);
+        localStorage.setItem(LOCAL_STORAGE_LOCALE, language);
+        localStorage.setItem(LOCAL_STORAGE_NGO_NAME, ngo_name);
+        localStorage.setItem(LOCAL_STORAGE_FIRST_NAME, first_name);
+
+        return Promise.resolve();
+      } else return Promise.reject();
+    } else {
+      return Promise.reject();
+    }
   }
   if (type === AUTH_LOGOUT) {
-    localStorage.removeItem("username");
-    localStorage.removeItem("permissions");
-    return Promise.resolve();
+    let supersetResult = await api.supersetLogout();
+    console.log(supersetResult);
+    if (supersetResult.status === 200) {
+      localStorage.removeItem(LOCAL_STORAGE_USERNAME);
+      localStorage.removeItem(LOCAL_STORAGE_USER_KEY);
+      localStorage.removeItem(LOCAL_STORAGE_NGO_KEY);
+      localStorage.removeItem(LOCAL_STORAGE_PERMISSIONS);
+      localStorage.removeItem(LOCAL_STORAGE_LOCALE);
+      localStorage.removeItem(LOCAL_STORAGE_NGO_NAME);
+      localStorage.removeItem(LOCAL_STORAGE_FIRST_NAME);
+      return Promise.resolve();
+    } else {
+      return Promise.reject();
+    }
   }
   if (type === AUTH_ERROR) {
     return Promise.resolve();
@@ -62,7 +90,6 @@ export default async (type, params) => {
   if (type === AUTH_CHECK) {
     const { data } = await api.isAuthenticated();
     const { is_authenticated } = data;
-    console.log(`IS AUTH ${is_authenticated}`);
     if (!is_authenticated) {
       return Promise.reject();
     } else {
@@ -70,8 +97,9 @@ export default async (type, params) => {
     }
   }
   if (type === AUTH_GET_PERMISSIONS) {
-    let permissions = localStorage.getItem("permissions").split(",");
-    // console.log(permissions);
+    let permissions = localStorage
+      .getItem(LOCAL_STORAGE_PERMISSIONS)
+      .split(",");
     const authPermissions = {};
     const init = {
       enabled: false,
@@ -81,6 +109,7 @@ export default async (type, params) => {
       edit: false,
       delete: false
     };
+
     // measurements
     const users = { ...init };
     const admins = { ...init };
@@ -90,12 +119,17 @@ export default async (type, params) => {
     const coaches = { ...init };
     const curricula = { ...init };
     const files = { ...init };
+    const registrationForms = { ...init };
     const measurementTypes = { ...init };
-    const permission_groups = { ...init };
-    const user_groups = { ...init };
+    const permissionGroups = { ...init };
+    const userGroups = { ...init };
     const resources = { ...init };
     const sessions = { ...init };
     const readings = { ...init };
+    const userHierarchies = { ...init };
+    const requests = { ...init };
+
+    authPermissions["requests"] = requests;
 
     if (checkPermission(permissions, "measurements.view_measurement")) {
       measurements["show"] = true;
@@ -155,23 +189,23 @@ export default async (type, params) => {
     authPermissions["ngos"] = ngos;
 
     if (checkPermission(permissions, "users.view_permissiongroup")) {
-      permission_groups["show"] = true;
-      permission_groups["list"] = true;
-      permission_groups["enabled"] = true;
+      permissionGroups["show"] = true;
+      permissionGroups["list"] = true;
+      permissionGroups["enabled"] = true;
     }
     if (checkPermission(permissions, "users.add_permissiongroup")) {
-      permission_groups["create"] = true;
-      permission_groups["enabled"] = true;
+      permissionGroups["create"] = true;
+      permissionGroups["enabled"] = true;
     }
     if (checkPermission(permissions, "users.change_permissiongroup")) {
-      permission_groups["edit"] = true;
-      permission_groups["enabled"] = true;
+      permissionGroups["edit"] = true;
+      permissionGroups["enabled"] = true;
     }
     if (checkPermission(permissions, "users.delete_permissiongroup")) {
-      permission_groups["delete"] = true;
-      permission_groups["enabled"] = true;
+      permissionGroups["delete"] = true;
+      permissionGroups["enabled"] = true;
     }
-    authPermissions["permission_groups"] = permission_groups;
+    authPermissions["permission_groups"] = permissionGroups;
 
     if (checkPermission(permissions, "users.view_admin")) {
       admins["show"] = true;
@@ -231,23 +265,23 @@ export default async (type, params) => {
     authPermissions["athletes"] = athletes;
 
     if (checkPermission(permissions, "users.view_customusergroup")) {
-      user_groups["show"] = true;
-      user_groups["list"] = true;
-      user_groups["enabled"] = true;
+      userGroups["show"] = true;
+      userGroups["list"] = true;
+      userGroups["enabled"] = true;
     }
     if (checkPermission(permissions, "users.add_customusergroup")) {
-      user_groups["create"] = true;
-      user_groups["enabled"] = true;
+      userGroups["create"] = true;
+      userGroups["enabled"] = true;
     }
     if (checkPermission(permissions, "users.change_customusergroup")) {
-      user_groups["edit"] = true;
-      user_groups["enabled"] = true;
+      userGroups["edit"] = true;
+      userGroups["enabled"] = true;
     }
     if (checkPermission(permissions, "users.delete_customusergroup")) {
-      user_groups["delete"] = true;
-      user_groups["enabled"] = true;
+      userGroups["delete"] = true;
+      userGroups["enabled"] = true;
     }
-    authPermissions["user_groups"] = user_groups;
+    authPermissions["user_groups"] = userGroups;
 
     if (checkPermission(permissions, "users.view_userreading")) {
       readings["show"] = true;
@@ -272,11 +306,39 @@ export default async (type, params) => {
       athletes["enabled"] ||
       coaches["enabled"] ||
       admins["enabled"] ||
-      user_groups["enabled"]
+      userGroups["enabled"]
     ) {
       users["enabled"] = true;
     }
     authPermissions["users"] = users;
+
+    if (coaches["create"]) {
+      requests["show"] = true;
+      requests["list"] = true;
+      requests["create"] = false;
+      requests["edit"] = true;
+      requests["delete"] = true;
+      requests["enabled"] = true;
+    }
+
+    if (checkPermission(permissions, "resources.view_registrationform")) {
+      registrationForms["show"] = true;
+      registrationForms["list"] = true;
+      registrationForms["enabled"] = true;
+    }
+    if (checkPermission(permissions, "resources.add_registrationform")) {
+      registrationForms["create"] = true;
+      registrationForms["enabled"] = true;
+    }
+    if (checkPermission(permissions, "resources.change_registrationform")) {
+      registrationForms["edit"] = true;
+      registrationForms["enabled"] = true;
+    }
+    if (checkPermission(permissions, "resources.delete_registrationform")) {
+      registrationForms["delete"] = true;
+      registrationForms["enabled"] = true;
+    }
+    authPermissions["registrationForms"] = registrationForms;
 
     if (checkPermission(permissions, "resources.view_resource")) {
       resources["show"] = true;
@@ -353,6 +415,25 @@ export default async (type, params) => {
       sessions["enabled"] = true;
     }
     authPermissions["sessions"] = sessions;
+
+    if (checkPermission(permissions, "users.view_userhierarchy")) {
+      userHierarchies["show"] = true;
+      userHierarchies["list"] = true;
+      userHierarchies["enabled"] = true;
+    }
+    if (checkPermission(permissions, "users.add_userhierarchy")) {
+      userHierarchies["create"] = true;
+      userHierarchies["enabled"] = true;
+    }
+    if (checkPermission(permissions, "users.change_userhierarchy")) {
+      userHierarchies["edit"] = true;
+      userHierarchies["enabled"] = true;
+    }
+    if (checkPermission(permissions, "users.delete_userhierarchy")) {
+      userHierarchies["delete"] = true;
+      userHierarchies["enabled"] = true;
+    }
+    authPermissions["user_hierarchies"] = userHierarchies;
     return Promise.resolve(authPermissions);
   }
   return Promise.reject("Unkown method");

@@ -42,6 +42,20 @@ import ngos from "../ngos";
 import readings from "../readings";
 import permissionGroups from "../permissionGroups";
 import { hasAccess } from "ra-auth-acl";
+import {
+  PERMISSION_ADMIN_ENABLED,
+  PERMISSION_USER_ENABLED,
+  PERMISSION_ATHLETE_ENABLED,
+  PERMISSION_COACH_ENABLED,
+  PERMISSION_USER_GROUP_ENABLED,
+  PERMISSION_USER_HIERARCHY_ENABLED,
+  PERMISSION_RESOURCE_ENABLED,
+  PERMISSION_MEASUREMENT_ENABLED,
+  PERMISSION_READING_ENABLED,
+  PERMISSION_PERMISSION_GROUP_ENABLED,
+  PERMISSION_MEASUREMENT_TYPE_ENABLED,
+  PERMISSION_NGO_ENABLED
+} from "../constants";
 
 class Menu extends Component {
   state = {};
@@ -63,18 +77,18 @@ class Menu extends Component {
 
         <WithPermissions
           render={({ permissions }) => {
-            if (hasAccess(permissions, "ngos.enabled")) {
+            if (hasAccess(permissions, PERMISSION_NGO_ENABLED)) {
               return (
                 <SubMenu
                   handleToggle={() => this.handleToggle("bosCatalog")}
                   isOpen={this.state.bosCatalog}
                   sidebarIsOpen={open}
-                  name="BOS Admin"
+                  name={translate("ra.bosadmin")}
                   icon={<measurements.icon />}
                 >
                   <MenuItemLink
                     to={`/ngos`}
-                    primaryText={translate(`resources.ngos.name`, {
+                    primaryText={translate(`ra.menu.ngos`, {
                       smart_count: 2
                     })}
                     leftIcon={<ngos.icon />}
@@ -90,52 +104,63 @@ class Menu extends Component {
 
         <WithPermissions
           render={({ permissions }) => {
-            if (hasAccess(permissions, "users.enabled")) {
+            if (hasAccess(permissions, PERMISSION_USER_ENABLED)) {
               return (
                 <SubMenu
                   handleToggle={() => this.handleToggle("userCatalog")}
                   isOpen={this.state.userCatalog}
                   sidebarIsOpen={open}
-                  name="Users"
+                  name={translate("ra.title.users")}
                   icon={<admins.icon />}
                 >
-                  {hasAccess(permissions, "users.enabled") && (
+                  {hasAccess(permissions, PERMISSION_ADMIN_ENABLED) && (
                     <MenuItemLink
                       to={`/admins`}
-                      primaryText={"Admins"}
+                      primaryText={translate("ra.menu.admins")}
                       leftIcon={<admins.icon />}
                       onClick={onMenuClick}
                     />
                   )}
-                  {hasAccess(permissions, "users.enabled") && (
+                  {hasAccess(permissions, PERMISSION_COACH_ENABLED) && (
                     <MenuItemLink
                       to={`/coaches`}
-                      primaryText={"Coaches"}
+                      primaryText={translate("ra.menu.coaches")}
                       leftIcon={<coaches.icon />}
                       onClick={onMenuClick}
                     />
                   )}
-                  {hasAccess(permissions, "users.enabled") && (
+                  {hasAccess(permissions, PERMISSION_ATHLETE_ENABLED) && (
                     <MenuItemLink
                       to={`/athletes`}
-                      primaryText={"Athletes"}
+                      primaryText={translate("ra.title.athlete")}
                       leftIcon={<athletes.icon />}
                       onClick={onMenuClick}
                     />
                   )}
-                  {hasAccess(permissions, "users.enabled") && (
+                  {hasAccess(permissions, PERMISSION_USER_GROUP_ENABLED) && (
                     <MenuItemLink
                       to={`/user_groups`}
-                      primaryText={"User Groups"}
+                      primaryText={translate("ra.menu.usergroup")}
                       leftIcon={<userGroups.icon />}
                       onClick={onMenuClick}
                     />
                   )}
-                  {hasAccess(permissions, "users.enabled") && (
+                  {hasAccess(
+                    permissions,
+                    PERMISSION_USER_HIERARCHY_ENABLED
+                  ) && (
                     <MenuItemLink
                       to={`/organisation`}
-                      primaryText={"Organisation"}
+                      primaryText={translate("ra.menu.organisation")}
                       leftIcon={<organisation.icon />}
+                      onClick={onMenuClick}
+                    />
+                  )}
+                  {hasAccess(permissions, PERMISSION_COACH_ENABLED) && (
+                    <MenuItemLink
+                      to={`/requests`}
+                      primaryText={translate("ra.menu.requests")}
+                      leftIcon={<resources.icon />}
                       onClick={onMenuClick}
                     />
                   )}
@@ -147,14 +172,13 @@ class Menu extends Component {
           }}
         />
 
-        {/* TODO permissions */}
         <WithPermissions
           render={({ permissions }) => {
-            if (hasAccess(permissions, "resources.enabled")) {
+            if (hasAccess(permissions, PERMISSION_RESOURCE_ENABLED)) {
               return (
                 <MenuItemLink
                   to={`/resources`}
-                  primaryText={"Resources"}
+                  primaryText={translate("ra.title.resources")}
                   leftIcon={<resources.icon />}
                   onClick={onMenuClick}
                 />
@@ -167,11 +191,11 @@ class Menu extends Component {
 
         <WithPermissions
           render={({ permissions }) => {
-            if (hasAccess(permissions, "measurements.enabled")) {
+            if (hasAccess(permissions, PERMISSION_MEASUREMENT_ENABLED)) {
               return (
                 <MenuItemLink
                   to={`/measurements`}
-                  primaryText={translate(`resources.measurements.name`, {
+                  primaryText={translate(`ra.title.measurements`, {
                     smart_count: 2
                   })}
                   leftIcon={<measurements.icon />}
@@ -186,11 +210,11 @@ class Menu extends Component {
 
         <WithPermissions
           render={({ permissions }) => {
-            if (hasAccess(permissions, "readings.enabled")) {
+            if (hasAccess(permissions, PERMISSION_READING_ENABLED)) {
               return (
                 <MenuItemLink
                   to={`/readings`}
-                  primaryText={translate(`resources.readings.name`, {
+                  primaryText={translate(`ra.menu.reading`, {
                     smart_count: 2
                   })}
                   leftIcon={<readings.icon />}
@@ -205,11 +229,11 @@ class Menu extends Component {
 
         <WithPermissions
           render={({ permissions }) => {
-            if (hasAccess(permissions, "measurement_types.enabled")) {
+            if (hasAccess(permissions, PERMISSION_MEASUREMENT_TYPE_ENABLED)) {
               return (
                 <MenuItemLink
                   to={`/measurement_types`}
-                  primaryText={translate(`resources.measurement_types.name`, {
+                  primaryText={translate("ra.menu.measurement_type", {
                     smart_count: 2
                   })}
                   leftIcon={<measurementTypes.icon />}
@@ -224,11 +248,11 @@ class Menu extends Component {
 
         <WithPermissions
           render={({ permissions }) => {
-            if (hasAccess(permissions, "permission_groups.enabled")) {
+            if (hasAccess(permissions, PERMISSION_PERMISSION_GROUP_ENABLED)) {
               return (
                 <MenuItemLink
                   to={`/permission_groups`}
-                  primaryText={translate(`resources.permission_groups.name`, {
+                  primaryText={translate(`ra.title.permission_group`, {
                     smart_count: 2
                   })}
                   leftIcon={<permissionGroups.icon />}

@@ -16,10 +16,11 @@
  */
 
 export const API_URL = process.env.REACT_APP_API_URL;
-
+export const SUPERSET_API_URL = process.env.REACT_APP_SUPERSET_API_URL;
 export const AVAILABLE_LANGUAGES = [
   { label: "English", value: "en_IN" },
-  { label: "मराठी", value: "mr_IN" }
+  { label: "हिंदी", value: "hi_IN" },
+  { label: "ಕನ್ನಡ", value: "ka_IN" }
 ];
 
 export const ATHLETE = "athlete";
@@ -31,6 +32,8 @@ export const API_SUCCESS = "Done";
 export const SNACKBAR_ERROR = "error";
 export const SNACKBAR_SUCCESS = "success";
 export const SNACKBAR_INFO = "info";
+
+export const PERMISSION_USER_ENABLED = "users.enabled";
 
 export const PERMISSION_ADMIN_CREATE = "admins.create";
 export const PERMISSION_ADMIN_DELETE = "admins.delete";
@@ -53,12 +56,123 @@ export const PERMISSION_COACH_ENABLED = "coaches.enabled";
 export const PERMISSION_COACH_LIST = "coaches.list";
 export const PERMISSION_COACH_SHOW = "coaches.show";
 
+export const PERMISSION_USER_GROUP_CREATE = "user_groups.create";
+export const PERMISSION_USER_GROUP_DELETE = "user_groups.delete";
+export const PERMISSION_USER_GROUP_EDIT = "user_groups.edit";
+export const PERMISSION_USER_GROUP_ENABLED = "user_groups.enabled";
+export const PERMISSION_USER_GROUP_LIST = "user_groups.list";
+export const PERMISSION_USER_GROUP_SHOW = "user_groups.show";
+
 export const RESOURCE_TYPE_FILE = "file";
 export const RESOURCE_TYPE_TRAINING_SESSION = "session";
 export const RESOURCE_TYPE_REGISTRATION_FORM = "registration";
 export const RESOURCE_TYPE_CURRICULUM = "curriculum";
 
+export const PERMISSION_REQUESTS_SHOW = "requests.show";
+export const PERMISSION_REQUESTS_LIST = "requests.list";
+
+export const PERMISSION_RESOURCE_CREATE = "resources.create";
+export const PERMISSION_RESOURCE_DELETE = "resources.delete";
+export const PERMISSION_RESOURCE_EDIT = "resources.edit";
+export const PERMISSION_RESOURCE_ENABLED = "resources.enabled";
+export const PERMISSION_RESOURCE_LIST = "resources.list";
+export const PERMISSION_RESOURCE_SHOW = "resources.show";
+
+export const PERMISSION_FILE_CREATE = "files.create";
+export const PERMISSION_FILE_DELETE = "files.delete";
+export const PERMISSION_FILE_EDIT = "files.edit";
+export const PERMISSION_FILE_ENABLED = "files.enabled";
+export const PERMISSION_FILE_LIST = "files.list";
+export const PERMISSION_FILE_SHOW = "files.show";
+
+export const PERMISSION_REGISTRATION_FORM_CREATE = "registrationForms.create";
+export const PERMISSION_REGISTRATION_FORM_DELETE = "registrationForms.delete";
+export const PERMISSION_REGISTRATION_FORM_EDIT = "registrationForms.edit";
+export const PERMISSION_REGISTRATION_FORM_ENABLED = "registrationForms.enabled";
+export const PERMISSION_REGISTRATION_FORM_LIST = "registrationForms.list";
+export const PERMISSION_REGISTRATION_FORM_SHOW = "registrationForms.show";
+
+export const PERMISSION_TRAINING_SESSION_CREATE = "sessions.create";
+export const PERMISSION_TRAINING_SESSION_DELETE = "sessions.delete";
+export const PERMISSION_TRAINING_SESSION_EDIT = "sessions.edit";
+export const PERMISSION_TRAINING_SESSION_ENABLED = "sessions.enabled";
+export const PERMISSION_TRAINING_SESSION_LIST = "sessions.list";
+export const PERMISSION_TRAINING_SESSION_SHOW = "sessions.show";
+
+export const PERMISSION_CURRICULA_CREATE = "curricula.create";
+export const PERMISSION_CURRICULA_DELETE = "curricula.delete";
+export const PERMISSION_CURRICULA_EDIT = "curricula.edit";
+export const PERMISSION_CURRICULA_ENABLED = "curricula.enabled";
+export const PERMISSION_CURRICULA_LIST = "curricula.list";
+export const PERMISSION_CURRICULA_SHOW = "curricula.show";
+
+export const PERMISSION_USER_HIERARCHY_CREATE = "user_hierarchies.create";
+export const PERMISSION_USER_HIERARCHY_DELETE = "user_hierarchies.delete";
+export const PERMISSION_USER_HIERARCHY_EDIT = "user_hierarchies.edit";
+export const PERMISSION_USER_HIERARCHY_ENABLED = "user_hierarchies.enabled";
+export const PERMISSION_USER_HIERARCHY_LIST = "user_hierarchies.list";
+export const PERMISSION_USER_HIERARCHY_SHOW = "user_hierarchies.show";
+
+export const PERMISSION_MEASUREMENT_CREATE = "measurements.create";
+export const PERMISSION_MEASUREMENT_DELETE = "measurements.delete";
+export const PERMISSION_MEASUREMENT_EDIT = "measurements.edit";
+export const PERMISSION_MEASUREMENT_ENABLED = "measurements.enabled";
+export const PERMISSION_MEASUREMENT_LIST = "measurements.list";
+export const PERMISSION_MEASUREMENT_SHOW = "measurements.show";
+
+export const PERMISSION_READING_CREATE = "readings.create";
+export const PERMISSION_READING_DELETE = "readings.delete";
+export const PERMISSION_READING_EDIT = "readings.edit";
+export const PERMISSION_READING_ENABLED = "readings.enabled";
+export const PERMISSION_READING_LIST = "readings.list";
+export const PERMISSION_READING_SHOW = "readings.show";
+
+export const PERMISSION_NGO_CREATE = "ngos.create";
+export const PERMISSION_NGO_DELETE = "ngos.delete";
+export const PERMISSION_NGO_EDIT = "ngos.edit";
+export const PERMISSION_NGO_ENABLED = "ngos.enabled";
+export const PERMISSION_NGO_LIST = "ngos.list";
+export const PERMISSION_NGO_SHOW = "ngos.show";
+
+export const PERMISSION_PERMISSION_GROUP_CREATE = "permission_groups.create";
+export const PERMISSION_PERMISSION_GROUP_DELETE = "permission_groups.delete";
+export const PERMISSION_PERMISSION_GROUP_EDIT = "permission_groups.edit";
+export const PERMISSION_PERMISSION_GROUP_ENABLED = "permission_groups.enabled";
+export const PERMISSION_PERMISSION_GROUP_LIST = "permission_groups.list";
+export const PERMISSION_PERMISSION_GROUP_SHOW = "permission_groups.show";
+
+export const PERMISSION_MEASUREMENT_TYPE_CREATE = "measurement_types.create";
+export const PERMISSION_MEASUREMENT_TYPE_DELETE = "measurement_types.delete";
+export const PERMISSION_MEASUREMENT_TYPE_EDIT = "measurement_types.edit";
+export const PERMISSION_MEASUREMENT_TYPE_ENABLED = "measurement_types.enabled";
+export const PERMISSION_MEASUREMENT_TYPE_LIST = "measurement_types.list";
+export const PERMISSION_MEASUREMENT_TYPE_SHOW = "measurement_types.show";
+
+export const localeEN_IN = "en_IN";
+export const localeHI_IN = "hi_IN";
+export const localeKA_IN = "ka_IN";
+
 export const GENDER_CHOICES = [
   { id: "male", name: "Male" },
   { id: "female", name: "Female" }
 ];
+
+export const REQUEST_STATUS_CHOICES = [
+  { id: "pending", name: "ra.request.pending" },
+  { id: "approved", name: "ra.request.approved" },
+  { id: "rejected", name: "ra.request.rejected" }
+];
+
+export const VALID_PDF_EXTENSIONS = [".pdf"];
+export const VALID_VIDEO_EXTENSIONS = [".mp4"];
+export const VALID_IMAGE_EXTENSIONS = [".png", ".jpeg", ".jpg"];
+export const VALID_FILE_EXTENSIONS =
+  VALID_PDF_EXTENSIONS + VALID_IMAGE_EXTENSIONS + VALID_VIDEO_EXTENSIONS;
+
+export const LOCAL_STORAGE_LOCALE = "locale";
+export const LOCAL_STORAGE_USERNAME = "username";
+export const LOCAL_STORAGE_USER_KEY = "user_key";
+export const LOCAL_STORAGE_NGO_KEY = "ngo_key";
+export const LOCAL_STORAGE_PERMISSIONS = "permissions";
+export const LOCAL_STORAGE_NGO_NAME = "ngo_name";
+export const LOCAL_STORAGE_FIRST_NAME = "first_name";

@@ -26,29 +26,43 @@ import {
 import withStyles from "@material-ui/core/styles/withStyles";
 import { hasAccess } from "ra-auth-acl";
 import PermissionGroupNameField from "./PermissionGroupNameField";
+import { translate } from "react-admin";
+import {
+  PERMISSION_PERMISSION_GROUP_SHOW,
+  PERMISSION_PERMISSION_GROUP_EDIT
+} from "../constants";
 
 const styles = {
   nb_commands: { color: "purple" }
 };
 
-const PermissionGroupList = ({ classes, permissions, ...props }) => (
-  <List
-    {...props}
-    sort={{ field: "name", order: "ASC" }}
-    title={"List of permission groups"}
-    perPage={25}
-    exporter={false}
-  >
-    <Responsive
-      medium={
-        <Datagrid>
-          <PermissionGroupNameField source="name" />
-          {hasAccess(permissions, "permission_groups.show") && <ShowButton />}
-          {hasAccess(permissions, "permission_groups.edit") && <EditButton />}
-        </Datagrid>
-      }
-    />
-  </List>
+const PermissionGroupList = translate(
+  ({ classes, permissions, translate, ...props }) => (
+    <List
+      {...props}
+      sort={{ field: "name", order: "ASC" }}
+      title={translate("ra.List of permission groups")}
+      perPage={25}
+      exporter={false}
+    >
+      <Responsive
+        medium={
+          <Datagrid>
+            <PermissionGroupNameField
+              label={translate("ra.title.name")}
+              source="name"
+            />
+            {hasAccess(permissions, PERMISSION_PERMISSION_GROUP_SHOW) && (
+              <ShowButton />
+            )}
+            {hasAccess(permissions, PERMISSION_PERMISSION_GROUP_EDIT) && (
+              <EditButton />
+            )}
+          </Datagrid>
+        }
+      />
+    </List>
+  )
 );
 
 export default withStyles(styles)(PermissionGroupList);

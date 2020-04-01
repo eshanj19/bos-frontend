@@ -26,6 +26,8 @@ import {
   BooleanInput
 } from "react-admin";
 import api from "../api";
+import { translate } from "react-admin";
+import { LOCAL_STORAGE_NGO_KEY } from "../constants";
 
 export const styles = {
   label: { display: "block" },
@@ -58,12 +60,12 @@ export const validateUserGroupCreation = values => {
 
 const optionRenderer = choice => `${choice.first_name} ${choice.last_name}`;
 
-const UserGroupCreate = ({ classes, ...props }) => {
+const UserGroupCreate = translate(({ classes, translate, ...props }) => {
   const [resourceChoices, setResourceChoices] = useState([]);
   const [userChoices, setUserChoices] = useState([]);
   useEffect(() => {
     //fetch possible resource choices.
-    const ngoKey = localStorage.getItem("ngo_key");
+    const ngoKey = localStorage.getItem(LOCAL_STORAGE_NGO_KEY);
     api.getResourcesByNgo(ngoKey).then(({ data }) => {
       console.log(data);
       const choices = data.map(d => ({ id: d.key, name: d.label }));
@@ -88,27 +90,38 @@ const UserGroupCreate = ({ classes, ...props }) => {
     }
   };
   return (
-    <Create undoable={false} {...props}>
+    <Create
+      undoable={false}
+      {...props}
+      title={translate("ra.create user group")}
+    >
       <SimpleForm redirect="list" validate={validateUserGroupCreation}>
-        <TextInput autoFocus source="label" formClassName={classes.label} />
+        <TextInput
+          autoFocus
+          label={translate("ra.title.label")}
+          source="label"
+          formClassName={classes.label}
+        />
         <AutocompleteArrayInput
           source="users"
+          label={translate("ra.title.users")}
           choices={userChoices}
           onChange={handleChoiceChange}
         />
         <AutocompleteArrayInput
           source="resources"
+          label={translate("ra.title.resources")}
           choices={resourceChoices}
           onChange={handleChoiceChange}
         />
         <BooleanInput
           source="is_active"
-          label="Active"
+          label={translate("ra.action.active")}
           formClassName={classes.is_active}
           defaultValue={true}
         />
       </SimpleForm>
     </Create>
   );
-};
+});
 export default withStyles(styles)(UserGroupCreate);

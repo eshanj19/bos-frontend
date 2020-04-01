@@ -35,7 +35,8 @@ import {
   Input
 } from "@material-ui/core";
 import api from "../api";
-import { GENDER_CHOICES } from "../constants";
+import { GENDER_CHOICES, LOCAL_STORAGE_NGO_KEY } from "../constants";
+import { translate } from "react-admin";
 
 const styles = {
   flex: { display: "flex", marginRight: "1rem" }
@@ -51,7 +52,7 @@ const AthleteEditActions = ({ basePath, data, resource, onToggleDialog }) => {
   );
 };
 
-const AthleteEdit = ({ classes, ...props }) => {
+const AthleteEdit = translate(({ classes, translate, ...props }) => {
   const [showDialog, toggleDialog] = useState(false);
   const [password, handleChangePassword] = useState("");
   const [confirmPassword, handleChangeConfirmPassword] = useState("");
@@ -59,7 +60,7 @@ const AthleteEdit = ({ classes, ...props }) => {
   const [resourceChoices, setResourceChoices] = useState([]);
   useEffect(() => {
     //fetch possible resource choices.
-    const ngoKey = localStorage.getItem("ngo_key");
+    const ngoKey = localStorage.getItem(LOCAL_STORAGE_NGO_KEY);
     api.getResourcesByNgo(ngoKey).then(({ data }) => {
       console.log(data);
       const choices = data.map(d => ({ id: d.key, name: d.label }));
@@ -90,7 +91,7 @@ const AthleteEdit = ({ classes, ...props }) => {
   return (
     <div>
       <Edit
-        title="Athlete Edit"
+        title={translate("ra.edit athlete")}
         undoable={false}
         actions={
           <AthleteEditActions
@@ -107,20 +108,34 @@ const AthleteEdit = ({ classes, ...props }) => {
           <TextInput
             autoFocus
             source="first_name"
+            label={translate("ra.title.first_name")}
             formClassName={classes.flex}
           />
-          <TextInput source="middle_name" formClassName={classes.flex} />
-          <TextInput source="last_name" formClassName={classes.flex} />
-          <SelectInput source="gender" choices={GENDER_CHOICES} />
+          <TextInput
+            label={translate("ra.title.middle_name")}
+            source="middle_name"
+            formClassName={classes.flex}
+          />
+          <TextInput
+            label={translate("ra.title.last_name")}
+            source="last_name"
+            formClassName={classes.flex}
+          />
+          <SelectInput
+            label={translate("ra.title.gender")}
+            source="gender"
+            choices={GENDER_CHOICES}
+          />
 
           <AutocompleteArrayInput
             source="resources"
+            label={translate("ra.title.resources")}
             choices={resourceChoices}
             onChange={handleResourceChoiceChange}
           />
           <BooleanInput
             source="is_active"
-            label="Active"
+            label={translate("ra.action.active")}
             formClassName={[classes.is_active]}
           />
         </SimpleForm>
@@ -170,6 +185,6 @@ const AthleteEdit = ({ classes, ...props }) => {
       </Dialog>
     </div>
   );
-};
+});
 
 export default withStyles(styles)(AthleteEdit);

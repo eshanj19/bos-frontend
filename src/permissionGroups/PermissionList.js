@@ -33,10 +33,6 @@ export var cardS = {
 };
 
 class PermissionList extends Component {
-  constructor(props) {
-    super(props);
-  }
-
   handleChange = name => event => {
     this.props.handleCheckbox(name, event.target.checked);
   };
@@ -44,21 +40,22 @@ class PermissionList extends Component {
   getCheckedPermission = () => {
     const { currentGroupPermissions, classes, flag } = this.props;
     const clubpermissions = [
-      { key: "_group", name: "Group" },
       { key: "_curriculum", name: "Curriculum" },
-      { key: "_ngoregistrationresource", name: "Ngo Registration" },
-      { key: "_userhierarchy", name: "User Hierarchy" },
-      { key: "_usergroup", name: "User Group" },
-      { key: "_athlete", name: "Athlete" },
-      { key: "_ngo", name: "Ngo" },
+      { key: "_athlete", name: "Athletes" },
+      { key: "_coach", name: "Coachs" },
       { key: "_resource", name: "Resources" },
-      { key: "_trainingsession", name: "Training session" },
-      { key: "_userresource", name: "User Resources" },
-      { key: "_coach", name: "Coach" },
-      { key: "_userreading", name: "User Reading" },
-      { key: "_user", name: "User" },
-      { key: "_file", name: "File" },
-      { key: "_admin", name: "Admin" },
+      { key: "_customusergroup", name: "User Group" },
+      { key: "_ngoregistrationresource", name: "Registration Forms" },
+      { key: "_userhierarchy", name: "User Hierarchy" },
+
+      { key: "_ngo", name: "Ngo" },
+      { key: "_trainingsession", name: "Training sessions" },
+      // { key: "_userresource", name: "User Resources" },
+
+      { key: "_userreading", name: "User Readings" },
+      // { key: "_user", name: "Users" },
+      { key: "_file", name: "Files" },
+      { key: "_admin", name: "Admins" },
       { key: "_measurement", name: "Measurements" }
     ];
 
@@ -78,10 +75,17 @@ class PermissionList extends Component {
       }
 
       return (
-        <Grid item display="block" sm={4} xs={12} md={4}>
+        <Grid item display="block" sm={12} xs={12} md={4} lg={3} xl={3}>
           {flag ? (
             <Grid>
-              <Card style={{ marginTop: 10, marginLeft: 8, padding: 50 }}>
+              <Card
+                style={{
+                  marginTop: 10,
+                  marginLeft: 8,
+                  paddingTop: 5,
+                  paddingLeft: 40
+                }}
+              >
                 <CardContent>
                   <h2>{permission.name}</h2>
                   {list.map(permission => (
@@ -98,7 +102,14 @@ class PermissionList extends Component {
             </Grid>
           ) : (
             <Grid>
-              <Card style={{ marginTop: 10, marginLeft: 8, padding: 50 }}>
+              <Card
+                style={{
+                  marginTop: 10,
+                  marginLeft: 8,
+                  paddingTop: 5,
+                  paddingLeft: 40
+                }}
+              >
                 <CardContent>
                   <h2>{permission.name}</h2>
                   {list.map(permission => (

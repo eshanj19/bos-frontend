@@ -16,14 +16,13 @@
  */
 
 import axios from "./axios";
-import { useSnackbar } from "notistack";
+import supersetAxios from "./supersetAxios";
 import {
   SNACKBAR_ERROR,
   SNACKBAR_SUCCESS,
   API_ERROR_UNKNOWN,
   API_SUCCESS
 } from "./constants";
-import { enqueueSnackbar } from "notistack";
 
 const toFormData = data => {
   const fd = new FormData();
@@ -35,6 +34,14 @@ const toFormData = data => {
 
 const login = data => {
   return axios.post("/login/", toFormData(data));
+};
+
+const supersetLogin = data => {
+  return supersetAxios.post("/login/", toFormData(data));
+};
+
+const supersetLogout = () => {
+  return supersetAxios.get("/logout/");
 };
 
 const get = url => {
@@ -67,6 +74,18 @@ const getCoachRegistrationResource = key => {
 
 const resetPassword = (key, body) => {
   return axios.post(`/users/${key}/reset_password/`, toFormData(body));
+};
+
+const requestAccept = (key, body) => {
+  return axios.post(`/requests/${key}/request_accept/`, toFormData(body));
+};
+
+const requestReject = key => {
+  return axios.post(`/requests/${key}/request_reject/`);
+};
+
+const checkUsername = (key, body) => {
+  return axios.post(`/requests/${key}/check_username/`, toFormData(body));
 };
 
 const put = (url, body) => {
@@ -256,10 +275,16 @@ const getAllUsersByNgo = ngoKey => {
   return axios.get(`/ngos/${ngoKey}/all_users/`);
 };
 
+const changeLanguage = (userKey, data) => {
+  return axios.post(`/users/${userKey}/change_language/`, data);
+};
+
 const api = {
   handleSuccess,
   handleError,
   login,
+  supersetLogin,
+  supersetLogout,
   get,
   put,
   post,
@@ -274,6 +299,9 @@ const api = {
   getAllPermissions,
   isAuthenticated,
   resetPassword,
+  requestAccept,
+  requestReject,
+  checkUsername,
   getForgotPasswordToken,
   isForgotPasswordTokenValid,
   forgotPassword,
@@ -300,7 +328,8 @@ const api = {
   submitFile,
   saveOrgHierarchy,
   getPermissionGroups,
-  editFile
+  editFile,
+  changeLanguage
 };
 
 export default api;

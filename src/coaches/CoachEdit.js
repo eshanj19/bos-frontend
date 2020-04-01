@@ -29,27 +29,31 @@ import withStyles from "@material-ui/core/styles/withStyles";
 import { Button, CardActions } from "@material-ui/core";
 import api from "../api";
 import ResetPasswordDialog from "../common/ResetPasswordDialog";
-import { GENDER_CHOICES } from "../constants";
+import { GENDER_CHOICES, LOCAL_STORAGE_NGO_KEY } from "../constants";
+import { translate } from "react-admin";
 
 const styles = {
   flex: { display: "flex", marginRight: "1rem" }
 };
 
-const CoachEditActions = ({ basePath, data, resource, onToggleDialog }) => {
-  console.log(data);
-  return (
-    <CardActions style={{ justifyContent: "flex-end" }}>
-      <ShowButton basePath={basePath} record={data} />
-      <Button color="primary" onClick={() => onToggleDialog(data.key)}>
-        Reset Password
-      </Button>
-    </CardActions>
-  );
-};
+const CoachEditActions = translate(
+  ({ basePath, data, translate, resource, onToggleDialog }) => {
+    console.log(data);
+    return (
+      <CardActions style={{ justifyContent: "flex-end" }}>
+        <ShowButton basePath={basePath} record={data} />
+        <Button color="primary" onClick={() => onToggleDialog(data.key)}>
+          {translate("ra.action.reset_password")}
+        </Button>
+      </CardActions>
+    );
+  }
+);
 
-const CoachEdit = ({ classes, ...props }) => {
+const CoachEdit = translate(({ classes, translate, ...props }) => {
   const [showDialog, toggleDialog] = useState(false);
   const [password, handleChangePassword] = useState("");
+  const [currentpassword, handlecurrentpassword] = useState("");
   const [confirmPassword, handleChangeConfirmPassword] = useState("");
   const [userKey, setUserKey] = useState(null);
   const [resourceChoices, setResourceChoices] = useState([]);
@@ -57,7 +61,7 @@ const CoachEdit = ({ classes, ...props }) => {
 
   useEffect(() => {
     //fetch possible resource choices.
-    const ngoKey = localStorage.getItem("ngo_key");
+    const ngoKey = localStorage.getItem(LOCAL_STORAGE_NGO_KEY);
     api.getResourcesByNgo(ngoKey).then(({ data }) => {
       console.log(data);
       const choices = data.map(d => ({ id: d.key, name: d.label }));
@@ -67,11 +71,12 @@ const CoachEdit = ({ classes, ...props }) => {
   useEffect(() => {
     handleChangePassword("");
     handleChangeConfirmPassword("");
+    handlecurrentpassword("");
   }, [showDialog]);
 
   useEffect(() => {
     //fetch possible resource choices.
-    const ngoKey = localStorage.getItem("ngo_key");
+    const ngoKey = localStorage.getItem(LOCAL_STORAGE_NGO_KEY);
     api.getPermissionGroups(ngoKey).then(({ data }) => {
       const choices = data.map(d => ({
         id: d.id,
@@ -94,11 +99,14 @@ const CoachEdit = ({ classes, ...props }) => {
 
   const resetPassword = () => {
     if (!password || password.length === 0) return;
-    if (password === confirmPassword) {
-      api.resetPassword(userKey, password).then(() => {
-        toggleDialog(!showDialog);
-      });
-    }
+    let passworddata = {
+      password: password,
+      currentpassword: currentpassword,
+      confirmPassword: confirmPassword
+    };
+    api.resetPassword(userKey, passworddata).then(() => {
+      toggleDialog(!showDialog);
+    });
   };
 
   const handleResourceChoiceChange = data => {
@@ -115,7 +123,7 @@ const CoachEdit = ({ classes, ...props }) => {
     <div>
       <Edit
         undoable={false}
-        title="Coach Edit"
+        title={translate("ra.edit coach")}
         actions={
           <CoachEditActions
             onToggleDialog={userKey => {
@@ -130,27 +138,41 @@ const CoachEdit = ({ classes, ...props }) => {
         <SimpleForm>
           <TextInput
             autoFocus
+            label={translate("ra.title.first_name")}
             source="first_name"
             formClassName={classes.flex}
           />
-          <TextInput source="middle_name" formClassName={classes.flex} />
-          <TextInput source="last_name" formClassName={classes.flex} />
-          <SelectInput source="gender" choices={GENDER_CHOICES} />
+          <TextInput
+            label={translate("ra.title.middle_name")}
+            source="middle_name"
+            formClassName={classes.flex}
+          />
+          <TextInput
+            label={translate("ra.title.last_name")}
+            source="last_name"
+            formClassName={classes.flex}
+          />
+          <SelectInput
+            label={translate("ra.title.gender")}
+            source="gender"
+            choices={GENDER_CHOICES}
+          />
 
           <AutocompleteArrayInput
-            label="Permission group"
+            label={translate("ra.title.permission_group")}
             source="permission_groups"
             choices={permissionGroupChoices}
             onChange={handlePermissionGroupChoiceChange}
           />
           <AutocompleteArrayInput
             source="resources"
+            label={translate("ra.title.resources")}
             choices={resourceChoices}
             onChange={handleResourceChoiceChange}
           />
           <BooleanInput
             source="is_active"
-            label="Active"
+            label={translate("ra.action.active")}
             formClassName={classes.flex}
           />
         </SimpleForm>
@@ -161,6 +183,7 @@ const CoachEdit = ({ classes, ...props }) => {
         confirmPassword={confirmPassword}
         onChangePassword={handleChangePassword}
         onChangeConfirmPassword={handleChangeConfirmPassword}
+        onChangCurrentPassword={handlecurrentpassword}
         toggleDialog={() => {
           toggleDialog(!showDialog);
         }}
@@ -168,6 +191,6 @@ const CoachEdit = ({ classes, ...props }) => {
       />
     </div>
   );
-};
+});
 
 export default withStyles(styles)(CoachEdit);

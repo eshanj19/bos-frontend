@@ -16,9 +16,15 @@
  */
 
 import { capitalizeString } from "./stringUtils";
+import {
+  VALID_IMAGE_EXTENSIONS,
+  VALID_PDF_EXTENSIONS,
+  VALID_VIDEO_EXTENSIONS,
+  LOCAL_STORAGE_NGO_KEY
+} from "./constants";
 
 export const getGroupName = name => {
-  const ngoKey = localStorage.getItem("ngo_key");
+  const ngoKey = localStorage.getItem(LOCAL_STORAGE_NGO_KEY);
   var groupName = capitalizeString(name.replace(ngoKey + "_", ""));
   return groupName;
 };
@@ -101,3 +107,40 @@ export const flat_hierarchy = [
 export function capitalizeFirstLetter(string) {
   return string.charAt(0).toUpperCase() + string.slice(1);
 }
+
+export const getFileExtensionFromURL = url => {
+  const fileExtension = url
+    .toLowerCase()
+    .split(".")
+    .pop();
+  return "." + fileExtension;
+};
+
+export const checkIfValidImageExtension = fileExtension => {
+  for (let index = 0; index < VALID_IMAGE_EXTENSIONS.length; index++) {
+    const validFileExtension = VALID_IMAGE_EXTENSIONS[index];
+    if (validFileExtension === fileExtension) {
+      return true;
+    }
+  }
+  return false;
+};
+
+export const checkIfValidPDFExtension = fileExtension => {
+  for (let index = 0; index < VALID_PDF_EXTENSIONS.length; index++) {
+    const validFileExtension = VALID_PDF_EXTENSIONS[index];
+    if (validFileExtension === fileExtension) {
+      return true;
+    }
+  }
+  return false;
+};
+export const checkIfValidVideoExtension = fileExtension => {
+  for (let index = 0; index < VALID_VIDEO_EXTENSIONS.length; index++) {
+    const validFileExtension = VALID_VIDEO_EXTENSIONS[index];
+    if (validFileExtension === fileExtension) {
+      return true;
+    }
+  }
+  return false;
+};
