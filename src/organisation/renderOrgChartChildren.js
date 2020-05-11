@@ -1,12 +1,20 @@
 import React, { Component } from "react";
 import OrgChartNode from "./OrgChartNode";
 
-const renderOrgChartChildren = (node,setParentNode,searchedUserList,onSearchUser,searchTerm) => {
-  const hasRightSibling = childIndex => {
+const renderOrgChartChildren = (
+  node,
+  setParentForNode,
+  searchedUserList,
+  onSearchUser,
+  searchTerm,
+  removeChildrenForNode,
+  removeParentForNode
+) => {
+  const hasRightSibling = (childIndex) => {
     return (node.children || []).length > childIndex + 1;
   };
 
-  const hasLeftSibling = childIndex => {
+  const hasLeftSibling = (childIndex) => {
     return childIndex > 0;
   };
 
@@ -56,7 +64,15 @@ const renderOrgChartChildren = (node,setParentNode,searchedUserList,onSearchUser
 
   const children = (node.children || []).map((child, childIndex) => (
     <td colSpan="2" className="nodeGroupCell" key={childIndex}>
-      {renderOrgChartChildren(child,setParentNode,searchedUserList,onSearchUser,searchTerm)}
+      {renderOrgChartChildren(
+        child,
+        setParentForNode,
+        searchedUserList,
+        onSearchUser,
+        searchTerm,
+        removeChildrenForNode,
+        removeParentForNode
+      )}
     </td>
   ));
 
@@ -65,13 +81,15 @@ const renderOrgChartChildren = (node,setParentNode,searchedUserList,onSearchUser
       <tbody>
         <tr>
           <td className="nodeCell" colSpan={(node.children || []).length * 2}>
-            <OrgChartNode 
-              node={node} 
-              setParentNode={setParentNode} 
+            <OrgChartNode
+              node={node}
+              setParentForNode={setParentForNode}
+              removeChildrenForNode={removeChildrenForNode}
+              removeParentForNode={removeParentForNode}
               onSearchUser={onSearchUser}
               searchedUserList={searchedUserList}
               searchTerm={searchTerm}
-              />
+            />
           </td>
         </tr>
         <tr>{(node.children || []).length > 0 && nodeLineBelow}</tr>

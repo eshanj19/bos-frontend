@@ -5,7 +5,7 @@ import {
   Menu,
   MenuItem,
   Button,
-  Grid
+  Grid,
 } from "@material-ui/core";
 import renderOrgChartChildren from "./renderOrgChartChildren";
 import PersonAddIcon from "@material-ui/icons/PersonAdd";
@@ -45,8 +45,9 @@ class OrganisationShow extends Component {
       zeroEdgeNodes: [],
       menuAnchorEl: null,
       searchedUserList: [],
+      possibleUserOptions: [],
       selectedZeroEdgeNode: null,
-      searchTerm: ""
+      searchTerm: "",
     };
   }
 
@@ -54,31 +55,33 @@ class OrganisationShow extends Component {
     const ngoKey = localStorage.getItem(LOCAL_STORAGE_NGO_KEY);
     api
       .getUserHierarchy(ngoKey)
-      .then(response => {
+      .then((response) => {
         // TODO Error handling
         const hierarchyData = response.data;
-        console.log(hierarchyData);
-        // return;
         // const hierarchyData = flat_hierarchy;
         const flatttenedHierarchyStructure = sortBy(
           hierarchyData,
-          o => o.label
+          (o) => o.label
         );
-        const { root, zeroEdgeNodes } = this.getHierarchy(hierarchyData);
-        const possibleUserOptions = filter(flatttenedHierarchyStructure, o => {
-          return this.findNodeByKey(root, o.key) && o.key !== "ghost_node";
-        });
-        console.log(possibleUserOptions);
+        const { root, zeroEdgeNodes, allNodes } = this.getHierarchy(
+          hierarchyData
+        );
+        // const possibleUserOptions = filter(
+        //   flatttenedHierarchyStructure,
+        //   (o) => {
+        //     return this.findNodeByKey(root, o.key) && o.key !== "ghost_node";
+        //   }
+        // );
+        const possibleUserOptions = allNodes;
         this.setState({
           orgHierarchy: root,
           zeroEdgeNodes,
           possibleUserOptions,
           flatttenedHierarchyStructure,
-          searchedUserList: possibleUserOptions
+          searchedUserList: possibleUserOptions,
         });
       })
-      .catch(response => {
-        console.log(response);
+      .catch((response) => {
         api.handleError(response);
       });
   }
@@ -97,21 +100,23 @@ class OrganisationShow extends Component {
     }
   };
 
-  getHierarchy = hierarchyData => {
+  getHierarchy = (hierarchyData) => {
     let root = {};
     const topLevelNodes = [];
     const zeroEdgeNodes = [];
+    const allNodes = [];
 
     hierarchyData.forEach((node, index, array) => {
       const { children } = node;
       if (children) {
-        node.children = children.map(childKey => {
+        node.children = children.map((childKey) => {
           return find(hierarchyData, { key: childKey });
         });
       }
     });
-    hierarchyData.forEach(node => {
+    hierarchyData.forEach((node) => {
       const { parent_node, children } = node;
+      allNodes.push(node);
       if (!parent_node && children.length === 0 && node.key !== "ghost_node") {
         zeroEdgeNodes.push(node);
         return;
@@ -122,29 +127,79 @@ class OrganisationShow extends Component {
       }
     });
     const ghostNode = find(topLevelNodes, { key: "ghost_node" });
-    const topNodes = filter(topLevelNodes, node => node.key !== "ghost_node");
+    const topNodes = filter(topLevelNodes, (node) => node.key !== "ghost_node");
     root = { ...ghostNode, children: topNodes };
-    return { root, zeroEdgeNodes };
+    return { root, zeroEdgeNodes, allNodes };
   };
 
+  removeChildrenForNode = (nodeKey) => {
+    if (nodeKey === "ghost_node") {
+      return;
+    }
+    this.removeParentForNode(nodeKey, true);
+  };
+  removeParentForNode = (nodeKey, removeChildren) => {
+    if (nodeKey === "ghost_node") {
+      return;
+    }
+    let { orgHierarchy, flatttenedHierarchyStructure } = this.state;
+    const node = this.findNodeByKey(orgHierarchy, nodeKey);
+    if (!node) {
+      return;
+    }
+
+    if (removeChildren) {
+      node.children = [];
+    } else {
+      // Remove parent
+      const parentNode = this.findNodeByKey(orgHierarchy, node.parent_node);
+      if (!parentNode) {
+        return;
+      }
+      const index = findIndex(parentNode.children, { key: nodeKey });
+      if (index > -1) {
+        parentNode.children.splice(index, 1);
+      }
+    }
+
+    // Calculate zero edges nodes again
+
+    var zeroEdgeNodes = [];
+    flatttenedHierarchyStructure.forEach((node) => {
+      if (findIndex(orgHierarchy.children, { key: node.key }) === -1) {
+        zeroEdgeNodes.push({
+          children: [],
+          key: node.key,
+          label: node.label,
+          parent_node: null,
+          role: node.role,
+        });
+      }
+    });
+
+    this.setState({
+      orgHierarchy,
+      zeroEdgeNodes,
+    });
+  };
   setParentForNode = (nodeKey, parentKey) => {
     let {
       orgHierarchy,
       zeroEdgeNodes,
-      flatttenedHierarchyStructure
+      flatttenedHierarchyStructure,
     } = this.state;
     /**
      * check for cyclic tree
      * must prevent that from happening.
      */
     if (parentKey && this.isDecendentByKeyIn(nodeKey, parentKey)) {
-      this.props.enqueueSnackbar("is decendent!", {
+      this.props.enqueueSnackbar("Cyclic loop detected", {
         variant: "error",
         autoHideDuration: 4000,
         anchorOrigin: {
           vertical: "top",
-          horizontal: "right"
-        }
+          horizontal: "right",
+        },
       });
       return;
     }
@@ -153,7 +208,11 @@ class OrganisationShow extends Component {
       find(zeroEdgeNodes, { key: nodeKey });
     const newParentNode = this.findNodeByKey(orgHierarchy, parentKey);
     const { parent_node: oldParentNodeKey } = node;
-    if (newParentNode && newParentNode.key === oldParentNodeKey) return;
+
+    if (newParentNode && newParentNode.key === oldParentNodeKey) {
+      console.log("Return here");
+      return;
+    }
 
     /**
      * if users sets parent to NULL,
@@ -168,7 +227,7 @@ class OrganisationShow extends Component {
         orgHierarchy = {
           label: "Organisation",
           key: "ghost_node",
-          children: []
+          children: [],
         };
       }
       orgHierarchy.children.push(node);
@@ -203,14 +262,13 @@ class OrganisationShow extends Component {
     //insert node in the children array of new parent
     if (newParentNode)
       newParentNode.children.push({ ...node, parent_node: parentKey });
-    const possibleUserOptions = filter(flatttenedHierarchyStructure, o => {
-      return this.findNodeByKey(orgHierarchy, o.key) && o.key !== "ghost_node";
-    });
+    // const possibleUserOptions = filter(flatttenedHierarchyStructure, (o) => {
+    //   return this.findNodeByKey(orgHierarchy, o.key) && o.key !== "ghost_node";
+    // });
     this.setState({
       orgHierarchy,
       zeroEdgeNodes,
-      possibleUserOptions,
-      searchedUserList: possibleUserOptions
+      // searchedUserList: possibleUserOptions,
     });
   };
 
@@ -229,30 +287,32 @@ class OrganisationShow extends Component {
     const { orgHierarchy, zeroEdgeNodes } = this.state;
     const payload = [orgHierarchy].concat(zeroEdgeNodes);
     const ngoKey = localStorage.getItem(LOCAL_STORAGE_NGO_KEY);
-    console.log(payload);
     // return;
     api
       .saveOrgHierarchy(payload, ngoKey)
-      .then(response => {
-        console.log(response);
+      .then((response) => {
         api.handleSuccess(response, this.props.enqueueSnackbar);
       })
-      .catch(error => {
+      .catch((error) => {
         api.handleError(error);
       });
   };
 
   render() {
-    const { orgHierarchy, zeroEdgeNodes, searchedUserList } = this.state;
+    const {
+      orgHierarchy,
+      zeroEdgeNodes,
+      searchedUserList,
+      possibleUserOptions,
+    } = this.state;
     const { translate } = this.props;
-    console.log({ orgHierarchy });
     return (
       <div>
         <div
           style={{
             display: "flex",
             justifyContent: "space-between",
-            alignItems: "center"
+            alignItems: "center",
           }}
         >
           <div>
@@ -270,7 +330,7 @@ class OrganisationShow extends Component {
               className="reactOrgChart"
               style={{
                 marginTop: "20px",
-                overflowX: "scroll"
+                overflowX: "scroll",
               }}
             >
               {orgHierarchy
@@ -279,8 +339,9 @@ class OrganisationShow extends Component {
                     this.setParentForNode,
                     searchedUserList,
                     this.handleSearchUser,
-                    this.state.searchTerm
-                    // { label: "amogh _o" }
+                    this.state.searchTerm,
+                    this.removeChildrenForNode,
+                    this.removeParentForNode
                   )
                 : null}
             </div>
@@ -292,7 +353,6 @@ class OrganisationShow extends Component {
                 {zeroEdgeNodes.length > 0
                   ? this.renderZeroEdgeNodes()
                   : translate("ra.title.no_members")}
-                {this.renderMenuItems()}
               </div>
             </div>
           </CardContent>
@@ -304,29 +364,12 @@ class OrganisationShow extends Component {
   renderZeroEdgeNodes = () => {
     const { orgHierarchy, zeroEdgeNodes } = this.state;
     const { translate } = this.props;
-    return zeroEdgeNodes.map(item => {
+    return zeroEdgeNodes.map((item) => {
       return (
         <Fragment key={item.key}>
           <Grid container alignItems="center">
-            <Grid item xs={2}>
+            <Grid item xs={12}>
               {item.label}
-            </Grid>
-            <Grid item xs={2}>
-              <Button
-                color="primary"
-                variant="flat"
-                onClick={event => {
-                  this.setState({
-                    menuAnchorEl: event.currentTarget,
-                    selectedZeroEdgeNode: item
-                  });
-                }}
-              >
-                <PersonAddIcon />{" "}
-                <span style={{ marginLeft: "5px" }}>
-                  {translate("ra.title.set_parent")}
-                </span>
-              </Button>
             </Grid>
           </Grid>
         </Fragment>
@@ -334,46 +377,21 @@ class OrganisationShow extends Component {
     });
   };
 
-  handleSearchUser = searchTerm => {
-    const { searchedUserList, possibleUserOptions } = this.state;
+  handleSearchUser = (searchTerm) => {
+    const { possibleUserOptions } = this.state;
     if (!searchTerm || searchTerm.length === 0) {
       this.resetSearchedTerm();
       return;
     }
-    const filtered = filter(possibleUserOptions, o => {
+    const filtered = filter(possibleUserOptions, (o) => {
       return o.label.toLowerCase().includes(searchTerm.toLowerCase());
     });
     this.setState({ searchedUserList: filtered, searchTerm });
   };
 
   resetSearchedTerm = () => {
-    const { searchedUserList, possibleUserOptions } = this.state;
+    const { possibleUserOptions } = this.state;
     this.setState({ searchedUserList: possibleUserOptions, searchTerm: "" });
-  };
-
-  renderMenuItems = () => {
-    const { searchedUserList, selectedZeroEdgeNode } = this.state;
-
-    return (
-      <UserSelectionMenu
-        onUserSelected={userOption => {
-          this.setParentForNode(
-            selectedZeroEdgeNode.key,
-            userOption ? userOption.key : null
-          );
-          this.setState({ menuAnchorEl: null });
-        }}
-        userOptions={searchedUserList}
-        isOpen={Boolean(this.state.menuAnchorEl)}
-        menuAnchorEl={this.state.menuAnchorEl}
-        onClose={() => {
-          this.resetSearchedTerm();
-          this.setState({ menuAnchorEl: null });
-        }}
-        onSearchUser={this.handleSearchUser}
-        searchTerm={this.state.searchTerm}
-      />
-    );
   };
 }
 
