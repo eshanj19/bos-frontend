@@ -1,12 +1,5 @@
-import React, { useState } from "react";
-import {
-  Card,
-  CardContent,
-  Menu,
-  MenuItem,
-  Button,
-  Input
-} from "@material-ui/core";
+import React from "react";
+import { MenuItem, Input, Menu } from "@material-ui/core";
 
 export default function UserSelectionMenu(props) {
   // const [menuAnchorEl,setMenuAnchorEl] = useState(null);
@@ -19,20 +12,29 @@ export default function UserSelectionMenu(props) {
       onClose={props.onClose}
     >
       <MenuItem>
-        <Input 
-          placeholder="Search by name" 
-          onChange={({target}) => {props.onSearchUser(target.value)}}
+        <Input
+          placeholder="Add children by name"
+          onChange={({ target }) => {
+            props.onSearchUser(target.value);
+          }}
           value={props.searchTerm}
-          />
+        />
       </MenuItem>
       <MenuItem
         onClick={() => {
-          props.onUserSelected(null);
+          props.onUserSelected("remove_parent");
         }}
       >
-        --Empty--
+        --Remove parent--
       </MenuItem>
-      {props.userOptions.slice(0,5).map(option => {
+      <MenuItem
+        onClick={() => {
+          props.onUserSelected("remove_children");
+        }}
+      >
+        --Remove children--
+      </MenuItem>
+      {props.userOptions.slice(0, 5).map((option) => {
         return (
           <MenuItem
             key={option.key}
@@ -44,13 +46,9 @@ export default function UserSelectionMenu(props) {
           </MenuItem>
         );
       })}
-      {
-        props.userOptions.length > 5 ? 
-        <MenuItem>
-          and {props.userOptions.length - 5} more..
-        </MenuItem> : null
-      }
-      
+      {props.userOptions.length > 5 ? (
+        <MenuItem>and {props.userOptions.length - 5} more..</MenuItem>
+      ) : null}
     </Menu>
   );
 }
