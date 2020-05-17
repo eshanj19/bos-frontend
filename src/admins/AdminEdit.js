@@ -23,7 +23,9 @@ import {
   SimpleForm,
   BooleanInput,
   AutocompleteArrayInput,
-  SelectInput
+  SelectInput,
+  Toolbar,
+  SaveButton,
 } from "react-admin";
 import withStyles from "@material-ui/core/styles/withStyles";
 import { Button, CardActions } from "@material-ui/core";
@@ -35,9 +37,10 @@ import { GENDER_CHOICES, LOCAL_STORAGE_NGO_KEY } from "../constants";
 import { withRouter } from "react-router-dom";
 import { withSnackbar } from "notistack";
 import { translate } from "react-admin";
+import DeleteButtonWithConfirmation from "../common/DeleteButtonWithConfirmation";
 
 const styles = {
-  inlineBlock: { display: "inline-flex", marginRight: "1rem" }
+  inlineBlock: { display: "inline-flex", marginRight: "1rem" },
 };
 
 const AdminEditActions = translate(
@@ -53,6 +56,26 @@ const AdminEditActions = translate(
     );
   }
 );
+
+const toolbarStyles = {
+  toolbar: {
+    display: "flex",
+    justifyContent: "space-between",
+  },
+};
+
+const CustomToolbar = withStyles(toolbarStyles)((props) => (
+  <Toolbar {...props}>
+    <SaveButton />
+    <DeleteButtonWithConfirmation
+      basePath={props.basePath}
+      record={props.data}
+      resource={props.resource}
+      undoable={false}
+    />{" "}
+    />
+  </Toolbar>
+));
 
 const AdminEdit = translate(({ classes, translate, ...props }) => {
   const [showDialog, toggleDialog] = useState(false);
@@ -71,9 +94,9 @@ const AdminEdit = translate(({ classes, translate, ...props }) => {
     //fetch possible resource choices.
     const ngoKey = localStorage.getItem(LOCAL_STORAGE_NGO_KEY);
     api.getPermissionGroups(ngoKey).then(({ data }) => {
-      const choices = data.map(d => ({
+      const choices = data.map((d) => ({
         id: d.id,
-        name: d.name.replace(ngoKey + "_", "")
+        name: d.name.replace(ngoKey + "_", ""),
       }));
       setPermissionGroupChoices(choices);
     });
@@ -83,20 +106,20 @@ const AdminEdit = translate(({ classes, translate, ...props }) => {
     let passworddata = {
       password: password,
       confirmPassword: confirmPassword,
-      currentpassword: currentpassword
+      currentpassword: currentpassword,
     };
     api
       .resetPassword(userKey, passworddata)
-      .then(response => {
+      .then((response) => {
         toggleDialog(!showDialog);
         console.log(response);
         api.handleSuccess(response, enqueueSnackbar);
       })
-      .catch(response => {
+      .catch((response) => {
         api.handleError(response, enqueueSnackbar);
       });
   };
-  const handlePermissionGroupChoiceChange = data => {
+  const handlePermissionGroupChoiceChange = (data) => {
     const arr = Object.values(data);
     if (arr.length > 2) {
       arr.pop();
@@ -114,7 +137,7 @@ const AdminEdit = translate(({ classes, translate, ...props }) => {
         title={translate("ra.edit admin")}
         actions={
           <AdminEditActions
-            onToggleDialog={userKey => {
+            onToggleDialog={(userKey) => {
               toggleDialog(!showDialog);
               setUserKey(userKey);
             }}
@@ -123,7 +146,10 @@ const AdminEdit = translate(({ classes, translate, ...props }) => {
         }
         {...props}
       >
-        <SimpleForm validate={validateAdminCreation}>
+        <SimpleForm
+          validate={validateAdminCreation}
+          toolbar={<CustomToolbar />}
+        >
           <TextInput
             autoFocus
             source="first_name"
@@ -158,14 +184,12 @@ const AdminEdit = translate(({ classes, translate, ...props }) => {
             formClassName={classes.email}
           />
           <AutocompleteArrayInput
-            label="Permission group"
             source="permission_groups"
             label={translate("ra.title.permission_group")}
             choices={permissionGroupChoices}
             onChange={handlePermissionGroupChoiceChange}
           />
           <BooleanInput
-            label="Active"
             source="is_active"
             label={translate("ra.action.active")}
             formClassName={classes.email}

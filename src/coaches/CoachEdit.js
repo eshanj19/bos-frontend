@@ -23,7 +23,9 @@ import {
   SimpleForm,
   BooleanInput,
   AutocompleteArrayInput,
-  SelectInput
+  SelectInput,
+  Toolbar,
+  SaveButton,
 } from "react-admin";
 import withStyles from "@material-ui/core/styles/withStyles";
 import { Button, CardActions } from "@material-ui/core";
@@ -31,9 +33,10 @@ import api from "../api";
 import ResetPasswordDialog from "../common/ResetPasswordDialog";
 import { GENDER_CHOICES, LOCAL_STORAGE_NGO_KEY } from "../constants";
 import { translate } from "react-admin";
+import DeleteButtonWithConfirmation from "../common/DeleteButtonWithConfirmation";
 
 const styles = {
-  flex: { display: "flex", marginRight: "1rem" }
+  flex: { display: "flex", marginRight: "1rem" },
 };
 
 const CoachEditActions = translate(
@@ -50,6 +53,26 @@ const CoachEditActions = translate(
   }
 );
 
+const toolbarStyles = {
+  toolbar: {
+    display: "flex",
+    justifyContent: "space-between",
+  },
+};
+
+const CustomToolbar = withStyles(toolbarStyles)((props) => (
+  <Toolbar {...props}>
+    <SaveButton />
+    <DeleteButtonWithConfirmation
+      basePath={props.basePath}
+      record={props.data}
+      resource={props.resource}
+      undoable={false}
+    />{" "}
+    />
+  </Toolbar>
+));
+
 const CoachEdit = translate(({ classes, translate, ...props }) => {
   const [showDialog, toggleDialog] = useState(false);
   const [password, handleChangePassword] = useState("");
@@ -64,7 +87,7 @@ const CoachEdit = translate(({ classes, translate, ...props }) => {
     const ngoKey = localStorage.getItem(LOCAL_STORAGE_NGO_KEY);
     api.getResourcesByNgo(ngoKey).then(({ data }) => {
       console.log(data);
-      const choices = data.map(d => ({ id: d.key, name: d.label }));
+      const choices = data.map((d) => ({ id: d.key, name: d.label }));
       setResourceChoices(choices);
     });
   }, []);
@@ -78,15 +101,15 @@ const CoachEdit = translate(({ classes, translate, ...props }) => {
     //fetch possible resource choices.
     const ngoKey = localStorage.getItem(LOCAL_STORAGE_NGO_KEY);
     api.getPermissionGroups(ngoKey).then(({ data }) => {
-      const choices = data.map(d => ({
+      const choices = data.map((d) => ({
         id: d.id,
-        name: d.name.replace(ngoKey + "_", "")
+        name: d.name.replace(ngoKey + "_", ""),
       }));
       setPermissionGroupChoices(choices);
     });
   }, []);
 
-  const handlePermissionGroupChoiceChange = data => {
+  const handlePermissionGroupChoiceChange = (data) => {
     const arr = Object.values(data);
     if (arr.length > 2) {
       arr.pop();
@@ -102,14 +125,14 @@ const CoachEdit = translate(({ classes, translate, ...props }) => {
     let passworddata = {
       password: password,
       currentpassword: currentpassword,
-      confirmPassword: confirmPassword
+      confirmPassword: confirmPassword,
     };
     api.resetPassword(userKey, passworddata).then(() => {
       toggleDialog(!showDialog);
     });
   };
 
-  const handleResourceChoiceChange = data => {
+  const handleResourceChoiceChange = (data) => {
     const arr = Object.values(data);
     if (arr.length > 2) {
       arr.pop();
@@ -126,7 +149,7 @@ const CoachEdit = translate(({ classes, translate, ...props }) => {
         title={translate("ra.edit coach")}
         actions={
           <CoachEditActions
-            onToggleDialog={userKey => {
+            onToggleDialog={(userKey) => {
               toggleDialog(!showDialog);
               setUserKey(userKey);
             }}
@@ -135,7 +158,7 @@ const CoachEdit = translate(({ classes, translate, ...props }) => {
         }
         {...props}
       >
-        <SimpleForm>
+        <SimpleForm toolbar={<CustomToolbar />}>
           <TextInput
             autoFocus
             label={translate("ra.title.first_name")}

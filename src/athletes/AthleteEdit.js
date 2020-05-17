@@ -23,7 +23,9 @@ import {
   SimpleForm,
   BooleanInput,
   AutocompleteArrayInput,
-  SelectInput
+  SelectInput,
+  Toolbar,
+  SaveButton,
 } from "react-admin";
 import withStyles from "@material-ui/core/styles/withStyles";
 import {
@@ -32,14 +34,15 @@ import {
   DialogContent,
   Button,
   CardActions,
-  Input
+  Input,
 } from "@material-ui/core";
 import api from "../api";
 import { GENDER_CHOICES, LOCAL_STORAGE_NGO_KEY } from "../constants";
 import { translate } from "react-admin";
+import DeleteButtonWithConfirmation from "../common/DeleteButtonWithConfirmation";
 
 const styles = {
-  flex: { display: "flex", marginRight: "1rem" }
+  flex: { display: "flex", marginRight: "1rem" },
 };
 
 const AthleteEditActions = ({ basePath, data, resource, onToggleDialog }) => {
@@ -52,6 +55,26 @@ const AthleteEditActions = ({ basePath, data, resource, onToggleDialog }) => {
   );
 };
 
+const toolbarStyles = {
+  toolbar: {
+    display: "flex",
+    justifyContent: "space-between",
+  },
+};
+
+const CustomToolbar = withStyles(toolbarStyles)((props) => (
+  <Toolbar {...props}>
+    <SaveButton />
+    <DeleteButtonWithConfirmation
+      basePath={props.basePath}
+      record={props.data}
+      resource={props.resource}
+      undoable={false}
+    />{" "}
+    />
+  </Toolbar>
+));
+
 const AthleteEdit = translate(({ classes, translate, ...props }) => {
   const [showDialog, toggleDialog] = useState(false);
   const [password, handleChangePassword] = useState("");
@@ -63,7 +86,7 @@ const AthleteEdit = translate(({ classes, translate, ...props }) => {
     const ngoKey = localStorage.getItem(LOCAL_STORAGE_NGO_KEY);
     api.getResourcesByNgo(ngoKey).then(({ data }) => {
       console.log(data);
-      const choices = data.map(d => ({ id: d.key, name: d.label }));
+      const choices = data.map((d) => ({ id: d.key, name: d.label }));
       setResourceChoices(choices);
     });
   }, []);
@@ -78,7 +101,7 @@ const AthleteEdit = translate(({ classes, translate, ...props }) => {
       });
     }
   };
-  const handleResourceChoiceChange = data => {
+  const handleResourceChoiceChange = (data) => {
     const arr = Object.values(data);
     if (arr.length > 2) {
       arr.pop();
@@ -95,7 +118,7 @@ const AthleteEdit = translate(({ classes, translate, ...props }) => {
         undoable={false}
         actions={
           <AthleteEditActions
-            onToggleDialog={userKey => {
+            onToggleDialog={(userKey) => {
               toggleDialog(!showDialog);
               setUserKey(userKey);
             }}
@@ -104,7 +127,7 @@ const AthleteEdit = translate(({ classes, translate, ...props }) => {
         }
         {...props}
       >
-        <SimpleForm>
+        <SimpleForm toolbar={<CustomToolbar />}>
           <TextInput
             autoFocus
             source="first_name"
