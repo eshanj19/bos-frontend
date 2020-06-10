@@ -21,10 +21,10 @@ import {
   SNACKBAR_ERROR,
   SNACKBAR_SUCCESS,
   API_ERROR_UNKNOWN,
-  API_SUCCESS
+  API_SUCCESS,
 } from "./constants";
 
-const toFormData = data => {
+const toFormData = (data) => {
   const fd = new FormData();
   Object.entries(data).forEach(([key, value]) => {
     fd.append(key, value);
@@ -32,11 +32,11 @@ const toFormData = data => {
   return fd;
 };
 
-const login = data => {
+const login = (data) => {
   return axios.post("/login/", toFormData(data));
 };
 
-const supersetLogin = data => {
+const supersetLogin = (data) => {
   return supersetAxios.post("/login/", toFormData(data));
 };
 
@@ -44,11 +44,11 @@ const supersetLogout = () => {
   return supersetAxios.get("/logout/");
 };
 
-const get = url => {
+const get = (url) => {
   return axios.get(`${url}`);
 };
 
-const post = url => {
+const post = (url) => {
   return axios.post(`${url}`);
 };
 
@@ -62,12 +62,12 @@ const getCoachBaseline = (basePath, id) => {
   return axios.get(`${url}`);
 };
 
-const getAthleteRegistrationResource = key => {
+const getAthleteRegistrationResource = (key) => {
   const url = `/ngos/${key}/athlete_registration_resource`;
   return axios.get(`${url}`);
 };
 
-const getCoachRegistrationResource = key => {
+const getCoachRegistrationResource = (key) => {
   const url = `/ngos/${key}/coach_registration_resource`;
   return axios.get(`${url}`);
 };
@@ -76,11 +76,15 @@ const resetPassword = (key, body) => {
   return axios.post(`/users/${key}/reset_password/`, toFormData(body));
 };
 
+const resetPasswordByAdmin = (key, body) => {
+  return axios.post(`/users/${key}/reset_password_by_admin/`, toFormData(body));
+};
+
 const requestAccept = (key, body) => {
   return axios.post(`/requests/${key}/request_accept/`, toFormData(body));
 };
 
-const requestReject = key => {
+const requestReject = (key) => {
   return axios.post(`/requests/${key}/request_reject/`);
 };
 
@@ -100,35 +104,35 @@ const getAllPermissions = () => {
   return axios.get(`/permission_groups/all_permissions/`);
 };
 
-const getNGOPermissionGroups = key => {
+const getNGOPermissionGroups = (key) => {
   return axios.get(`/ngos/${key}/permission_groups/`);
 };
 
-const getForgotPasswordToken = body => {
+const getForgotPasswordToken = (body) => {
   return axios.post("/get_forgot_password_token/", toFormData(body));
 };
 
-const isForgotPasswordTokenValid = token => {
+const isForgotPasswordTokenValid = (token) => {
   return axios.get(`/is_forgot_password_token_valid?token=${token}`);
 };
 
-const forgotPassword = body => {
+const forgotPassword = (body) => {
   return axios.post("/forgot_password/", toFormData(body));
 };
 
-const createAthlete = body => {
+const createAthlete = (body) => {
   return axios.post("/athletes/", body);
 };
 
-const createCoach = body => {
+const createCoach = (body) => {
   return axios.post("/coaches/", body);
 };
 
-const createNGO = body => {
+const createNGO = (body) => {
   return axios.post("/ngos/", body);
 };
 
-const createPermissionGroup = body => {
+const createPermissionGroup = (body) => {
   return axios.post("/permission_groups/", body);
 };
 
@@ -178,17 +182,17 @@ const showSnackbar = (enqueueSnackbar, message, variant) => {
       variant: variant,
       anchorOrigin: {
         vertical: "bottom",
-        horizontal: "center"
-      }
+        horizontal: "center",
+      },
     });
   }
 };
 
-const getMeasurementDropdownOptionsForNgo = ngo_key => {
+const getMeasurementDropdownOptionsForNgo = (ngo_key) => {
   return axios.get(`ngos/${ngo_key}/measurements/`);
 };
 
-const getFileDropdownOptionsForNgo = ngo_key => {
+const getFileDropdownOptionsForNgo = (ngo_key) => {
   return axios.get(`ngos/${ngo_key}/files/`);
 };
 
@@ -200,15 +204,15 @@ const saveRegistrationForm = (sessionKey, data) => {
   return axios.put(`resources/${sessionKey}/`, data);
 };
 
-const createSession = data => {
+const createSession = (data) => {
   return axios.post("resources/", data);
 };
 
-const createRegistrationForm = data => {
+const createRegistrationForm = (data) => {
   return axios.post("resources/", data);
 };
 
-const getSessionsForNgo = ngo_key => {
+const getSessionsForNgo = (ngo_key) => {
   return axios.get(`ngos/${ngo_key}/training_sessions/`);
 };
 
@@ -216,24 +220,24 @@ const saveCurriculum = (curriculumKey, data) => {
   return axios.put(`resources/${curriculumKey}/`, data);
 };
 
-const createCurriculum = data => {
+const createCurriculum = (data) => {
   return axios.post("resources/", data);
 };
 
-const deactivateResource = key => {
+const deactivateResource = (key) => {
   return axios.post(`resources/${key}/deactivate/`);
 };
-const activateResource = key => {
+const activateResource = (key) => {
   return axios.post(`resources/${key}/activate/`);
 };
 
-const getResource = key => {
+const getResource = (key) => {
   return axios.get(`/resources/${key}`);
 };
-const getMeasurement = key => {
+const getMeasurement = (key) => {
   return axios.get(`/measurements/${key}`);
 };
-const getUserHierarchy = key => {
+const getUserHierarchy = (key) => {
   return axios.get(`/ngos/${key}/user_hierarchy`);
 };
 
@@ -251,7 +255,7 @@ const setAsAthleteRegistrationSession = (ngoKey, body) => {
   );
 };
 
-const submitFile = file => {
+const submitFile = (file) => {
   return axios.post(`/resources/`, file);
 };
 
@@ -263,15 +267,15 @@ const saveOrgHierarchy = (data, key) => {
   return axios.post(`/ngos/${key}/save_user_hierarchy/`, data);
 };
 
-const getResourcesByNgo = ngoKey => {
+const getResourcesByNgo = (ngoKey) => {
   return axios.get(`/ngos/${ngoKey}/all_resources/`);
 };
 
-const getPermissionGroups = ngoKey => {
+const getPermissionGroups = (ngoKey) => {
   return axios.get(`/ngos/${ngoKey}/permission_groups/`);
 };
 
-const getAllUsersByNgo = ngoKey => {
+const getAllUsersByNgo = (ngoKey) => {
   return axios.get(`/ngos/${ngoKey}/all_users/`);
 };
 
@@ -302,6 +306,7 @@ const api = {
   requestAccept,
   requestReject,
   checkUsername,
+  resetPasswordByAdmin,
   getForgotPasswordToken,
   isForgotPasswordTokenValid,
   forgotPassword,
@@ -329,7 +334,7 @@ const api = {
   saveOrgHierarchy,
   getPermissionGroups,
   editFile,
-  changeLanguage
+  changeLanguage,
 };
 
 export default api;

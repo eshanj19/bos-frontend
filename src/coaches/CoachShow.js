@@ -19,7 +19,7 @@ import React, { Component } from "react";
 import { Show, SimpleShowLayout, BooleanField, TextField } from "react-admin";
 import withStyles from "@material-ui/core/styles/withStyles";
 import { withTranslate } from "react-admin";
-import { styles } from "../common/UserCreate";
+import { styles } from "./CoachCreate";
 import GenderField from "../common/GenderField";
 
 class CoachShow extends Component {

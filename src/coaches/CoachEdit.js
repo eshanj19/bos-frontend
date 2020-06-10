@@ -30,10 +30,11 @@ import {
 import withStyles from "@material-ui/core/styles/withStyles";
 import { Button, CardActions } from "@material-ui/core";
 import api from "../api";
-import ResetPasswordDialog from "../common/ResetPasswordDialog";
 import { GENDER_CHOICES, LOCAL_STORAGE_NGO_KEY } from "../constants";
 import { translate } from "react-admin";
 import DeleteButtonWithConfirmation from "../common/DeleteButtonWithConfirmation";
+import AdminResetPasswordDialog from "../common/AdminResetPasswordDialog";
+import { withSnackbar } from "notistack";
 
 const styles = {
   flex: { display: "flex", marginRight: "1rem" },
@@ -76,17 +77,15 @@ const CustomToolbar = withStyles(toolbarStyles)((props) => (
 const CoachEdit = translate(({ classes, translate, ...props }) => {
   const [showDialog, toggleDialog] = useState(false);
   const [password, handleChangePassword] = useState("");
-  const [currentpassword, handlecurrentpassword] = useState("");
   const [confirmPassword, handleChangeConfirmPassword] = useState("");
   const [userKey, setUserKey] = useState(null);
   const [resourceChoices, setResourceChoices] = useState([]);
   const [permissionGroupChoices, setPermissionGroupChoices] = useState([]);
-
+  const { enqueueSnackbar } = props;
   useEffect(() => {
     //fetch possible resource choices.
     const ngoKey = localStorage.getItem(LOCAL_STORAGE_NGO_KEY);
     api.getResourcesByNgo(ngoKey).then(({ data }) => {
-      console.log(data);
       const choices = data.map((d) => ({ id: d.key, name: d.label }));
       setResourceChoices(choices);
     });
@@ -94,7 +93,6 @@ const CoachEdit = translate(({ classes, translate, ...props }) => {
   useEffect(() => {
     handleChangePassword("");
     handleChangeConfirmPassword("");
-    handlecurrentpassword("");
   }, [showDialog]);
 
   useEffect(() => {
@@ -121,15 +119,20 @@ const CoachEdit = translate(({ classes, translate, ...props }) => {
   };
 
   const resetPassword = () => {
-    if (!password || password.length === 0) return;
     let passworddata = {
       password: password,
-      currentpassword: currentpassword,
       confirmPassword: confirmPassword,
     };
-    api.resetPassword(userKey, passworddata).then(() => {
-      toggleDialog(!showDialog);
-    });
+    api
+      .resetPasswordByAdmin(userKey, passworddata)
+      .then((response) => {
+        toggleDialog(!showDialog);
+        console.log(response);
+        api.handleSuccess(response, enqueueSnackbar);
+      })
+      .catch((response) => {
+        api.handleError(response, enqueueSnackbar);
+      });
   };
 
   const handleResourceChoiceChange = (data) => {
@@ -200,13 +203,13 @@ const CoachEdit = translate(({ classes, translate, ...props }) => {
           />
         </SimpleForm>
       </Edit>
-      <ResetPasswordDialog
+
+      <AdminResetPasswordDialog
         showDialog={showDialog}
         password={password}
         confirmPassword={confirmPassword}
         onChangePassword={handleChangePassword}
         onChangeConfirmPassword={handleChangeConfirmPassword}
-        onChangCurrentPassword={handlecurrentpassword}
         toggleDialog={() => {
           toggleDialog(!showDialog);
         }}
@@ -216,4 +219,4 @@ const CoachEdit = translate(({ classes, translate, ...props }) => {
   );
 });
 
-export default withStyles(styles)(CoachEdit);
+export default withSnackbar(withStyles(styles)(CoachEdit));

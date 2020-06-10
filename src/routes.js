@@ -37,5 +37,5 @@ export default [
     exact
     path="/resources/edit/registration/:id"
     component={EditRegistrationForm}
-  />
+  />,
 ];

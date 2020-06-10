@@ -30,7 +30,6 @@ import {
 import withStyles from "@material-ui/core/styles/withStyles";
 import { Button, CardActions } from "@material-ui/core";
 import api from "../api";
-import ResetPasswordDialog from "../common/ResetPasswordDialog";
 
 import { validateAdminCreation } from "./AdminCreate";
 import { GENDER_CHOICES, LOCAL_STORAGE_NGO_KEY } from "../constants";
@@ -38,6 +37,7 @@ import { withRouter } from "react-router-dom";
 import { withSnackbar } from "notistack";
 import { translate } from "react-admin";
 import DeleteButtonWithConfirmation from "../common/DeleteButtonWithConfirmation";
+import AdminResetPasswordDialog from "../common/AdminResetPasswordDialog";
 
 const styles = {
   inlineBlock: { display: "inline-flex", marginRight: "1rem" },
@@ -80,7 +80,6 @@ const CustomToolbar = withStyles(toolbarStyles)((props) => (
 const AdminEdit = translate(({ classes, translate, ...props }) => {
   const [showDialog, toggleDialog] = useState(false);
   const [password, handleChangePassword] = useState("");
-  const [currentpassword, handlecurrentpassword] = useState("");
   const [confirmPassword, handleChangeConfirmPassword] = useState("");
   const [permissionGroupChoices, setPermissionGroupChoices] = useState([]);
   const [userKey, setUserKey] = useState(null);
@@ -88,7 +87,6 @@ const AdminEdit = translate(({ classes, translate, ...props }) => {
   useEffect(() => {
     handleChangePassword("");
     handleChangeConfirmPassword("");
-    handlecurrentpassword("");
   }, [showDialog]);
   useEffect(() => {
     //fetch possible resource choices.
@@ -106,13 +104,11 @@ const AdminEdit = translate(({ classes, translate, ...props }) => {
     let passworddata = {
       password: password,
       confirmPassword: confirmPassword,
-      currentpassword: currentpassword,
     };
     api
-      .resetPassword(userKey, passworddata)
+      .resetPasswordByAdmin(userKey, passworddata)
       .then((response) => {
         toggleDialog(!showDialog);
-        console.log(response);
         api.handleSuccess(response, enqueueSnackbar);
       })
       .catch((response) => {
@@ -196,15 +192,12 @@ const AdminEdit = translate(({ classes, translate, ...props }) => {
           />
         </SimpleForm>
       </Edit>
-      <ResetPasswordDialog
+      <AdminResetPasswordDialog
         showDialog={showDialog}
         password={password}
-        currentpassword={currentpassword}
         confirmPassword={confirmPassword}
         onChangePassword={handleChangePassword}
         onChangeConfirmPassword={handleChangeConfirmPassword}
-        onChangCurrentPassword={handlecurrentpassword}
-        validateAdminCreation={validateAdminCreation}
         toggleDialog={() => {
           toggleDialog(!showDialog);
         }}
